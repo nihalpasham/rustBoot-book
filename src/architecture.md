@@ -26,10 +26,9 @@ o->  Simplified Block Diagram, Pre handover stage:
 
                             .---------------------------------------------------------.
                             |                                           .-----------. |
-                            |                 rustBoot core             | Embedded  | |
+                            |        {b}      rustBoot core             | Embedded  | |
                             |                   bootloader              |  Pub Key  |-|-------> Embedded in software or 
                             |                                           '-----------' |         in hardware
-                            |                                                         | 
                             '---------------------------------------------------------' 
 
                              - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
@@ -59,10 +58,78 @@ o->  Simplified Block Diagram, Pre handover stage:
                             '--------------------------------------------------------'
 ```
 
+## Post-handover stage: 
 
-### Miscellaneous:
+- At this stage, control has been handed over to firmware (or linux).
+- rustBoot doest not have a networking stack. The job of downloading and installing an update is offloaded to firmware or linux (drastically reducing the TCB)
+- Firmware can trigger and confirm updates by setting the state of the `update or boot` partition via a rustBoot api. This removes the need for a filesystem (smaller TCB). 
+  - However, not all systems can be booted without a file-system. 
+  - In such cases, rustBoot provides a FAT16 or 32 implementation, written in safe rust. 
+- Once an update is triggered and the device is reset (i.e. restarted), rustBoot takes over and will attempt to verify and boot the update.
 
-- rustBoot `can replace U-boot` in a trust-chain i.e. it can easily be integrated into an existing trust-chain, wherever U-boot is used.
-- As it has a very small hardware abstraction layer, it is highly portable across Cortex-M and Cortex-A architectures. 
-- Public-key hashes or trust anchors can be stored in secure hardware or embedded in software.
-- Hardware drivers for different types of secure-hardware (ex: crypto elements) will be made available via the HAL. 
+
+```svgbob
+
+o->  Simplified Block Diagram, Post handover stage:
+
+
+                            .----------------------------------------------------------.
+                            |  .------.   .--------------------.  .------------------. |
+                            |  | Apps |   | App to download    |  | App to trigger & | | 
+                            |  |      |   | and install update |  |  confirm updates | |
+                            |  '------'   '--------------------'  '------------------' |
+                            '------------------------|----------------------|----------' 
+                             - - - - - - - - - - - - - - - - - - - - - - - -v- - - - -  
+                                                     |             .----------------.           rustBoot provides a  
+                                                     |             | rustBoot flash | ------->  tiny api to trigger  
+                                                     |             |      API       |           and confirm updates
+                                                     |             '----------------' 
+                                                     |                      | 
+                             - - - - - - - - - - - - v - - - - - - - - - - - - - - - -        
+                          .--------------------------------------.          |                                      
+      Transport           | .-----. .-----. .------------------. |          |
+        Options  <--------| | TCP | | UDP | | Custom Transport | |          |
+                          | '-----' '-----' '------------------' |          |
+                          '--------------------------------------'          v
+                            - - - - - - - - - - - - - - - - - - - - - - - - - - - - -        
+                            .-------------------------------------------------------.        
+                            |                                                       |
+                            |             Linux or Baremetal Firmware               |       
+                            |                                                       |              
+                            '-------------------------------------------------------'         
+                            .--------------------------------------------------------.
+                            |                                                        |
+                            |   Secure Element    +     Hardware   ( MCU or MPU )    |
+                            |                                                        |     
+                            '--------------------------------------------------------'
+
+# Legend:
+r1 = {
+    stroke: papayawhip;
+}
+r2 = {
+    fill: crimson;
+}
+a = {
+    stroke-dasharray: 8;
+    fill: lightblue;
+}
+b = {
+    stroke: lightgreen;
+}
+bigrect = {
+    fill: yellow;
+    stroke: red;
+}
+red = {
+    fill:red;
+    stroke:blue;
+}
+
+```
+> ### Notes:
+> 
+> - rustBoot `can replace U-boot` in a trust-chain i.e. it can easily be integrated into an existing trust-chain, wherever U-boot is used.
+> - As it has a very small hardware abstraction layer, it is highly portable across Cortex-M and Cortex-A architectures. 
+> - Public-key hashes or trust anchors can be stored in secure hardware or embedded in software.
+> - Hardware drivers for different types of secure-hardware (ex: crypto elements) will be made available via the HAL. 
