@@ -4,31 +4,59 @@ rustBoot's architecture reflects its focus on `simplicity and security above all
 
 For a high-level overview, you can think of rustBoot as operating in 2 independent stages. 
 
-- **Pre-handover stage:** represents a stage after power-on and BootROM execution i.e. a stage where `rustBoot` has `execution control`.
+- **Pre-handover stage:** represents a stage after power-on and BootROM execution i.e. a stage where `rustBoot` has full `execution control`.
 - **Post-handover stage:** firmware has begun executing and has complete `execution control`.
 
-rustBoot's runtime software stack at pre-handover stage looks something like this:
+## Pre-handover stage: 
+
+- rustBoot provides a minimal hardware abstraction layer for a wide range of ARM microcontrollers (STM32, Nordic, Microchip etc.) and microprocessors (rpi4, NXP etc.). The HAL allows peripherals drivers to initialize requiste hardware such as flash memories, UART controllers, GPIO pins etc.  
+- an optional software-based crypto library in-case you dont need (or use) dedicated crypto hardware.
+- rustBoot's core-bootloader houses all of the `actual boot-logic` such as
+  - firmware image `intergrity and authenticity verification` via digital signatures
+  - power-interruptible firmware updates along with the assurance of fall-back availability. 
+  - `FITImage and device tree` parsing while booting linux.
+  - multi-slot partitioning of microcontroller flash memory
+  - `anti-rollback protection` via version numbering.
+
 
 ```svgbob
 
-o->  Pre handover chart
-          .---.  .---. .---.  .---.    .---.  .---.
-OS API    '---'  '---' '---'  '---'    '---'  '---'
-            |      |     |      |        |      |
-            v      v     |      v        |      v
-          .------------. | .-----------. |  .-----.
-          | Filesystem | | | Scheduler | |  | MMU |
-          '------------' | '-----------' |  '-----'
-                 |       |      |        |
-                 v       |      |        v
-____          .----.     |      |    .---------.
-              | IO |<----'      |    | Network |
-              '----'            |    '---------'
-                |               |         |
-                v               v         v
-         .---------------------------------------.
-         |       Pysical Hardware ( MCU or MPU ) |
-         '---------------------------------------'
+o->  Simplified Block Diagram, Pre handover stage:
+
+
+                            .---------------------------------------------------------.
+                            |                                           .-----------. |
+                            |                 rustBoot core             | Embedded  | |
+                            |                   bootloader              |  Pub Key  |-|-------> Embedded in software or 
+                            |                                           '-----------' |         in hardware
+                            |                                                         | 
+                            '---------------------------------------------------------' 
+
+                             - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
+      Optional Software                                             .----------------.        
+            based           <------------------------------------   |  `RustCrypto`  | 
+        crypto library                                              '----------------' 
+                                                                            | 
+                             - - - - - - - - - - - - - - - - - - - - - - - - - - - - -        
+                                                                            |
+      Peripheral            .---------. .-------. .------. .------.         |
+        Drivers  <--------  | CRYPTO  | | FLASH | | GPIO | | UART |         |
+                            '---------' '-------' '------' '------'         |
+                                 |           |        |        |            |
+                                 v           v        v        v            |
+                            - - - - - - - - - - - - - - - - - - - - - - - - - - - - -        
+                            .--------------------------------------.        |  
+                            |                                      |        |
+  Board specific            |                RUST                  |        |
+      HAL        <--------  |                                      |        |
+                            |      Hardware Abstraction Layer      |        |
+                            |                                      |        |
+                            '--------------------------------------'        v 
+                            .--------------------------------------------------------.
+                            |                                                        |
+                            |   Secure Element    +     Hardware   ( MCU or MPU )    |
+                            |                                                        |     
+                            '--------------------------------------------------------'
 ```
 
 
