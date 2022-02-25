@@ -61,11 +61,11 @@ o->  Simplified Block Diagram, Pre handover stage:
 ## Post-handover stage: 
 
 - At this stage, control has been handed over to firmware (or linux).
-- rustBoot doest not have a networking stack. The job of downloading and installing an update is offloaded to firmware or linux (drastically reducing the TCB)
+- rustBoot `does not` have a networking stack. The job of downloading and installing an update is offloaded to firmware or linux (drastically reducing the TCB)
 - Firmware can trigger and confirm updates by setting the state of the `update or boot` partition via a rustBoot api. This removes the need for a filesystem (smaller TCB). 
   - However, not all systems can be booted without a file-system. 
-  - In such cases, rustBoot provides a FAT16 or 32 implementation, written in safe rust. 
-- Once an update is triggered and the device is reset (i.e. restarted), rustBoot takes over and will attempt to verify and boot the update.
+  - If you need one, rustBoot offers a FAT16 or 32 implementation, written in safe rust. 
+- Once an update is triggered, the device is reset (i.e. restarted). rustBoot takes over and attempts to verify the update. If everything checks out, it boots the updated firmware.
 
 
 ```svgbob
@@ -79,13 +79,13 @@ o->  Simplified Block Diagram, Post handover stage:
                             |  |      |   | and install update |  |  confirm updates | |
                             |  '------'   '--------------------'  '------------------' |
                             '------------------------|----------------------|----------' 
-                             - - - - - - - - - - - - - - - - - - - - - - - -v- - - - -  
+                             - - - - - - - - - - - - | - - - - - - - - - -  v  - - - -  
                                                      |             .----------------.           rustBoot provides a  
                                                      |             | rustBoot flash | ------->  tiny api to trigger  
                                                      |             |      API       |           and confirm updates
                                                      |             '----------------' 
                                                      |                      | 
-                             - - - - - - - - - - - - v - - - - - - - - - - - - - - - -        
+                             - - - - - - - - - - - - v - - - - - - - - - -  | - - - - -        
                           .--------------------------------------.          |                                      
       Transport           | .-----. .-----. .------------------. |          |
         Options  <--------| | TCP | | UDP | | Custom Transport | |          |
