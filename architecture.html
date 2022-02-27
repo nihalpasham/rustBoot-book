@@ -1,0 +1,681 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Architecture - rustBoot Documentation</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Objectives</li><li class="chapter-item expanded "><a href="objectives.html"><strong aria-hidden="true">1.</strong> Goals</a></li><li class="chapter-item expanded "><a href="features.html"><strong aria-hidden="true">2.</strong> Features</a></li><li class="chapter-item expanded affix "><li class="part-title">Design and Architecture Overview</li><li class="chapter-item expanded "><a href="design.html"><strong aria-hidden="true">3.</strong> Design</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="design/core_components.html"><strong aria-hidden="true">3.1.</strong> Components of rustBoot</a></li></ol></li><li class="chapter-item expanded "><a href="architecture.html" class="active"><strong aria-hidden="true">4.</strong> Architecture</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="arch/images.html"><strong aria-hidden="true">4.1.</strong> rustBoot Images</a></li><li class="chapter-item expanded "><a href="arch/partitions.html"><strong aria-hidden="true">4.2.</strong> rustBoot Partitions</a></li><li class="chapter-item expanded "><a href="arch/boot_flow.html"><strong aria-hidden="true">4.3.</strong> rustBoot Secure-Boot Flow</a></li><li class="chapter-item expanded "><a href="arch/update_flow.html"><strong aria-hidden="true">4.4.</strong> rustBoot Secure-Update Flow</a></li><li class="chapter-item expanded "><a href="arch/signing_utilities.html"><strong aria-hidden="true">4.5.</strong> Signing Utilities</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Usage</li><li class="chapter-item expanded "><a href="user_guide.html"><strong aria-hidden="true">5.</strong> User Guide</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="usage/nrf52840.html"><strong aria-hidden="true">5.1.</strong> nrf52840</a></li><li class="chapter-item expanded "><a href="usage/rpi4.html"><strong aria-hidden="true">5.2.</strong> rpi4</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Coding Guidelines and Testing</li><li class="chapter-item expanded "><a href="coding_guide.html"><strong aria-hidden="true">6.</strong> Coding guidelines</a></li><li class="chapter-item expanded "><a href="testing.html"><strong aria-hidden="true">7.</strong> Testing</a></li><li class="chapter-item expanded affix "><li class="part-title">Continuos Integration</li><li class="chapter-item expanded "><a href="continuous-integration.html"><strong aria-hidden="true">8.</strong> Continuous Integration</a></li><li class="chapter-item expanded affix "><li class="part-title">For Developers</li><li class="chapter-item expanded "><a href="for_developers/index.html"><strong aria-hidden="true">9.</strong> For Developers</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="for_developers/ref_guide.html"><strong aria-hidden="true">9.1.</strong> Reference Guide</a></li><li class="spacer"></li></ol></li><li class="chapter-item expanded "><a href="misc/contributors.html">Contributors</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">rustBoot Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="high-level-overview"><a class="header" href="#high-level-overview">High Level Overview</a></h1>
+<p>rustBoot’s architecture reflects its focus on <code>simplicity and security above all else</code>. </p>
+<p>For a high-level overview, you can think of rustBoot as operating in 2 independent stages. </p>
+<ul>
+<li><strong>Pre-handover stage:</strong> post power-on, the BootROM (or some other intermediate-stage bootloader) executes and hands control over to <code>rustBoot</code>. This is a stage where <code>rustBoot</code> has full <code>execution control</code>.</li>
+<li><strong>Post-handover stage:</strong> firmware has begun executing and has complete <code>execution control</code>. Firmware uses a couple <code>rustBoot</code> dependencies to trigger and confirm updates.</li>
+</ul>
+<h2 id="pre-handover-stage"><a class="header" href="#pre-handover-stage">Pre-handover stage:</a></h2>
+<ul>
+<li>rustBoot provides a minimal hardware abstraction layer for a wide range of ARM microcontrollers (STM32, Nordic, Microchip etc.) and microprocessors (rpi4, NXP etc.). The HAL allows peripherals drivers to initialize requisite hardware such as flash memories, UART controllers, GPIO pins etc.</li>
+<li>an optional software-based crypto library in-case you dont need (or use) dedicated crypto hardware.</li>
+<li>rustBoot’s core-bootloader houses all of the <code>actual boot-logic</code> such as
+<ul>
+<li>firmware image <code>intergrity and authenticity verification</code> via digital signatures</li>
+<li>power-interruptible firmware updates along with the assurance of fall-back availability. </li>
+<li><code>FITImage and device tree</code> parsing while booting linux.</li>
+<li>multi-slot partitioning of microcontroller flash memory</li>
+<li><code>anti-rollback protection</code> via version numbering.</li>
+</ul>
+</li>
+</ul>
+<pre class="svgbob"><style>text{fill:var(--fg)}</style><svg xmlns="http://www.w3.org/2000/svg" width="960" height="592">
+    <style>
+        line, path, circle, rect, polygon{stroke:var(--fg);stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Lucida Console;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="960" height="592"></rect>
+    <rect x="228" y="72" width="464" height="80" class="solid nofill b" rx="4"></rect>
+    <text x="594" y="108" >Embedded</text>
+    <text x="602" y="124" >Pub</text>
+    <text x="634" y="124" >Key</text>
+    <text x="370" y="108" >rustBoot</text>
+    <text x="442" y="108" >core</text>
+    <text x="386" y="124" >bootloader</text>
+    <rect x="548" y="200" width="136" height="32" class="solid nofill" rx="4"></rect>
+    <text x="570" y="220" >`RustCrypto`</text>
+    <rect x="228" y="296" width="80" height="32" class="solid nofill" rx="4"></rect>
+    <text x="242" y="316" >CRYPTO</text>
+    <rect x="324" y="296" width="64" height="32" class="solid nofill" rx="4"></rect>
+    <text x="338" y="316" >FLASH</text>
+    <rect x="404" y="296" width="56" height="32" class="solid nofill" rx="4"></rect>
+    <text x="418" y="316" >GPIO</text>
+    <rect x="476" y="296" width="56" height="32" class="solid nofill" rx="4"></rect>
+    <text x="490" y="316" >UART</text>
+    <rect x="228" y="392" width="312" height="96" class="solid nofill" rx="4"></rect>
+    <text x="362" y="428" >RUST</text>
+    <text x="282" y="460" >Hardware</text>
+    <text x="354" y="460" >Abstraction</text>
+    <text x="450" y="460" >Layer</text>
+    <rect x="228" y="504" width="456" height="64" class="solid nofill" rx="4"></rect>
+    <text x="258" y="540" >Secure</text>
+    <text x="314" y="540" >Element</text>
+    <text x="402" y="540" >+</text>
+    <text x="450" y="540" >Hardware</text>
+    <path d="M 544,528 A 16,16 0,0,0 544,544" class="nofill"></path>
+    <text x="554" y="540" >MCU</text>
+    <text x="586" y="540" >or</text>
+    <text x="610" y="540" >MPU</text>
+    <path d="M 640,528 A 16,16 0,0,1 640,544" class="nofill"></path>
+    <circle cx="4" cy="24" r="3" class="nofill"></circle>
+    <text x="42" y="28" >Simplified</text>
+    <text x="130" y="28" >Block</text>
+    <text x="178" y="28" >Diagram,</text>
+    <text x="250" y="28" >Pre</text>
+    <text x="282" y="28" >handover</text>
+    <text x="354" y="28" >stage:</text>
+    <text x="770" y="124" >Embedded</text>
+    <text x="842" y="124" >in</text>
+    <text x="770" y="140" >in</text>
+    <text x="794" y="140" >hardware</text>
+    <text x="866" y="124" >software</text>
+    <text x="938" y="124" >or</text>
+    <line x1="232" y1="184" x2="240" y2="184" class="solid"></line>
+    <line x1="248" y1="184" x2="256" y2="184" class="solid"></line>
+    <line x1="264" y1="184" x2="272" y2="184" class="solid"></line>
+    <line x1="280" y1="184" x2="288" y2="184" class="solid"></line>
+    <line x1="296" y1="184" x2="304" y2="184" class="solid"></line>
+    <line x1="312" y1="184" x2="320" y2="184" class="solid"></line>
+    <line x1="328" y1="184" x2="336" y2="184" class="solid"></line>
+    <line x1="344" y1="184" x2="352" y2="184" class="solid"></line>
+    <line x1="360" y1="184" x2="368" y2="184" class="solid"></line>
+    <line x1="376" y1="184" x2="384" y2="184" class="solid"></line>
+    <line x1="392" y1="184" x2="400" y2="184" class="solid"></line>
+    <line x1="408" y1="184" x2="416" y2="184" class="solid"></line>
+    <line x1="424" y1="184" x2="432" y2="184" class="solid"></line>
+    <line x1="440" y1="184" x2="448" y2="184" class="solid"></line>
+    <line x1="456" y1="184" x2="464" y2="184" class="solid"></line>
+    <line x1="472" y1="184" x2="480" y2="184" class="solid"></line>
+    <line x1="488" y1="184" x2="496" y2="184" class="solid"></line>
+    <line x1="504" y1="184" x2="512" y2="184" class="solid"></line>
+    <line x1="520" y1="184" x2="528" y2="184" class="solid"></line>
+    <line x1="536" y1="184" x2="544" y2="184" class="solid"></line>
+    <line x1="552" y1="184" x2="560" y2="184" class="solid"></line>
+    <line x1="568" y1="184" x2="576" y2="184" class="solid"></line>
+    <line x1="584" y1="184" x2="592" y2="184" class="solid"></line>
+    <line x1="600" y1="184" x2="608" y2="184" class="solid"></line>
+    <line x1="616" y1="184" x2="624" y2="184" class="solid"></line>
+    <line x1="632" y1="184" x2="640" y2="184" class="solid"></line>
+    <line x1="648" y1="184" x2="656" y2="184" class="solid"></line>
+    <line x1="664" y1="184" x2="672" y2="184" class="solid"></line>
+    <line x1="680" y1="184" x2="688" y2="184" class="solid"></line>
+    <line x1="612" y1="240" x2="612" y2="256" class="solid"></line>
+    <line x1="600" y1="264" x2="608" y2="264" class="solid"></line>
+    <line x1="616" y1="264" x2="624" y2="264" class="solid"></line>
+    <line x1="612" y1="272" x2="612" y2="368" class="solid"></line>
+    <line x1="224" y1="376" x2="232" y2="376" class="solid"></line>
+    <line x1="240" y1="376" x2="248" y2="376" class="solid"></line>
+    <line x1="256" y1="376" x2="264" y2="376" class="solid"></line>
+    <line x1="272" y1="376" x2="280" y2="376" class="solid"></line>
+    <line x1="288" y1="376" x2="296" y2="376" class="solid"></line>
+    <line x1="304" y1="376" x2="312" y2="376" class="solid"></line>
+    <line x1="320" y1="376" x2="328" y2="376" class="solid"></line>
+    <line x1="336" y1="376" x2="344" y2="376" class="solid"></line>
+    <line x1="352" y1="376" x2="360" y2="376" class="solid"></line>
+    <line x1="368" y1="376" x2="376" y2="376" class="solid"></line>
+    <line x1="384" y1="376" x2="392" y2="376" class="solid"></line>
+    <line x1="400" y1="376" x2="408" y2="376" class="solid"></line>
+    <line x1="416" y1="376" x2="424" y2="376" class="solid"></line>
+    <line x1="432" y1="376" x2="440" y2="376" class="solid"></line>
+    <line x1="448" y1="376" x2="456" y2="376" class="solid"></line>
+    <line x1="464" y1="376" x2="472" y2="376" class="solid"></line>
+    <line x1="480" y1="376" x2="488" y2="376" class="solid"></line>
+    <line x1="496" y1="376" x2="504" y2="376" class="solid"></line>
+    <line x1="512" y1="376" x2="520" y2="376" class="solid"></line>
+    <line x1="528" y1="376" x2="536" y2="376" class="solid"></line>
+    <line x1="544" y1="376" x2="552" y2="376" class="solid"></line>
+    <line x1="608" y1="376" x2="616" y2="376" class="solid"></line>
+    <text x="50" y="204" >Optional</text>
+    <text x="122" y="204" >Software</text>
+    <text x="98" y="220" >based</text>
+    <text x="66" y="236" >crypto</text>
+    <text x="122" y="236" >library</text>
+    <line x1="232" y1="264" x2="240" y2="264" class="solid"></line>
+    <line x1="248" y1="264" x2="256" y2="264" class="solid"></line>
+    <line x1="264" y1="264" x2="272" y2="264" class="solid"></line>
+    <line x1="280" y1="264" x2="288" y2="264" class="solid"></line>
+    <line x1="296" y1="264" x2="304" y2="264" class="solid"></line>
+    <line x1="312" y1="264" x2="320" y2="264" class="solid"></line>
+    <line x1="328" y1="264" x2="336" y2="264" class="solid"></line>
+    <line x1="344" y1="264" x2="352" y2="264" class="solid"></line>
+    <line x1="360" y1="264" x2="368" y2="264" class="solid"></line>
+    <line x1="376" y1="264" x2="384" y2="264" class="solid"></line>
+    <line x1="392" y1="264" x2="400" y2="264" class="solid"></line>
+    <line x1="408" y1="264" x2="416" y2="264" class="solid"></line>
+    <line x1="424" y1="264" x2="432" y2="264" class="solid"></line>
+    <line x1="440" y1="264" x2="448" y2="264" class="solid"></line>
+    <line x1="456" y1="264" x2="464" y2="264" class="solid"></line>
+    <line x1="472" y1="264" x2="480" y2="264" class="solid"></line>
+    <line x1="488" y1="264" x2="496" y2="264" class="solid"></line>
+    <line x1="504" y1="264" x2="512" y2="264" class="solid"></line>
+    <line x1="520" y1="264" x2="528" y2="264" class="solid"></line>
+    <line x1="536" y1="264" x2="544" y2="264" class="solid"></line>
+    <line x1="552" y1="264" x2="560" y2="264" class="solid"></line>
+    <line x1="568" y1="264" x2="576" y2="264" class="solid"></line>
+    <line x1="584" y1="264" x2="592" y2="264" class="solid"></line>
+    <line x1="632" y1="264" x2="640" y2="264" class="solid"></line>
+    <line x1="648" y1="264" x2="656" y2="264" class="solid"></line>
+    <line x1="664" y1="264" x2="672" y2="264" class="solid"></line>
+    <line x1="680" y1="264" x2="688" y2="264" class="solid"></line>
+    <text x="50" y="300" >Peripheral</text>
+    <text x="66" y="316" >Drivers</text>
+    <line x1="560" y1="376" x2="568" y2="376" class="solid"></line>
+    <line x1="576" y1="376" x2="584" y2="376" class="solid"></line>
+    <line x1="592" y1="376" x2="600" y2="376" class="solid"></line>
+    <line x1="624" y1="376" x2="632" y2="376" class="solid"></line>
+    <line x1="640" y1="376" x2="648" y2="376" class="solid"></line>
+    <line x1="656" y1="376" x2="664" y2="376" class="solid"></line>
+    <line x1="672" y1="376" x2="680" y2="376" class="solid"></line>
+    <text x="18" y="428" >Board</text>
+    <text x="66" y="428" >specific</text>
+    <text x="50" y="444" >HAL</text>
+    <g>
+        <line x1="8" y1="24" x2="16" y2="24" class="solid"></line>
+        <polygon points="16,20 24,24 16,28" class="filled"></polygon>
+    </g>
+    <g>
+        <path d="M 584,88 A 4,4 0,0,0 580,92" class="nofill"></path>
+        <line x1="580" y1="92" x2="580" y2="132" class="solid"></line>
+        <line x1="584" y1="88" x2="672" y2="88" class="solid"></line>
+        <path d="M 672,88 A 4,4 0,0,1 676,92" class="nofill"></path>
+        <line x1="676" y1="92" x2="676" y2="132" class="solid"></line>
+        <line x1="676" y1="120" x2="752" y2="120" class="solid"></line>
+        <polygon points="752,116 760,120 752,124" class="filled"></polygon>
+        <path d="M 580,132 A 4,4 0,0,0 584,136" class="nofill"></path>
+        <line x1="584" y1="136" x2="672" y2="136" class="solid"></line>
+        <path d="M 676,132 A 4,4 0,0,1 672,136" class="nofill"></path>
+    </g>
+    <g>
+        <line x1="268" y1="336" x2="268" y2="356" class="solid"></line>
+        <polygon points="264,356 272,356 268,368" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="364" y1="336" x2="364" y2="356" class="solid"></line>
+        <polygon points="360,356 368,356 364,368" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="436" y1="336" x2="436" y2="356" class="solid"></line>
+        <polygon points="432,356 440,356 436,368" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="508" y1="336" x2="508" y2="356" class="solid"></line>
+        <polygon points="504,356 512,356 508,368" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="612" y1="384" x2="612" y2="484" class="solid"></line>
+        <polygon points="608,484 616,484 612,496" class="filled"></polygon>
+    </g>
+    <g>
+        <polygon points="232,212 224,216 232,220" class="filled"></polygon>
+        <line x1="232" y1="216" x2="520" y2="216" class="solid"></line>
+    </g>
+    <g>
+        <polygon points="144,308 136,312 144,316" class="filled"></polygon>
+        <line x1="144" y1="312" x2="208" y2="312" class="solid"></line>
+    </g>
+    <g>
+        <polygon points="144,436 136,440 144,444" class="filled"></polygon>
+        <line x1="144" y1="440" x2="208" y2="440" class="solid"></line>
+    </g>
+</svg></pre>
+<h2 id="post-handover-stage"><a class="header" href="#post-handover-stage">Post-handover stage:</a></h2>
+<ul>
+<li>At this stage, control has been handed over to firmware (or linux).</li>
+<li>rustBoot <code>does not</code> have a networking stack. The job of downloading and installing an update is offloaded to firmware or linux (<a href="index.html#trusted-computing-base"><code>drastically reducing the TCB</code></a>)</li>
+<li>Firmware can trigger and confirm updates by setting the state of the <code>update or boot</code> partition via a rustBoot api. This removes the need for a filesystem (<a href="index.html#trusted-computing-base"><code>again smaller TCB</code></a>). 
+<ul>
+<li>However, not all systems can boot without a file-system. </li>
+<li>If you need one, rustBoot offers a FAT16 or 32 implementation, written in safe rust. </li>
+</ul>
+</li>
+<li>Once an update is triggered, the device is reset (i.e. restarted). rustBoot takes over and attempts to verify the update. If everything checks out, it boots the updated firmware.</li>
+</ul>
+<pre class="svgbob"><style>text{fill:var(--fg)}</style><svg xmlns="http://www.w3.org/2000/svg" width="928" height="544">
+    <style>
+        line, path, circle, rect, polygon{stroke:var(--fg);stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Lucida Console;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        .r1{ 
+    stroke: papayawhip;
+ }
+.r2{ 
+    fill: crimson;
+ }
+.a{ 
+    stroke-dasharray: 8;
+    fill: lightblue;
+ }
+.b{ 
+    stroke: purple;
+ }
+.bigrect{ 
+    fill: yellow;
+    stroke: red;
+ }
+.red{ 
+    fill:red;
+    stroke:blue;
+ }
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="928" height="544"></rect>
+    <rect x="228" y="72" width="472" height="80" class="solid nofill" rx="4"></rect>
+    <rect x="252" y="88" width="56" height="48" class="solid nofill" rx="4"></rect>
+    <text x="266" y="108" >Apps</text>
+    <rect x="340" y="88" width="168" height="48" class="solid nofill" rx="4"></rect>
+    <text x="354" y="108" >App</text>
+    <text x="386" y="108" >to</text>
+    <text x="410" y="108" >download</text>
+    <text x="354" y="124" >and</text>
+    <text x="386" y="124" >install</text>
+    <text x="450" y="124" >update</text>
+    <rect x="532" y="88" width="152" height="48" class="solid nofill" rx="4"></rect>
+    <text x="546" y="108" >App</text>
+    <text x="578" y="108" >to</text>
+    <text x="602" y="108" >trigger</text>
+    <text x="666" y="108" >&amp;</text>
+    <text x="554" y="124" >confirm</text>
+    <text x="618" y="124" >updates</text>
+    <rect x="540" y="184" width="136" height="48" class="solid nofill b" rx="4"></rect>
+    <text x="554" y="204" >rustBoot</text>
+    <text x="626" y="204" >flash</text>
+    <text x="594" y="220" >API</text>
+    <rect x="228" y="296" width="48" height="32" class="solid nofill" rx="4"></rect>
+    <text x="242" y="316" >TCP</text>
+    <rect x="292" y="296" width="48" height="32" class="solid nofill" rx="4"></rect>
+    <text x="306" y="316" >UDP</text>
+    <rect x="356" y="296" width="152" height="32" class="solid nofill" rx="4"></rect>
+    <text x="370" y="316" >Custom</text>
+    <text x="426" y="316" >Transport</text>
+    <rect x="228" y="376" width="448" height="64" class="solid nofill" rx="4"></rect>
+    <text x="338" y="412" >Linux</text>
+    <text x="386" y="412" >or</text>
+    <text x="410" y="412" >Baremetal</text>
+    <text x="490" y="412" >Firmware</text>
+    <rect x="228" y="456" width="456" height="64" class="solid nofill" rx="4"></rect>
+    <text x="258" y="492" >Secure</text>
+    <text x="314" y="492" >Element</text>
+    <text x="402" y="492" >+</text>
+    <text x="450" y="492" >Hardware</text>
+    <path d="M 544,480 A 16,16 0,0,0 544,496" class="nofill"></path>
+    <text x="554" y="492" >MCU</text>
+    <text x="586" y="492" >or</text>
+    <text x="610" y="492" >MPU</text>
+    <path d="M 640,480 A 16,16 0,0,1 640,496" class="nofill"></path>
+    <circle cx="4" cy="24" r="3" class="nofill"></circle>
+    <text x="42" y="28" >Simplified</text>
+    <text x="130" y="28" >Block</text>
+    <text x="178" y="28" >Diagram,</text>
+    <text x="250" y="28" >Post</text>
+    <text x="290" y="28" >handover</text>
+    <text x="362" y="28" >stage:</text>
+    <line x1="428" y1="144" x2="428" y2="160" class="solid"></line>
+    <line x1="232" y1="168" x2="240" y2="168" class="solid"></line>
+    <line x1="248" y1="168" x2="256" y2="168" class="solid"></line>
+    <line x1="264" y1="168" x2="272" y2="168" class="solid"></line>
+    <line x1="280" y1="168" x2="288" y2="168" class="solid"></line>
+    <line x1="296" y1="168" x2="304" y2="168" class="solid"></line>
+    <line x1="312" y1="168" x2="320" y2="168" class="solid"></line>
+    <line x1="328" y1="168" x2="336" y2="168" class="solid"></line>
+    <line x1="344" y1="168" x2="352" y2="168" class="solid"></line>
+    <line x1="360" y1="168" x2="368" y2="168" class="solid"></line>
+    <line x1="376" y1="168" x2="384" y2="168" class="solid"></line>
+    <line x1="392" y1="168" x2="400" y2="168" class="solid"></line>
+    <line x1="408" y1="168" x2="416" y2="168" class="solid"></line>
+    <line x1="424" y1="168" x2="432" y2="168" class="solid"></line>
+    <line x1="440" y1="168" x2="448" y2="168" class="solid"></line>
+    <line x1="456" y1="168" x2="464" y2="168" class="solid"></line>
+    <line x1="472" y1="168" x2="480" y2="168" class="solid"></line>
+    <line x1="488" y1="168" x2="496" y2="168" class="solid"></line>
+    <line x1="504" y1="168" x2="512" y2="168" class="solid"></line>
+    <line x1="520" y1="168" x2="528" y2="168" class="solid"></line>
+    <line x1="536" y1="168" x2="544" y2="168" class="solid"></line>
+    <line x1="552" y1="168" x2="560" y2="168" class="solid"></line>
+    <line x1="568" y1="168" x2="576" y2="168" class="solid"></line>
+    <line x1="584" y1="168" x2="592" y2="168" class="solid"></line>
+    <line x1="632" y1="168" x2="640" y2="168" class="solid"></line>
+    <line x1="648" y1="168" x2="656" y2="168" class="solid"></line>
+    <line x1="664" y1="168" x2="672" y2="168" class="solid"></line>
+    <line x1="680" y1="168" x2="688" y2="168" class="solid"></line>
+    <line x1="612" y1="240" x2="612" y2="256" class="solid"></line>
+    <line x1="232" y1="264" x2="240" y2="264" class="solid"></line>
+    <line x1="248" y1="264" x2="256" y2="264" class="solid"></line>
+    <line x1="264" y1="264" x2="272" y2="264" class="solid"></line>
+    <line x1="280" y1="264" x2="288" y2="264" class="solid"></line>
+    <line x1="296" y1="264" x2="304" y2="264" class="solid"></line>
+    <line x1="312" y1="264" x2="320" y2="264" class="solid"></line>
+    <line x1="328" y1="264" x2="336" y2="264" class="solid"></line>
+    <line x1="344" y1="264" x2="352" y2="264" class="solid"></line>
+    <line x1="360" y1="264" x2="368" y2="264" class="solid"></line>
+    <line x1="376" y1="264" x2="384" y2="264" class="solid"></line>
+    <line x1="392" y1="264" x2="400" y2="264" class="solid"></line>
+    <line x1="408" y1="264" x2="416" y2="264" class="solid"></line>
+    <line x1="440" y1="264" x2="448" y2="264" class="solid"></line>
+    <line x1="456" y1="264" x2="464" y2="264" class="solid"></line>
+    <line x1="472" y1="264" x2="480" y2="264" class="solid"></line>
+    <line x1="488" y1="264" x2="496" y2="264" class="solid"></line>
+    <line x1="504" y1="264" x2="512" y2="264" class="solid"></line>
+    <line x1="520" y1="264" x2="528" y2="264" class="solid"></line>
+    <line x1="600" y1="264" x2="608" y2="264" class="solid"></line>
+    <line x1="616" y1="264" x2="624" y2="264" class="solid"></line>
+    <line x1="224" y1="360" x2="232" y2="360" class="solid"></line>
+    <line x1="240" y1="360" x2="248" y2="360" class="solid"></line>
+    <line x1="256" y1="360" x2="264" y2="360" class="solid"></line>
+    <line x1="272" y1="360" x2="280" y2="360" class="solid"></line>
+    <line x1="288" y1="360" x2="296" y2="360" class="solid"></line>
+    <line x1="304" y1="360" x2="312" y2="360" class="solid"></line>
+    <line x1="320" y1="360" x2="328" y2="360" class="solid"></line>
+    <line x1="336" y1="360" x2="344" y2="360" class="solid"></line>
+    <line x1="352" y1="360" x2="360" y2="360" class="solid"></line>
+    <line x1="368" y1="360" x2="376" y2="360" class="solid"></line>
+    <line x1="384" y1="360" x2="392" y2="360" class="solid"></line>
+    <line x1="400" y1="360" x2="408" y2="360" class="solid"></line>
+    <line x1="416" y1="360" x2="424" y2="360" class="solid"></line>
+    <line x1="432" y1="360" x2="440" y2="360" class="solid"></line>
+    <line x1="448" y1="360" x2="456" y2="360" class="solid"></line>
+    <line x1="464" y1="360" x2="472" y2="360" class="solid"></line>
+    <line x1="480" y1="360" x2="488" y2="360" class="solid"></line>
+    <line x1="496" y1="360" x2="504" y2="360" class="solid"></line>
+    <line x1="512" y1="360" x2="520" y2="360" class="solid"></line>
+    <line x1="528" y1="360" x2="536" y2="360" class="solid"></line>
+    <line x1="544" y1="360" x2="552" y2="360" class="solid"></line>
+    <line x1="560" y1="360" x2="568" y2="360" class="solid"></line>
+    <line x1="576" y1="360" x2="584" y2="360" class="solid"></line>
+    <line x1="592" y1="360" x2="600" y2="360" class="solid"></line>
+    <line x1="608" y1="360" x2="616" y2="360" class="solid"></line>
+    <line x1="624" y1="360" x2="632" y2="360" class="solid"></line>
+    <line x1="640" y1="360" x2="648" y2="360" class="solid"></line>
+    <line x1="656" y1="360" x2="664" y2="360" class="solid"></line>
+    <line x1="672" y1="360" x2="680" y2="360" class="solid"></line>
+    <text x="770" y="188" >rustBoot</text>
+    <text x="842" y="188" >provides</text>
+    <text x="914" y="188" >a</text>
+    <text x="770" y="204" >tiny</text>
+    <text x="810" y="204" >api</text>
+    <text x="842" y="204" >to</text>
+    <text x="866" y="204" >trigger</text>
+    <text x="770" y="220" >and</text>
+    <text x="802" y="220" >confirm</text>
+    <text x="866" y="220" >updates</text>
+    <line x1="536" y1="264" x2="544" y2="264" class="solid"></line>
+    <line x1="552" y1="264" x2="560" y2="264" class="solid"></line>
+    <line x1="568" y1="264" x2="576" y2="264" class="solid"></line>
+    <line x1="584" y1="264" x2="592" y2="264" class="solid"></line>
+    <line x1="632" y1="264" x2="640" y2="264" class="solid"></line>
+    <line x1="648" y1="264" x2="656" y2="264" class="solid"></line>
+    <line x1="664" y1="264" x2="672" y2="264" class="solid"></line>
+    <line x1="680" y1="264" x2="688" y2="264" class="solid"></line>
+    <text x="50" y="300" >Transport</text>
+    <text x="66" y="316" >Options</text>
+    <g>
+        <line x1="8" y1="24" x2="16" y2="24" class="solid"></line>
+        <polygon points="16,20 24,24 16,28" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="612" y1="144" x2="612" y2="164" class="solid"></line>
+        <polygon points="608,164 616,164 612,176" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="428" y1="176" x2="428" y2="260" class="solid"></line>
+        <polygon points="424,260 432,260 428,272" class="filled"></polygon>
+    </g>
+    <g>
+        <path d="M 216,280 A 4,4 0,0,0 212,284" class="nofill"></path>
+        <line x1="212" y1="284" x2="212" y2="340" class="solid"></line>
+        <line x1="216" y1="280" x2="520" y2="280" class="solid"></line>
+        <path d="M 520,280 A 4,4 0,0,1 524,284" class="nofill"></path>
+        <line x1="524" y1="284" x2="524" y2="340" class="solid"></line>
+        <path d="M 212,340 A 4,4 0,0,0 216,344" class="nofill"></path>
+        <line x1="216" y1="344" x2="520" y2="344" class="solid"></line>
+        <path d="M 524,340 A 4,4 0,0,1 520,344" class="nofill"></path>
+        <polygon points="144,308 136,312 144,316" class="filled"></polygon>
+        <line x1="144" y1="312" x2="212" y2="312" class="solid"></line>
+    </g>
+    <g>
+        <line x1="612" y1="272" x2="612" y2="340" class="solid"></line>
+        <polygon points="608,340 616,340 612,352" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="688" y1="200" x2="744" y2="200" class="solid"></line>
+        <polygon points="744,196 752,200 744,204" class="filled"></polygon>
+    </g>
+</svg></pre>
+<blockquote>
+<h3 id="notes"><a class="header" href="#notes">Notes:</a></h3>
+<ul>
+<li>rustBoot <code>can replace U-boot</code> in a trust-chain i.e. it can easily be integrated into an existing trust-chain, wherever U-boot is used.</li>
+<li>As it has a very small hardware abstraction layer, it is highly portable across Cortex-M and Cortex-A architectures. </li>
+<li>Public-key hashes or trust anchors can be stored in secure hardware or embedded in software.</li>
+<li>Hardware drivers for different types of secure-hardware (ex: crypto elements) will be made available via the HAL. </li>
+</ul>
+</blockquote>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="design/core_components.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="arch/images.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="design/core_components.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="arch/images.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        <script type="text/javascript" src="mermaid.min.js"></script>
+        <script type="text/javascript" src="mermaid-init.js"></script>
+
+
+    </body>
+</html>
