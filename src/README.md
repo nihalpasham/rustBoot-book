@@ -1,6 +1,6 @@
 # rustBoot 
 
-*by Nihal Pasham with contributions from the Rust Community* 
+*by Nihal Pasham* 
 
 ## What is it?
 

@@ -1,12 +1,13 @@
 # Goals
 
-Contrary to prevailing wisdom, writing your own secure-bootloader is a complex project. The effort involved in developing/integrating one can be overwhelming. For example, we'll need to address things such as key-management, signing infrastructure, code-safety, trust-chains, reliable back-ups etc. before we even get to the `actual booting logic`. 
+Contrary to prevailing wisdom, writing your own secure-bootloader is a complex project. The effort involved in developing/integrating one can be overwhelming. For example, we'll need to address a plethora of accompanying tasks such as key-management, signing infrastructure, code-safety, trust-chains, reliable back-ups etc. before we even get to the `actual booting logic`. 
 
 rustBoot's purpose is to help simplify the entire process. Its primary goals are
 
-- **Compliance with the [IETF-SUIT](https://datatracker.ietf.org/wg/suit/about/) standard** i.e.
-    - one of `SUIT's requirements` is to not use specific protocols or data link interfaces to transfer `updates` to a device. 
-    - transferring an `update` should be delegated to the firmware/OS to avoid `size or computational` limitations (along with a drastic reduction in attack surface).
+- **Complies with *some* key requirements of the [IETF-SUIT](https://datatracker.ietf.org/wg/suit/about/) standard** i.e.
+    - one of `SUIT's requirements` - transferring or downloading an `update` should be delegated to the firmware/OS to avoid `size or computational` limitations. In other words, the bootloader should NOT be required to download and install an update. This removes the need for a networking stack and provides for a drastic reduction in the bootloader's attack surface.
+    - SUIT also does not mandate the use of specific protocols or data link interfaces to transfer `updates` to a device. 
+    - rustBoot fully complies with this requirement. 
 - **Reliable updates:**
     - reliable updates in rustBoot will take the form of  
         - `flash swap operations` for microcontroller based systems. We'll use the `boot/update based multi-slot partitioning method` to replace currently active firmware with a newly received update and at the same time store a back-up copy of it in a (passive) secondary partition.

@@ -1,6 +1,6 @@
 # rustBoot Images
 
-rustBoot images comprise of a `256-byte header` pre-pended to the firmware image and are deliberately designed to be as simple as possible. 
+rustBoot images comprise of a `256-byte header` pre-pended to a firmware binary and are deliberately designed to be as simple as possible. 
 
 - it does not rely on the use of complex digital certificate formats to [`reduce its TCB`](../index.md#trusted-computing-base) and avoids uneccessary [code-complexity](../index.md#complexity--boot-time)
 

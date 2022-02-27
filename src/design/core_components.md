@@ -28,7 +28,7 @@ rustBoot provides abstractions for the following hardware classes i.e. it expose
     - This includes all crates in the rustcrypto project - hashing, signing, verification, encryption etc.
 
 ### rustBoot `firmware` interface
-- rustBoot complies with the [**IETF-SUIT**](https://datatracker.ietf.org/wg/suit/about/) standard and does not include a networking stack, instead networking is offloaded to the underlying firmware/OS. 
+- rustBoot complies with a key requirement of the [**IETF-SUIT**](https://datatracker.ietf.org/wg/suit/about/) standard and does not include a networking stack, instead networking is offloaded to the underlying firmware/OS. 
 - Firmware updates are downloaded and stored in non-volatile storage.
 - In order to trigger the update, rustBoot provides a simple API that can be called from within bare-metal firmware or linux.
 

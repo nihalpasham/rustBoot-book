@@ -5,11 +5,9 @@ This repository contains the source of `rustBoot book`.
 
 You can also read the book for free online. 
 
-See the releases to download just the code of all the code listings that appear in the book.
-
 ## Contributing
 
-We'd love your help! Please see CONTRIBUTING.md to learn about the kinds of contributions we're looking for.
+We'd love your help! Please feel free to submit pull requests.
 
 ## Spellchecking
 
