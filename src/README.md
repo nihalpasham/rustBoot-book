@@ -17,7 +17,8 @@ rustBoot prioritizes the following above all else.
 - *For example, we include `flash device drivers for all supported boards` written in safe Rust.*
 
 ## Why prioritize the above?
-- **Trusted Computing Base:** Open-source bootloaders have a large trusted computing base i.e. they (pretty much) resemble a mini operating system with 
+### Trusted Computing Base: 
+Open-source bootloaders have a large trusted computing base i.e. they (pretty much) resemble a mini operating system with 
     - a complete networking stack
     - a collection of device drivers and device-tree blob(s)
     - integrated debug and command shells
@@ -28,14 +29,17 @@ rustBoot prioritizes the following above all else.
 
 [uboot]: https://github.com/u-boot/u-boot
 
-- **Memory safety:** A large TCB inevitably equates to a large attack surface. The vast majority of them are written in C or some combination of C and Assembly. `A quick analysis of CVEs` reported over the last 2 years (in u-boot, bare-box and other open-source ones) show that the bulk of them fall into the memory-safety category. 
+### Memory safety: 
+A large TCB inevitably equates to a large attack surface. The vast majority of them are written in C or some combination of C and Assembly. `A quick analysis of CVEs` reported over the last 2 years (in u-boot, bare-box and other open-source ones) show that the bulk of them fall into the memory-safety category. 
 > Note: `addressable attack surface` is much larger, the above `attack surface` is only compounded when we add boot-time driver vulnerabilities.
 
-- **Complexity & boot-time:** Custom secure boot implementations can `get quite complex and add latency` with 
+### Complexity & boot-time:
+Custom secure boot implementations can `get quite complex and add latency` with 
     - redundant hierarchical digital signature verification trust chains or 
     - elaborate parsing of custom header or container formats.
 
-- **Vendor dependencies:** Vendor-specific or custom chain of trust dependencies make it difficult to port bootloader implementations across boards.  This is in-part attributable to `non-standards based solutions`. 
+### Vendor dependencies: 
+Vendor-specific or custom chain of trust dependencies make it difficult to port bootloader implementations across boards.  This is in-part attributable to `non-standards based solutions`. 
 
 
 

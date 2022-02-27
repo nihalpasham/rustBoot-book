@@ -4,12 +4,12 @@ rustBoot's architecture reflects its focus on `simplicity and security above all
 
 For a high-level overview, you can think of rustBoot as operating in 2 independent stages. 
 
-- **Pre-handover stage:** represents a stage after power-on and BootROM execution i.e. a stage where `rustBoot` has full `execution control`.
-- **Post-handover stage:** firmware has begun executing and has complete `execution control`.
+- **Pre-handover stage:** post power-on, the BootROM (or some other intermediate-stage bootloader) executes and hands control over to `rustBoot`. This is a stage where `rustBoot` has full `execution control`.
+- **Post-handover stage:** firmware has begun executing and has complete `execution control`. Firmware uses a couple `rustBoot` dependencies to trigger and confirm updates.
 
 ## Pre-handover stage: 
 
-- rustBoot provides a minimal hardware abstraction layer for a wide range of ARM microcontrollers (STM32, Nordic, Microchip etc.) and microprocessors (rpi4, NXP etc.). The HAL allows peripherals drivers to initialize requiste hardware such as flash memories, UART controllers, GPIO pins etc.  
+- rustBoot provides a minimal hardware abstraction layer for a wide range of ARM microcontrollers (STM32, Nordic, Microchip etc.) and microprocessors (rpi4, NXP etc.). The HAL allows peripherals drivers to initialize requisite hardware such as flash memories, UART controllers, GPIO pins etc.  
 - an optional software-based crypto library in-case you dont need (or use) dedicated crypto hardware.
 - rustBoot's core-bootloader houses all of the `actual boot-logic` such as
   - firmware image `intergrity and authenticity verification` via digital signatures
@@ -61,9 +61,9 @@ o->  Simplified Block Diagram, Pre handover stage:
 ## Post-handover stage: 
 
 - At this stage, control has been handed over to firmware (or linux).
-- rustBoot `does not` have a networking stack. The job of downloading and installing an update is offloaded to firmware or linux (drastically reducing the TCB)
-- Firmware can trigger and confirm updates by setting the state of the `update or boot` partition via a rustBoot api. This removes the need for a filesystem (smaller TCB). 
-  - However, not all systems can be booted without a file-system. 
+- rustBoot `does not` have a networking stack. The job of downloading and installing an update is offloaded to firmware or linux ([`drastically reducing the TCB`](index.md#trusted-computing-base))
+- Firmware can trigger and confirm updates by setting the state of the `update or boot` partition via a rustBoot api. This removes the need for a filesystem ([`again smaller TCB`](index.md#trusted-computing-base)). 
+  - However, not all systems can boot without a file-system. 
   - If you need one, rustBoot offers a FAT16 or 32 implementation, written in safe rust. 
 - Once an update is triggered, the device is reset (i.e. restarted). rustBoot takes over and attempts to verify the update. If everything checks out, it boots the updated firmware.
 
@@ -79,13 +79,13 @@ o->  Simplified Block Diagram, Post handover stage:
                             |  |      |   | and install update |  |  confirm updates | |
                             |  '------'   '--------------------'  '------------------' |
                             '------------------------|----------------------|----------' 
-                             - - - - - - - - - - - - | - - - - - - - - - -  v  - - - -  
+                             - - - - - - - - - - - - - - - - - - - - - - -  v  - - - -  
                                                      |             .----------------.           rustBoot provides a  
                                                      |             | rustBoot flash | ------->  tiny api to trigger  
-                                                     |             |      API       |           and confirm updates
+                                                     |             |  {b} API       |           and confirm updates
                                                      |             '----------------' 
                                                      |                      | 
-                             - - - - - - - - - - - - v - - - - - - - - - -  | - - - - -        
+                             - - - - - - - - - - - - v - - - - - - - - - - - - - - - -        
                           .--------------------------------------.          |                                      
       Transport           | .-----. .-----. .------------------. |          |
         Options  <--------| | TCP | | UDP | | Custom Transport | |          |
@@ -115,7 +115,7 @@ a = {
     fill: lightblue;
 }
 b = {
-    stroke: lightgreen;
+    stroke: purple;
 }
 bigrect = {
     fill: yellow;
