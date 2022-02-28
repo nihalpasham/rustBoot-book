@@ -2,10 +2,7 @@
 
 *by Nihal Pasham* 
 
-## What is it?
-
 rustBoot is a standalone bootloader, written entirely in `Rust`, designed to run on anything from a microcontroller to a system on chip. It can be used to boot into bare-metal firmware or Linux.
-
 ## Why rustBoot? 
 
 rustBoot prioritizes the following above all else.
@@ -25,13 +22,13 @@ Open-source bootloaders have a large trusted computing base i.e. they (pretty mu
     - support for every possible filesystem you can think of.   
     - and more stuff.
 
-> Note: This includes [`U-boot`][uboot], the de-facto standard in the embedded systems world.
+> **Note:** This includes [`U-boot`][uboot], the de-facto standard in the embedded systems world.
 
 [uboot]: https://github.com/u-boot/u-boot
 
 ### Memory safety: 
 A large TCB inevitably equates to a large attack surface. The vast majority of them are written in C or some combination of C and Assembly. `A quick analysis of CVEs` reported over the last 2 years (in u-boot, bare-box and other open-source ones) show that the bulk of them fall into the memory-safety category. 
-> Note: `addressable attack surface` is much larger, the above `attack surface` is only compounded when we add boot-time driver vulnerabilities.
+> **Note:** `addressable attack surface` is much larger, the above `attack surface` is only compounded when we add boot-time driver vulnerabilities.
 
 ### Complexity & boot-time:
 Custom secure boot implementations can `get quite complex and add latency` with 

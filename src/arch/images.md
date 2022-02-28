@@ -29,9 +29,10 @@ o->  Simplified Block Diagram, 256 byte rustBoot header:
                                                            v
 
                                                 all valid rustBoot images 
-                                                contain a 256 byte header 
-                                                prepended to executable
-                                                firmware binaries
+                                                are composed of a 256 byte 
+                                                header prepended to an
+                                                executable firmware
+                                                binary.
                                                         
 ```
 
@@ -64,7 +65,7 @@ Each tag represents some information about the firmware. `rustBoot` requires the
     - Type: `0x0030`
     - Length: 2 bytes
 - The `sha256 digest` tag contains a `SHA2 hash` of the firmware and is used to check firmware integrity.
-    - Type: 0x0003
+    - Type: `0x0003`
     - Length: `32 bytes`
 - The `firmware signature` tag contains the `ECC signature` and is used to verify firmware against a known public key.
     - Type: `0x0020`
@@ -78,10 +79,9 @@ Each tag represents some information about the firmware. `rustBoot` requires the
     - Length: 32 bytes
     - This tag contains the SHA256 digest of the public key of the corresponding private-key used by the signing tool. The bootloader may use this field to locate the correct public key in case multiple keys are available.
 
-### rustBoot Defaults: 
-
-- A valid rustBoot image is always signed by default.
-- It relies on the 256-byte header for firmware validation.
-- It will fail to boot an image
-    - if it does not possess a valid rustBoot header or
-    - if it isn't signed or if it cannot be verified using the included the authentication-type.
+> **rustBoot Defaults:** 
+> - By default, a valid rustBoot image is always signed.
+> - It relies on the 256-byte header for firmware validation.
+> - It will fail to boot an image
+    - if it does not possess a [`valid rustBoot header`](images.md#rustboot-images) or
+    - if it isn't signed or if it cannot be verified using the included the [`authentication-type`](images.md#tags).

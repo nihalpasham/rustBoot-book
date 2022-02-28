@@ -1,7 +1,7 @@
 
 # rustBoot Book
 
-This repository contains the source of `rustBoot book`.
+This repository contains the source of [`rustBoot book`](https://nihalpasham.github.io/rustBoot-book/index.html).
 
 You can also read the book for free online. 
 

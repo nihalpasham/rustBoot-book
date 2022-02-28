@@ -19,7 +19,7 @@ rustBoot provides abstractions for the following hardware classes i.e. it expose
 - TrustZone: Cortex-M or Cortex-A 
 - serial interfaces: UART(s), GPIO(s)
 
-> Note: To minimize integrational complexity and enhance security, we already provide a number of different hardware drivers written in safe-rust. So, you can use `your own drivers using rust-ffi` or use existing ones from the repo.
+> **Note:** To minimize integrational complexity and enhance security, we already provide a number of different hardware drivers written in safe-rust. So, you can use `your own drivers using rust-ffi` or use existing ones from the repo.
 
 ### Fast and safe crypto drivers
 - `hardware secure elements or accelerators:` again, rustBoot offers drivers for crypto hardware or you can use your own.

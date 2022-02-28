@@ -127,8 +127,7 @@ red = {
 }
 
 ```
-> ### Notes:
-> 
+> **Notes:**
 > - rustBoot `can replace U-boot` in a trust-chain i.e. it can easily be integrated into an existing trust-chain, wherever U-boot is used.
 > - As it has a very small hardware abstraction layer, it is highly portable across Cortex-M and Cortex-A architectures. 
 > - Public-key hashes or trust anchors can be stored in secure hardware or embedded in software.
