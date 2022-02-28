@@ -117,6 +117,9 @@
                         <a href="print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
+                        <a href="https://github.com/nihalpasham/rustBoot-book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
 
                     </div>
                 </div>
@@ -145,7 +148,6 @@
                     <main>
                         <h1 id="rustboot"><a class="header" href="#rustboot">rustBoot</a></h1>
 <p><em>by Nihal Pasham</em> </p>
-<h2 id="what-is-it"><a class="header" href="#what-is-it">What is it?</a></h2>
 <p>rustBoot is a standalone bootloader, written entirely in <code>Rust</code>, designed to run on anything from a microcontroller to a system on chip. It can be used to boot into bare-metal firmware or Linux.</p>
 <h2 id="why-rustboot"><a class="header" href="#why-rustboot">Why rustBoot?</a></h2>
 <p>rustBoot prioritizes the following above all else.</p>
@@ -169,12 +171,12 @@
 <li>and more stuff.</li>
 </ul>
 <blockquote>
-<p>Note: This includes <a href="https://github.com/u-boot/u-boot"><code>U-boot</code></a>, the de-facto standard in the embedded systems world.</p>
+<p><strong>Note:</strong> This includes <a href="https://github.com/u-boot/u-boot"><code>U-boot</code></a>, the de-facto standard in the embedded systems world.</p>
 </blockquote>
 <h3 id="memory-safety"><a class="header" href="#memory-safety">Memory safety:</a></h3>
 <p>A large TCB inevitably equates to a large attack surface. The vast majority of them are written in C or some combination of C and Assembly. <code>A quick analysis of CVEs</code> reported over the last 2 years (in u-boot, bare-box and other open-source ones) show that the bulk of them fall into the memory-safety category. </p>
 <blockquote>
-<p>Note: <code>addressable attack surface</code> is much larger, the above <code>attack surface</code> is only compounded when we add boot-time driver vulnerabilities.</p>
+<p><strong>Note:</strong> <code>addressable attack surface</code> is much larger, the above <code>attack surface</code> is only compounded when we add boot-time driver vulnerabilities.</p>
 </blockquote>
 <h3 id="complexity--boot-time"><a class="header" href="#complexity--boot-time">Complexity &amp; boot-time:</a></h3>
 <p>Custom secure boot implementations can <code>get quite complex and add latency</code> with </p>
@@ -213,7 +215,7 @@
 <li>one of rustBoot’s core design objectives is to keep it simple and avoid complexity. So, there will be little to no application of meta or async programming constructs. </li>
 </ul>
 <blockquote>
-<p>Note: We dont actually need the extra performance. rustBoot can hit sub-second <code>secure boot-times</code> as we’ve stripped it down to the bare-essentials. This assumes flash load times are fast enough and a firmware binary-blob size of &lt; 1MB.</p>
+<p><strong>Note:</strong> We dont actually need the extra performance. rustBoot can hit sub-second <code>secure boot-times</code> as we’ve stripped it down to the bare-essentials. This assumes flash load times are fast enough and a firmware binary-blob size of &lt; 1MB.</p>
 </blockquote>
 </li>
 <li>
@@ -299,7 +301,7 @@ support for a highly secure and efficient <code>firmware transport</code> method
 <li>serial interfaces: UART(s), GPIO(s)</li>
 </ul>
 <blockquote>
-<p>Note: To minimize integrational complexity and enhance security, we already provide a number of different hardware drivers written in safe-rust. So, you can use <code>your own drivers using rust-ffi</code> or use existing ones from the repo.</p>
+<p><strong>Note:</strong> To minimize integrational complexity and enhance security, we already provide a number of different hardware drivers written in safe-rust. So, you can use <code>your own drivers using rust-ffi</code> or use existing ones from the repo.</p>
 </blockquote>
 <h3 id="fast-and-safe-crypto-drivers"><a class="header" href="#fast-and-safe-crypto-drivers">Fast and safe crypto drivers</a></h3>
 <ul>
@@ -799,7 +801,7 @@ support for a highly secure and efficient <code>firmware transport</code> method
     </g>
 </svg></pre>
 <blockquote>
-<h3 id="notes"><a class="header" href="#notes">Notes:</a></h3>
+<p><strong>Notes:</strong></p>
 <ul>
 <li>rustBoot <code>can replace U-boot</code> in a trust-chain i.e. it can easily be integrated into an existing trust-chain, wherever U-boot is used.</li>
 <li>As it has a very small hardware abstraction layer, it is highly portable across Cortex-M and Cortex-A architectures. </li>
@@ -812,7 +814,7 @@ support for a highly secure and efficient <code>firmware transport</code> method
 <ul>
 <li>it does not rely on the use of complex digital certificate formats to <a href="arch/../index.html#trusted-computing-base"><code>reduce its TCB</code></a> and avoids uneccessary <a href="arch/../index.html#complexity--boot-time">code-complexity</a></li>
 </ul>
-<pre class="svgbob"><style>text{fill:var(--fg)}</style><svg xmlns="http://www.w3.org/2000/svg" width="1216" height="448">
+<pre class="svgbob"><style>text{fill:var(--fg)}</style><svg xmlns="http://www.w3.org/2000/svg" width="1216" height="464">
     <style>
         line, path, circle, rect, polygon{stroke:var(--fg);stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Lucida Console;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
         <!--separator-->
@@ -835,7 +837,7 @@ support for a highly secure and efficient <code>firmware transport</code> method
             <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
         </marker>
     </defs>
-    <rect class="backdrop" x="0" y="0" width="1216" height="448"></rect>
+    <rect class="backdrop" x="0" y="0" width="1216" height="464"></rect>
     <circle cx="4" cy="24" r="3" class="nofill"></circle>
     <text x="42" y="28" >Simplified</text>
     <text x="130" y="28" >Block</text>
@@ -888,16 +890,19 @@ support for a highly secure and efficient <code>firmware transport</code> method
     <text x="418" y="380" >valid</text>
     <text x="466" y="380" >rustBoot</text>
     <text x="538" y="380" >images</text>
-    <text x="386" y="396" >contain</text>
-    <text x="450" y="396" >a</text>
-    <text x="466" y="396" >256</text>
-    <text x="498" y="396" >byte</text>
-    <text x="538" y="396" >header</text>
-    <text x="386" y="412" >prepended</text>
-    <text x="466" y="412" >to</text>
-    <text x="490" y="412" >executable</text>
-    <text x="386" y="428" >firmware</text>
-    <text x="458" y="428" >binaries</text>
+    <text x="386" y="396" >are</text>
+    <text x="418" y="396" >composed</text>
+    <text x="490" y="396" >of</text>
+    <text x="514" y="396" >a</text>
+    <text x="530" y="396" >256</text>
+    <text x="562" y="396" >byte</text>
+    <text x="386" y="412" >header</text>
+    <text x="442" y="412" >prepended</text>
+    <text x="522" y="412" >to</text>
+    <text x="546" y="412" >an</text>
+    <text x="386" y="428" >executable</text>
+    <text x="474" y="428" >firmware</text>
+    <text x="386" y="444" >binary.</text>
     <g>
         <line x1="8" y1="24" x2="16" y2="24" class="solid"></line>
         <polygon points="16,20 24,24 16,28" class="filled"></polygon>
@@ -992,7 +997,7 @@ support for a highly secure and efficient <code>firmware transport</code> method
 </li>
 <li>The <code>sha256 digest</code> tag contains a <code>SHA2 hash</code> of the firmware and is used to check firmware integrity.
 <ul>
-<li>Type: 0x0003</li>
+<li>Type: <code>0x0003</code></li>
 <li>Length: <code>32 bytes</code></li>
 </ul>
 </li>
@@ -1013,18 +1018,128 @@ support for a highly secure and efficient <code>firmware transport</code> method
 </ul>
 </li>
 </ul>
-<h3 id="rustboot-defaults"><a class="header" href="#rustboot-defaults">rustBoot Defaults:</a></h3>
+<blockquote>
+<p><strong>rustBoot Defaults:</strong> </p>
 <ul>
-<li>A valid rustBoot image is always signed by default.</li>
+<li>By default, a valid rustBoot image is always signed.</li>
 <li>It relies on the 256-byte header for firmware validation.</li>
 <li>It will fail to boot an image
 <ul>
-<li>if it does not possess a valid rustBoot header or</li>
-<li>if it isn’t signed or if it cannot be verified using the included the authentication-type.</li>
+<li>if it does not possess a <a href="arch/images.html#rustboot-images"><code>valid rustBoot header</code></a> or</li>
+<li>if it isn’t signed or if it cannot be verified using the included the <a href="arch/images.html#tags"><code>authentication-type</code></a>.</li>
 </ul>
 </li>
 </ul>
+</blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="rustboot-partitions"><a class="header" href="#rustboot-partitions">rustBoot Partitions</a></h1>
+<p><code>rustBoot</code> offers 2 <code>update-types</code>, depending on the type of the underlying system.</p>
+<ul>
+<li>
+<p><strong>micro-controller updates:</strong> uses the concept of <a href="https://github.com/nihalpasham/rustBoot/issues/2"><code>swappable flash partitions</code></a> to update micro-controller firmware. </p>
+<blockquote>
+<p>This usually means bare-metal firmware but it is also applicable to <code>RTOS(s)</code>.</p>
+</blockquote>
+</li>
+<li>
+<p><strong>linux system updates:</strong> uses the traditional <code>ram based swap</code> method to update linux distributions running atop micro-processors.</p>
+</li>
+</ul>
+<h2 id="micro-controller-updates"><a class="header" href="#micro-controller-updates">Micro-controller Updates:</a></h2>
+<pre class="svgbob"><style>text{fill:var(--fg)}</style><svg xmlns="http://www.w3.org/2000/svg" width="824" height="112">
+    <style>
+        line, path, circle, rect, polygon{stroke:var(--fg);stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Lucida Console;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="824" height="112"></rect>
+    <circle cx="4" cy="24" r="3" class="nofill"></circle>
+    <text x="42" y="28" >Simplified</text>
+    <text x="130" y="28" >Block</text>
+    <text x="178" y="28" >Diagram,</text>
+    <text x="250" y="28" >rustBoot</text>
+    <text x="322" y="28" >MCU</text>
+    <text x="354" y="28" >flash</text>
+    <text x="402" y="28" >partitioning:</text>
+    <text x="106" y="76" >rustBoot</text>
+    <text x="178" y="76" >Partition</text>
+    <text x="314" y="76" >BOOT</text>
+    <text x="354" y="76" >Partition</text>
+    <text x="498" y="76" >UPDATE</text>
+    <text x="554" y="76" >Partition</text>
+    <text x="682" y="76" >SWAP</text>
+    <text x="722" y="76" >Partition</text>
+    <g>
+        <line x1="8" y1="24" x2="16" y2="24" class="solid"></line>
+        <polygon points="16,20 24,24 16,28" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="84" y1="56" x2="812" y2="56" class="solid"></line>
+        <line x1="84" y1="56" x2="84" y2="88" class="solid"></line>
+        <line x1="268" y1="56" x2="268" y2="88" class="solid"></line>
+        <line x1="460" y1="56" x2="460" y2="88" class="solid"></line>
+        <line x1="660" y1="56" x2="660" y2="88" class="solid"></line>
+        <line x1="812" y1="56" x2="812" y2="88" class="solid"></line>
+        <line x1="84" y1="88" x2="812" y2="88" class="solid"></line>
+    </g>
+</svg></pre>
+<blockquote>
+<p>Note: <code>BOOT</code>, <code>UPDATE</code> and <code>SWAP</code> partitions need <strong>NOT</strong> be consecutively laid out in flash memory. The above diagram only serves as a visual aid.</p>
+</blockquote>
+<p>rustBoot requires <code>mcu flash</code> to be divided into (at-least) 4 non-overlapping memory regions (i.e. partitions). </p>
+<ul>
+<li><code>rustBoot</code>: contains the bootloader. This starts starts at <code>address 0x0</code> in flash. </li>
+<li><code>BOOT:</code> contains boot firmware. <code>rustBoot</code> always boots from this partition address.</li>
+<li><code>UPDATE:</code> contains update firmware i.e. downloaded update firmware is placed in this partition.</li>
+<li><code>SWAP:</code> is an empty partition that is used while swapping contents of <code>BOOT</code> and <code>UPDATE</code>.</li>
+</ul>
+<p>All 3 partition boundaries must be aligned to a physical sector as <code>rustBoot</code> erases all flash sectors prior to storing a new firmware image, and swaps the contents of the two partitions, one sector at a time.</p>
+<p>To ensure partition-sector aligments are maintained, before proceeding to partition a target system, the following points must be considered:</p>
+<ul>
+<li><code>BOOT and UPDATE</code> partition must be of the same size.</li>
+<li><code>SWAP</code> partition <code>must be larger than the largest sector</code> in either <code>BOOT</code> or <code>UPDATE</code> partition.</li>
+</ul>
+<p>MCU flash memory is partitioned as follows:</p>
+<ul>
+<li>rustBoot partition starts at <code>address 0x0</code> in flash memory. It should be at least 32KB in size.</li>
+<li><code>BOOT</code> partition starts at a pre-defined address - <a href="https://github.com/nihalpasham/rustBoot/blob/7ea124b2d8f82b85b5500bfdbc038c104eee4452/rustBoot/src/constants.rs#L8"><code>BOOT_PARTITION_ADDRESS</code></a></li>
+<li><code>UPDATE</code> partition starts at a pre-defined address - <a href="https://github.com/nihalpasham/rustBoot/blob/7ea124b2d8f82b85b5500bfdbc038c104eee4452/rustBoot/src/constants.rs#L10"><code>UPDATE_PARTITION_ADDRESS</code></a>
+<ul>
+<li>both partitions must be of the same size, defined by <a href="https://github.com/nihalpasham/rustBoot/blob/7ea124b2d8f82b85b5500bfdbc038c104eee4452/rustBoot/src/constants.rs#L6"><code>PARTITION_SIZE</code></a></li>
+</ul>
+</li>
+<li><code>SWAP</code> partition starts at a predefined address - <a href="https://github.com/nihalpasham/rustBoot/blob/7ea124b2d8f82b85b5500bfdbc038c104eee4452/rustBoot/src/constants.rs#L9"><code>SWAP_PARTITION_ADDRESS</code></a>
+<ul>
+<li>swap-space size is defined by <a href="https://github.com/nihalpasham/rustBoot/blob/7ea124b2d8f82b85b5500bfdbc038c104eee4452/rustBoot/src/constants.rs#L5"><code>SECTOR_SIZE</code></a> and must be larger than the largest sector in either <code>BOOT</code> or <code>UPDATE</code> partition.</li>
+</ul>
+</li>
+</ul>
+<p>BOOT, UPDATE, SWAP addresses and SECTOR_SIZE, PARTITION_SIZE values can be set via command line options or developers <code>constants.rs</code>.</p>
+<blockquote>
+<p><strong>rustBoot Defaults:</strong></p>
+<ul>
+<li>By default, public keys used for firmware validation are embedded in <code>rustBoot-firmware</code> during a factory-image-burn. However, rustBoot also offers the option to retrieve them from secure-hardware (ex: crypto-elements).</li>
+<li>The <code>BOOT</code> partiton is the only partition from where we boot a firmware image. The firmware image must be linked so that its entry-point is at address <code>256 + BOOT_PARTITION_ADDRESS</code>.</li>
+<li><code>BOOT</code> firmware is responsible for downloading a new firmware image via a secure channel and installing it in the <code>UPDATE</code> partition. To trigger an update, the <code>BOOT</code> firmware updates the <code>status byte</code> of the <code>UPDATE</code> partition and performs a reboot. This will allow the bootloader to <code>swap the contents</code> of <code>BOOT</code> partition with that of the <code>UPDATE</code> partition. </li>
+</ul>
+</blockquote>
+<h2 id="linux-system-updates"><a class="header" href="#linux-system-updates">Linux System Updates:</a></h2>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="rustboot-boot-flow"><a class="header" href="#rustboot-boot-flow">rustBoot Boot Flow</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="rustboot-update-flow"><a class="header" href="#rustboot-update-flow">rustBoot Update Flow</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="signing-utilities"><a class="header" href="#signing-utilities">Signing Utilities</a></h1>

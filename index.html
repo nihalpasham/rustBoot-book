@@ -116,6 +116,9 @@
                         <a href="print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
+                        <a href="https://github.com/nihalpasham/rustBoot-book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
 
                     </div>
                 </div>
@@ -144,7 +147,6 @@
                     <main>
                         <h1 id="rustboot"><a class="header" href="#rustboot">rustBoot</a></h1>
 <p><em>by Nihal Pasham</em> </p>
-<h2 id="what-is-it"><a class="header" href="#what-is-it">What is it?</a></h2>
 <p>rustBoot is a standalone bootloader, written entirely in <code>Rust</code>, designed to run on anything from a microcontroller to a system on chip. It can be used to boot into bare-metal firmware or Linux.</p>
 <h2 id="why-rustboot"><a class="header" href="#why-rustboot">Why rustBoot?</a></h2>
 <p>rustBoot prioritizes the following above all else.</p>
@@ -168,12 +170,12 @@
 <li>and more stuff.</li>
 </ul>
 <blockquote>
-<p>Note: This includes <a href="https://github.com/u-boot/u-boot"><code>U-boot</code></a>, the de-facto standard in the embedded systems world.</p>
+<p><strong>Note:</strong> This includes <a href="https://github.com/u-boot/u-boot"><code>U-boot</code></a>, the de-facto standard in the embedded systems world.</p>
 </blockquote>
 <h3 id="memory-safety"><a class="header" href="#memory-safety">Memory safety:</a></h3>
 <p>A large TCB inevitably equates to a large attack surface. The vast majority of them are written in C or some combination of C and Assembly. <code>A quick analysis of CVEs</code> reported over the last 2 years (in u-boot, bare-box and other open-source ones) show that the bulk of them fall into the memory-safety category. </p>
 <blockquote>
-<p>Note: <code>addressable attack surface</code> is much larger, the above <code>attack surface</code> is only compounded when we add boot-time driver vulnerabilities.</p>
+<p><strong>Note:</strong> <code>addressable attack surface</code> is much larger, the above <code>attack surface</code> is only compounded when we add boot-time driver vulnerabilities.</p>
 </blockquote>
 <h3 id="complexity--boot-time"><a class="header" href="#complexity--boot-time">Complexity &amp; boot-time:</a></h3>
 <p>Custom secure boot implementations can <code>get quite complex and add latency</code> with </p>

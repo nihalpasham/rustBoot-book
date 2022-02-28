@@ -116,6 +116,9 @@
                         <a href="../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
+                        <a href="https://github.com/nihalpasham/rustBoot-book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
 
                     </div>
                 </div>
@@ -147,7 +150,7 @@
 <ul>
 <li>it does not rely on the use of complex digital certificate formats to <a href="../index.html#trusted-computing-base"><code>reduce its TCB</code></a> and avoids uneccessary <a href="../index.html#complexity--boot-time">code-complexity</a></li>
 </ul>
-<pre class="svgbob"><style>text{fill:var(--fg)}</style><svg xmlns="http://www.w3.org/2000/svg" width="1216" height="448">
+<pre class="svgbob"><style>text{fill:var(--fg)}</style><svg xmlns="http://www.w3.org/2000/svg" width="1216" height="464">
     <style>
         line, path, circle, rect, polygon{stroke:var(--fg);stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Lucida Console;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
         <!--separator-->
@@ -170,7 +173,7 @@
             <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
         </marker>
     </defs>
-    <rect class="backdrop" x="0" y="0" width="1216" height="448"></rect>
+    <rect class="backdrop" x="0" y="0" width="1216" height="464"></rect>
     <circle cx="4" cy="24" r="3" class="nofill"></circle>
     <text x="42" y="28" >Simplified</text>
     <text x="130" y="28" >Block</text>
@@ -223,16 +226,19 @@
     <text x="418" y="380" >valid</text>
     <text x="466" y="380" >rustBoot</text>
     <text x="538" y="380" >images</text>
-    <text x="386" y="396" >contain</text>
-    <text x="450" y="396" >a</text>
-    <text x="466" y="396" >256</text>
-    <text x="498" y="396" >byte</text>
-    <text x="538" y="396" >header</text>
-    <text x="386" y="412" >prepended</text>
-    <text x="466" y="412" >to</text>
-    <text x="490" y="412" >executable</text>
-    <text x="386" y="428" >firmware</text>
-    <text x="458" y="428" >binaries</text>
+    <text x="386" y="396" >are</text>
+    <text x="418" y="396" >composed</text>
+    <text x="490" y="396" >of</text>
+    <text x="514" y="396" >a</text>
+    <text x="530" y="396" >256</text>
+    <text x="562" y="396" >byte</text>
+    <text x="386" y="412" >header</text>
+    <text x="442" y="412" >prepended</text>
+    <text x="522" y="412" >to</text>
+    <text x="546" y="412" >an</text>
+    <text x="386" y="428" >executable</text>
+    <text x="474" y="428" >firmware</text>
+    <text x="386" y="444" >binary.</text>
     <g>
         <line x1="8" y1="24" x2="16" y2="24" class="solid"></line>
         <polygon points="16,20 24,24 16,28" class="filled"></polygon>
@@ -327,7 +333,7 @@
 </li>
 <li>The <code>sha256 digest</code> tag contains a <code>SHA2 hash</code> of the firmware and is used to check firmware integrity.
 <ul>
-<li>Type: 0x0003</li>
+<li>Type: <code>0x0003</code></li>
 <li>Length: <code>32 bytes</code></li>
 </ul>
 </li>
@@ -348,17 +354,19 @@
 </ul>
 </li>
 </ul>
-<h3 id="rustboot-defaults"><a class="header" href="#rustboot-defaults">rustBoot Defaults:</a></h3>
+<blockquote>
+<p><strong>rustBoot Defaults:</strong> </p>
 <ul>
-<li>A valid rustBoot image is always signed by default.</li>
+<li>By default, a valid rustBoot image is always signed.</li>
 <li>It relies on the 256-byte header for firmware validation.</li>
 <li>It will fail to boot an image
 <ul>
-<li>if it does not possess a valid rustBoot header or</li>
-<li>if it isn’t signed or if it cannot be verified using the included the authentication-type.</li>
+<li>if it does not possess a <a href="images.html#rustboot-images"><code>valid rustBoot header</code></a> or</li>
+<li>if it isn’t signed or if it cannot be verified using the included the <a href="images.html#tags"><code>authentication-type</code></a>.</li>
 </ul>
 </li>
 </ul>
+</blockquote>
 
                     </main>
 
