@@ -297,7 +297,7 @@
         <polygon points="472,340 480,340 476,352" class="filled"></polygon>
     </g>
 </svg></pre>
-<h3 id="rustboot-image-header-layout"><a class="header" href="#rustboot-image-header-layout"><code>rustBoot Image</code> header layout:</a></h3>
+<h3 id="rustboot-image-header-layout"><a class="header" href="#rustboot-image-header-layout">rustBoot Image header layout:</a></h3>
 <p>The header always starts with a 4-byte magic number, followed by a 4-byte field indicating the size of the firmware image (excluding the header). All header contents are stored in little-endian format.</p>
 <p>The 2 (<code>magic and size</code>) fixed fields are followed by one or more <code>TLV(s) or Type, Length, Value</code> tags. A TLV has the following layout</p>
 <ul>

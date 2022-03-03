@@ -387,10 +387,10 @@
 <ul>
 <li>At this stage, control has been handed over to firmware (or linux).</li>
 <li>rustBoot <code>does not</code> have a networking stack. The job of downloading and installing an update is offloaded to firmware or linux (<a href="index.html#trusted-computing-base"><code>drastically reducing the TCB</code></a>)</li>
-<li>Firmware can trigger and confirm updates by setting the state of the <code>update or boot</code> partition via a rustBoot api. This removes the need for a filesystem (<a href="index.html#trusted-computing-base"><code>again smaller TCB</code></a>). 
+<li>Firmware can trigger and confirm updates by setting the state of the <code>update</code> partition via a rustBoot api. This removes the need for a filesystem (<a href="index.html#trusted-computing-base"><code>again smaller TCB</code></a>). 
 <ul>
 <li>However, not all systems can boot without a file-system. </li>
-<li>If you need one, rustBoot offers a FAT16 or 32 implementation, written in safe rust. </li>
+<li>If you need one, rustBoot offers a FAT 16/32 implementation, written in safe rust. </li>
 </ul>
 </li>
 <li>Once an update is triggered, the device is reset (i.e. restarted). rustBoot takes over and attempts to verify the update. If everything checks out, it boots the updated firmware.</li>

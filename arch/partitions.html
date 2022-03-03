@@ -214,7 +214,7 @@
     </g>
 </svg></pre>
 <blockquote>
-<p>Note: <code>BOOT</code>, <code>UPDATE</code> and <code>SWAP</code> partitions need <strong>NOT</strong> be consecutively laid out in flash memory. The above diagram only serves as a visual aid.</p>
+<p>Note: <code>BOOT</code>, <code>UPDATE</code> and <code>SWAP</code> partitions need not be consecutively laid out in flash memory. The above diagram only serves as a visual aid.</p>
 </blockquote>
 <p>rustBoot requires <code>mcu flash</code> to be divided into (at-least) 4 non-overlapping memory regions (i.e. partitions). </p>
 <ul>
@@ -249,7 +249,7 @@
 <p><strong>rustBoot Defaults:</strong></p>
 <ul>
 <li>By default, public keys used for firmware validation are embedded in <code>rustBoot-firmware</code> during a factory-image-burn. However, rustBoot also offers the option to retrieve them from secure-hardware (ex: crypto-elements).</li>
-<li>The <code>BOOT</code> partiton is the only partition from where we boot a firmware image. The firmware image must be linked so that its entry-point is at address <code>256 + BOOT_PARTITION_ADDRESS</code>.</li>
+<li>The <code>BOOT</code> partiton is the only partition from which we can boot a firmware image. The firmware image must be linked so that its entry-point is at address <code>256 + BOOT_PARTITION_ADDRESS</code>.</li>
 <li><code>BOOT</code> firmware is responsible for downloading a new firmware image via a secure channel and installing it in the <code>UPDATE</code> partition. To trigger an update, the <code>BOOT</code> firmware updates the <code>status byte</code> of the <code>UPDATE</code> partition and performs a reboot. This will allow the bootloader to <code>swap the contents</code> of <code>BOOT</code> partition with that of the <code>UPDATE</code> partition. </li>
 </ul>
 </blockquote>
