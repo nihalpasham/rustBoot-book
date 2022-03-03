@@ -35,7 +35,7 @@ jobs:
         run: bash ci/spellcheck.sh list
       - name: Check for broken links
         run: |
-          rustup install nightly
+          rustup toolchain install nightly --component rust-docs
           curl -sSLo linkcheck.sh \
             https://raw.githubusercontent.com/rust-lang/rust/master/src/tools/linkchecker/linkcheck.sh
           # Cannot use --all here because of the generated redirect pages aren't available.
