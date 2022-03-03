@@ -1,4 +1,5 @@
 
+![GitHub](https://img.shields.io/github/license/nihalpasham/rustBoot-book) [![ci](https://github.com/nihalpasham/rustBoot-book/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/nihalpasham/rustBoot-book/actions/workflows/ci.yml) [![chat](https://img.shields.io/badge/chat-rustBoot%3Amatrix.org-brightgreen)](https://matrix.to/#/#rustBoot:matrix.org)
 # rustBoot Book
 
 This repository contains the source of [`rustBoot book`](https://nihalpasham.github.io/rustBoot-book/index.html).
