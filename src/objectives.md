@@ -12,7 +12,7 @@ rustBoot's purpose is to help simplify the entire process. Its primary goals are
     - reliable updates in rustBoot will take the form of  
         - `flash swap operations` for microcontroller based systems. We'll use the `boot/update based multi-slot partitioning method` to replace currently active firmware with a newly received update and at the same time store a back-up copy of it in a (passive) secondary partition.
         - `ram swap operations` for more powerful system-on-chip boards which can boot Linux. 
-- **Predictablility over Performance:** 
+- **Predictability over Performance:** 
     - one of rustBoot's core design objectives is to keep it simple and avoid complexity. So, there will be little to no application of meta or async programming constructs. 
     > **Note:** We don't actually need the extra performance. rustBoot can hit sub-second `secure boot-times` as we've stripped it down to the bare-essentials. This assumes flash load times are fast enough and a firmware binary-blob size of < 1MB.
 - **Zero-dynamic memory allocation:**
