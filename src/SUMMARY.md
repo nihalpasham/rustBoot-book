@@ -29,7 +29,7 @@
 - [Coding guidelines](./coding_guide.md)
 - [Testing](./testing.md)
 
-# Continuos Integration
+# Continuous Integration
 - [Continuous Integration](continuous-integration.md)
 
 # For Developers

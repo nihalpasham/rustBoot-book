@@ -10,11 +10,11 @@ For a high-level overview, you can think of rustBoot as operating in 2 independe
 ## Pre-handover stage: 
 
 - rustBoot provides a minimal hardware abstraction layer for a wide range of ARM microcontrollers (STM32, Nordic, Microchip etc.) and microprocessors (rpi4, NXP etc.). The HAL allows peripherals drivers to initialize requisite hardware such as flash memories, UART controllers, GPIO pins etc.  
-- an optional software-based crypto library in-case you dont need (or use) dedicated crypto hardware.
+- an optional software-based crypto library in-case you don't need (or use) dedicated crypto hardware.
 - rustBoot's core-bootloader houses all of the `actual boot-logic` such as
-  - firmware image `intergrity and authenticity verification` via digital signatures
+  - firmware image `integrity and authenticity verification` via digital signatures
   - power-interruptible firmware updates along with the assurance of fall-back availability. 
-  - `FITImage and device tree` parsing while booting linux.
+  - `FIT-Image and device tree` parsing while booting linux.
   - multi-slot partitioning of microcontroller flash memory
   - `anti-rollback protection` via version numbering.
 

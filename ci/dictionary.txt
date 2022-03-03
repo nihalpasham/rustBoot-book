@@ -2,6 +2,8 @@ personal_ws-1.1 en 0 utf-8
 rustBoot
 rustBoot's
 bootloader
+bootloaders
+bootloader's
 Nihal
 Pasham
 microcontroller
@@ -26,3 +28,14 @@ lightblue
 bigrect
 parsers
 Predictability
+uboot
+facto
+SUIT's
+async
+Aarch
+uart
+BootROM
+ATECC
+STSAFE
+TrustZone
+unrepresentable

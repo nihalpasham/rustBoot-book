@@ -14,13 +14,13 @@ rustBoot's purpose is to help simplify the entire process. Its primary goals are
         - `ram swap operations` for more powerful system-on-chip boards which can boot Linux. 
 - **Predictablility over Performance:** 
     - one of rustBoot's core design objectives is to keep it simple and avoid complexity. So, there will be little to no application of meta or async programming constructs. 
-    > **Note:** We dont actually need the extra performance. rustBoot can hit sub-second `secure boot-times` as we've stripped it down to the bare-essentials. This assumes flash load times are fast enough and a firmware binary-blob size of < 1MB.
+    > **Note:** We don't actually need the extra performance. rustBoot can hit sub-second `secure boot-times` as we've stripped it down to the bare-essentials. This assumes flash load times are fast enough and a firmware binary-blob size of < 1MB.
 - **Zero-dynamic memory allocation:**
     - to make it highly portable, apart from its modular design, rustBoot relies on a zero dynamic memory allocation architecture i.e. no heap required. 
 - **Memory safety & type-state programming:** 
     - the entire bootloader is written in rust's safe-fragment with a limited set of well-defined api(s) for unsafe HW access.
     - as a consequence, it makes rustBoot immune to a whole host of memory safety bugs. ex: things like parsing image-headers (i.e. container-formats) in rustBoot is much safer.
-    - rustBoot takes advantage of rust's powerful type-system to make `invalid boot-states unrepresentable at compile time` and along with constructs such as sealed states, global singletons, it improves the overall security of the entire code-base.
+    - rustBoot takes advantage of rust's powerful type-system to make `invalid boot-states, unrepresentable at compile time` and along with constructs such as sealed states, global singletons, it improves the overall security of the entire code-base.
 
 > There is a plan to further add to rustBoot's high levels of assurance by leveraging `formal methods` such as
 > - `property-based testing via symbolic execution:` to formally verify rustBoot's parser.
