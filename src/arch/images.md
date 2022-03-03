@@ -36,7 +36,7 @@ o->  Simplified Block Diagram, 256 byte rustBoot header:
                                                         
 ```
 
-### `rustBoot Image` header layout:
+### rustBoot Image header layout:
 
 The header always starts with a 4-byte magic number, followed by a 4-byte field indicating the size of the firmware image (excluding the header). All header contents are stored in little-endian format.
 

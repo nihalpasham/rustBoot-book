@@ -1,26 +1,56 @@
 name: deploy
 
-on: 
+on:
   push:
-    branches: [ main ]
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  CARGO_TERM_COLOR: always
 
 jobs:
+  formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Check formatting
+        run: cargo fmt -- --check
+      - name: Install aspell
+        run: sudo apt-get install aspell
+      - name: Install shellcheck
+        run: sudo apt-get install shellcheck
+      - name: Report versions
+        run: |
+          aspell --version
+          shellcheck --version
+      - name: Shellcheck
+        run: find . -name '*.sh' | xargs shellcheck
+      - name: Spellcheck
+        run: bash ci/spellcheck.sh list
+      - name: Check for broken links
+        run: |
+          curl -sSLo linkcheck.sh \
+            https://raw.githubusercontent.com/rust-lang/rust/master/src/tools/linkchecker/linkcheck.sh
+          # Cannot use --all here because of the generated redirect pages aren't available.
+          sh linkcheck.sh book
+
   pages:
     name: GitHub Pages
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-    - name: Install Rust (rustup)
-      run: rustup update stable --no-self-update && rustup default stable
-    - name: Install mdbook + pre-processors
-      run: |
-        cargo install mdbook 
-        cargo install mdbook-mermaid 
-        cargo install mdbook-svgbob2
-    - name: Build book
-      run: mdbook build
-    - name: Deploy 🚀
-      uses: JamesIves/github-pages-deploy-action@v4.2.5
-      with:
-        branch: book # The branch the action should deploy to.
-        folder: book # The folder the action should deploy.
+      - uses: actions/checkout@master
+      - name: Install Rust (rustup)
+        run: rustup update stable --no-self-update && rustup default stable
+      - name: Install mdbook + pre-processors
+        run: |
+          cargo install mdbook 
+          cargo install mdbook-mermaid 
+          cargo install mdbook-svgbob2
+      - name: Build book
+        run: mdbook build
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4.2.5
+        with:
+          branch: book # The branch the action should deploy to.
+          folder: book # The folder the action should deploy.

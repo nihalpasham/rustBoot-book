@@ -62,9 +62,9 @@ o->  Simplified Block Diagram, Pre handover stage:
 
 - At this stage, control has been handed over to firmware (or linux).
 - rustBoot `does not` have a networking stack. The job of downloading and installing an update is offloaded to firmware or linux ([`drastically reducing the TCB`](index.md#trusted-computing-base))
-- Firmware can trigger and confirm updates by setting the state of the `update or boot` partition via a rustBoot api. This removes the need for a filesystem ([`again smaller TCB`](index.md#trusted-computing-base)). 
+- Firmware can trigger and confirm updates by setting the state of the `update` partition via a rustBoot api. This removes the need for a filesystem ([`again smaller TCB`](index.md#trusted-computing-base)). 
   - However, not all systems can boot without a file-system. 
-  - If you need one, rustBoot offers a FAT16 or 32 implementation, written in safe rust. 
+  - If you need one, rustBoot offers a FAT 16/32 implementation, written in safe rust. 
 - Once an update is triggered, the device is reset (i.e. restarted). rustBoot takes over and attempts to verify the update. If everything checks out, it boots the updated firmware.
 
 
