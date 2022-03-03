@@ -13,7 +13,6 @@ UART
 GPIO
 crypto
 interruptible
-FIT-image
 svgbob
 RustCrypto
 CRYPTO
