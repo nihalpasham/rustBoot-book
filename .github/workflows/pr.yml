@@ -1,7 +1,7 @@
-name: ci
+name: pr-check
 
 on:
-  push:
+  pull_request:
     branches: [main]
 
 env:
@@ -38,23 +38,3 @@ jobs:
             https://raw.githubusercontent.com/rust-lang/rust/master/src/tools/linkchecker/linkcheck.sh
           # Cannot use --all here because of the generated redirect pages aren't available.
           sh linkcheck.sh book
-
-  pages:
-    name: GitHub Pages
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-      - name: Install Rust (rustup)
-        run: rustup update stable --no-self-update && rustup default stable
-      - name: Install mdbook + pre-processors
-        run: |
-          cargo install mdbook 
-          cargo install mdbook-mermaid 
-          cargo install mdbook-svgbob2
-      - name: Build book
-        run: mdbook build
-      - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@v4.2.5
-        with:
-          branch: book # The branch the action should deploy to.
-          folder: book # The folder the action should deploy.
