@@ -58,6 +58,5 @@ jobs:
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4.2.5
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: book # The branch the action should deploy to.
-          FOLDER: book # The folder the action should deploy.
+          branch: book # The branch the action should deploy to.
+          folder: book # The folder the action should deploy.

@@ -11,23 +11,25 @@ rustBoot prioritizes the following above all else.
 * low-integration complexity
 
 `rustBoot` does the bare minimum needed to securely boot bare-metal firmware (or Linux) i.e. it has a really small `trusted computing base`. It is secure by default i.e. it `does not boot digitally unsigned firmware` and uses `memory-safe implementations` (for crypto and boot-logic) as the default. It also attempts to eliminate the high degree of integration-complexity involved in rolling a production-grade bootloader by adopting a `batteries-included` approach. 
-- *For example, we include `flash device drivers for all supported boards` written in safe Rust.*
+- *For example, we include `flash device drivers for all supported boards`, written in safe Rust.*
 
 ## Why prioritize the above?
 ### Trusted Computing Base: 
 Open-source bootloaders have a large trusted computing base i.e. they (pretty much) resemble a mini operating system with 
-    - a complete networking stack
-    - a collection of device drivers and device-tree blob(s)
-    - integrated debug and command shells
-    - support for every possible filesystem you can think of.   
-    - and more stuff.
+- a complete networking stack
+- a collection of device drivers and device-tree blob(s)
+- integrated debug and command shells
+- support for every possible filesystem you can think of.   
+- and more stuff.
 
 > **Note:** This includes [`U-boot`][uboot], the de-facto standard in the embedded-systems world. Here's a mental map of Uboot's potential attack surface. 
-> - [`DepthCharge`][uboot] is a U-Boot hacking toolkit for security researchers and tinkerers designed to exploit this large attack surface. 
-![mental_map_uboot_attack_surface](https://user-images.githubusercontent.com/20253082/156697312-3458f778-508a-44c6-ac1c-c4fcfce141bd.png)
+>
+> ![mental_map_uboot_attack_surface](https://user-images.githubusercontent.com/20253082/156764949-e5660c14-449a-416a-9835-4c156dc15cbe.png)
+> - *[`DepthCharge`][depthcharge] is a U-Boot hacking toolkit for security researchers and tinkerers.*
 
 [uboot]: https://github.com/u-boot/u-boot
 [depthcharge]: https://github.com/nccgroup/depthcharge
+
 
 ### Memory safety: 
 A large TCB inevitably equates to a large attack surface. The vast majority of them are written in C or some combination of C and Assembly. `A quick analysis of CVEs` reported over the last 2 years (in u-boot, bare-box and other open-source ones) show that the bulk of them fall into the memory-safety category. 
@@ -35,8 +37,8 @@ A large TCB inevitably equates to a large attack surface. The vast majority of t
 
 ### Complexity & boot-time:
 Custom secure boot implementations can `get quite complex and add latency` with 
-    - redundant hierarchical digital signature verification trust chains or 
-    - elaborate parsing of custom header or container formats.
+- redundant hierarchical digital signature verification trust chains or 
+- elaborate parsing of custom header or container formats.
 
 ### Vendor dependencies: 
 Vendor-specific or custom chain of trust dependencies make it difficult to port bootloader implementations across boards.  This is in-part attributable to `non-standards based solutions`. 
