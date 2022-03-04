@@ -6,15 +6,8 @@
 - **linux system updates:** uses the traditional `ram based swap` method to update linux distributions running atop micro-processors.
 ## Micro-controller Updates:
 
-```svgbob
+![partition](https://github.com/imrank03/rustBoot-book-diagrams/blob/main/partition.svg?raw=true "Simplified Block Diagram, 256 byte rustBoot header")
 
-o->  Simplified Block Diagram, rustBoot MCU flash partitioning:
-
-          +----------------------+-----------------------+------------------------+------------------+
-          |  rustBoot Partition  |     BOOT Partition    |    UPDATE Partition    |  SWAP Partition  |
-          +----------------------+-----------------------+------------------------+------------------+
-
-```       
 > Note: `BOOT`, `UPDATE` and `SWAP` partitions need **NOT** be consecutively laid out in flash memory. The above diagram only serves as a visual aid.
 
 rustBoot requires `mcu flash` to be divided into (at-least) 4 non-overlapping memory regions (i.e. partitions). 
