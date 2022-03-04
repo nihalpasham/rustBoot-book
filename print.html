@@ -171,7 +171,11 @@
 <li>and more stuff.</li>
 </ul>
 <blockquote>
-<p><strong>Note:</strong> This includes <a href="https://github.com/u-boot/u-boot"><code>U-boot</code></a>, the de-facto standard in the embedded systems world.</p>
+<p><strong>Note:</strong> This includes <a href="https://github.com/u-boot/u-boot"><code>U-boot</code></a>, the de-facto standard in the embedded-systems world. Here’s a mental map of Uboot’s potential attack surface. </p>
+<ul>
+<li><a href="https://github.com/u-boot/u-boot"><code>DepthCharge</code></a> is a U-Boot hacking toolkit for security researchers and tinkerers designed to exploit this large attack surface. 
+<img src="https://user-images.githubusercontent.com/20253082/156697312-3458f778-508a-44c6-ac1c-c4fcfce141bd.png" alt="mental_map_uboot_attack_surface" /></li>
+</ul>
 </blockquote>
 <h3 id="memory-safety"><a class="header" href="#memory-safety">Memory safety:</a></h3>
 <p>A large TCB inevitably equates to a large attack surface. The vast majority of them are written in C or some combination of C and Assembly. <code>A quick analysis of CVEs</code> reported over the last 2 years (in u-boot, bare-box and other open-source ones) show that the bulk of them fall into the memory-safety category. </p>
