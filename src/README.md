@@ -8,9 +8,9 @@ rustBoot is a standalone bootloader, written entirely in `Rust`, designed to run
 rustBoot prioritizes the following above all else.
 * keep only the bare-essentials
 * secure by default
-* low integrational complexity
+* low-integration complexity
 
-`rustBoot` does the bare minimum needed to securely boot bare-metal firmware (or Linux) i.e. it has a really small `trusted computing base`. It is secure by default i.e. it `does not boot digitally unsigned firmware` and as far as possible uses `memory-safe implementations` (for crypto and boot-logic) as the default. It also attempts to eliminate the high degree of integrational complexity involved in rolling a production-grade bootloader by adopting a `batteries-included` approach. 
+`rustBoot` does the bare minimum needed to securely boot bare-metal firmware (or Linux) i.e. it has a really small `trusted computing base`. It is secure by default i.e. it `does not boot digitally unsigned firmware` and uses `memory-safe implementations` (for crypto and boot-logic) as the default. It also attempts to eliminate the high degree of integration-complexity involved in rolling a production-grade bootloader by adopting a `batteries-included` approach. 
 - *For example, we include `flash device drivers for all supported boards` written in safe Rust.*
 
 ## Why prioritize the above?

@@ -36,7 +36,7 @@ BOOT, UPDATE, SWAP addresses and SECTOR_SIZE, PARTITION_SIZE values can be set v
 
 > **rustBoot Defaults:**
 > - By default, public keys used for firmware validation are embedded in `rustBoot-firmware` during a factory-image-burn. However, rustBoot also offers the option to retrieve them from secure-hardware (ex: crypto-elements).
-> - The `BOOT` partiton is the only partition from where we boot a firmware image. The firmware image must be linked so that its entry-point is at address `256 + BOOT_PARTITION_ADDRESS`.
+> - The `BOOT` partiton is the only partition from which we can boot a firmware image. The firmware image must be linked so that its entry-point is at address `256 + BOOT_PARTITION_ADDRESS`.
 > - `BOOT` firmware is responsible for downloading a new firmware image via a secure channel and installing it in the `UPDATE` partition. To trigger an update, the `BOOT` firmware updates the `status byte` of the `UPDATE` partition and performs a reboot. This will allow the bootloader to `swap the contents` of `BOOT` partition with that of the `UPDATE` partition. 
 
 ## Linux System Updates:

@@ -6,7 +6,7 @@ rustBoot images comprise of a `256-byte header` pre-pended to a firmware binary 
 
 ![rustBoot_header](https://github.com/imrank03/rustBoot-book-diagrams/blob/main/rustBoot_header.svg?raw=true "Simplified Block Diagram, 256 byte rustBoot header")
 
-### `rustBoot Image` header layout:
+### rustBoot Image header layout:
 
 The header always starts with a 4-byte magic number, followed by a 4-byte field indicating the size of the firmware image (excluding the header). All header contents are stored in little-endian format.
 
