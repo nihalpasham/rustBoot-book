@@ -157,7 +157,7 @@
 </ul>
 <p><code>rustBoot</code> does the bare minimum needed to securely boot bare-metal firmware (or Linux) i.e. it has a really small <code>trusted computing base</code>. It is secure by default i.e. it <code>does not boot digitally unsigned firmware</code> and uses <code>memory-safe implementations</code> (for crypto and boot-logic) as the default. It also attempts to eliminate the high degree of integration-complexity involved in rolling a production-grade bootloader by adopting a <code>batteries-included</code> approach. </p>
 <ul>
-<li><em>For example, we include <code>flash device drivers for all supported boards</code> written in safe Rust.</em></li>
+<li><em>For example, we include <code>flash device drivers for all supported boards</code>, written in safe Rust.</em></li>
 </ul>
 <h2 id="why-prioritize-the-above"><a class="header" href="#why-prioritize-the-above">Why prioritize the above?</a></h2>
 <h3 id="trusted-computing-base"><a class="header" href="#trusted-computing-base">Trusted Computing Base:</a></h3>
@@ -171,9 +171,9 @@
 </ul>
 <blockquote>
 <p><strong>Note:</strong> This includes <a href="https://github.com/u-boot/u-boot"><code>U-boot</code></a>, the de-facto standard in the embedded-systems world. Here’s a mental map of Uboot’s potential attack surface. </p>
+<p><img src="https://user-images.githubusercontent.com/20253082/156764949-e5660c14-449a-416a-9835-4c156dc15cbe.png" alt="mental_map_uboot_attack_surface" /></p>
 <ul>
-<li><a href="https://github.com/u-boot/u-boot"><code>DepthCharge</code></a> is a U-Boot hacking toolkit for security researchers and tinkerers designed to exploit this large attack surface. 
-<img src="https://user-images.githubusercontent.com/20253082/156697312-3458f778-508a-44c6-ac1c-c4fcfce141bd.png" alt="mental_map_uboot_attack_surface" /></li>
+<li><em><a href="https://github.com/nccgroup/depthcharge"><code>DepthCharge</code></a> is a U-Boot hacking toolkit for security researchers and tinkerers.</em></li>
 </ul>
 </blockquote>
 <h3 id="memory-safety"><a class="header" href="#memory-safety">Memory safety:</a></h3>
