@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Design - rustBoot Documentation</title>
+        <title>stm32f411 - rustBoot Documentation</title>
 
 
         <!-- Custom HTML head -->
@@ -13,21 +13,21 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
 
-        <link rel="icon" href="favicon.svg">
-        <link rel="shortcut icon" href="favicon.png">
-        <link rel="stylesheet" href="css/variables.css">
-        <link rel="stylesheet" href="css/general.css">
-        <link rel="stylesheet" href="css/chrome.css">
-        <link rel="stylesheet" href="css/print.css" media="print">
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="fonts/fonts.css">
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" href="highlight.css">
-        <link rel="stylesheet" href="tomorrow-night.css">
-        <link rel="stylesheet" href="ayu-highlight.css">
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
 
@@ -35,7 +35,7 @@
     <body>
         <!-- Provide site root to javascript -->
         <script type="text/javascript">
-            var path_to_root = "";
+            var path_to_root = "../";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
@@ -81,7 +81,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Objectives</li><li class="chapter-item expanded "><a href="objectives.html"><strong aria-hidden="true">1.</strong> Goals</a></li><li class="chapter-item expanded "><a href="features.html"><strong aria-hidden="true">2.</strong> Features</a></li><li class="chapter-item expanded affix "><li class="part-title">Design and Architecture Overview</li><li class="chapter-item expanded "><a href="design.html" class="active"><strong aria-hidden="true">3.</strong> Design</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="design/core_components.html"><strong aria-hidden="true">3.1.</strong> Components of rustBoot</a></li></ol></li><li class="chapter-item expanded "><a href="architecture.html"><strong aria-hidden="true">4.</strong> Architecture</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="arch/images.html"><strong aria-hidden="true">4.1.</strong> rustBoot Images</a></li><li class="chapter-item expanded "><a href="arch/partitions.html"><strong aria-hidden="true">4.2.</strong> rustBoot Partitions</a></li><li class="chapter-item expanded "><a href="arch/boot_flow.html"><strong aria-hidden="true">4.3.</strong> rustBoot Secure-Boot Flow</a></li><li class="chapter-item expanded "><a href="arch/update_flow.html"><strong aria-hidden="true">4.4.</strong> rustBoot Secure-Update Flow</a></li><li class="chapter-item expanded "><a href="arch/signing_utilities.html"><strong aria-hidden="true">4.5.</strong> Signing Utilities</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Usage</li><li class="chapter-item expanded "><a href="user_guide.html"><strong aria-hidden="true">5.</strong> User Guide</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="usage/nrf52840.html"><strong aria-hidden="true">5.1.</strong> nrf52840</a></li><li class="chapter-item expanded "><a href="usage/rpi4.html"><strong aria-hidden="true">5.2.</strong> rpi4</a></li><li class="chapter-item expanded "><a href="usage/stm32f411.html"><strong aria-hidden="true">5.3.</strong> stm32f411</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Coding Guidelines and Testing</li><li class="chapter-item expanded "><a href="coding_guide.html"><strong aria-hidden="true">6.</strong> Coding guidelines</a></li><li class="chapter-item expanded "><a href="testing.html"><strong aria-hidden="true">7.</strong> Testing</a></li><li class="chapter-item expanded affix "><li class="part-title">Continuous Integration</li><li class="chapter-item expanded "><a href="continuous-integration.html"><strong aria-hidden="true">8.</strong> Continuous Integration</a></li><li class="chapter-item expanded affix "><li class="part-title">For Developers</li><li class="chapter-item expanded "><a href="for_developers/index.html"><strong aria-hidden="true">9.</strong> For Developers</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="for_developers/ref_guide.html"><strong aria-hidden="true">9.1.</strong> Reference Guide</a></li><li class="spacer"></li></ol></li><li class="chapter-item expanded "><a href="misc/contributors.html">Contributors</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../index.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Objectives</li><li class="chapter-item expanded "><a href="../objectives.html"><strong aria-hidden="true">1.</strong> Goals</a></li><li class="chapter-item expanded "><a href="../features.html"><strong aria-hidden="true">2.</strong> Features</a></li><li class="chapter-item expanded affix "><li class="part-title">Design and Architecture Overview</li><li class="chapter-item expanded "><a href="../design.html"><strong aria-hidden="true">3.</strong> Design</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../design/core_components.html"><strong aria-hidden="true">3.1.</strong> Components of rustBoot</a></li></ol></li><li class="chapter-item expanded "><a href="../architecture.html"><strong aria-hidden="true">4.</strong> Architecture</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../arch/images.html"><strong aria-hidden="true">4.1.</strong> rustBoot Images</a></li><li class="chapter-item expanded "><a href="../arch/partitions.html"><strong aria-hidden="true">4.2.</strong> rustBoot Partitions</a></li><li class="chapter-item expanded "><a href="../arch/boot_flow.html"><strong aria-hidden="true">4.3.</strong> rustBoot Secure-Boot Flow</a></li><li class="chapter-item expanded "><a href="../arch/update_flow.html"><strong aria-hidden="true">4.4.</strong> rustBoot Secure-Update Flow</a></li><li class="chapter-item expanded "><a href="../arch/signing_utilities.html"><strong aria-hidden="true">4.5.</strong> Signing Utilities</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Usage</li><li class="chapter-item expanded "><a href="../user_guide.html"><strong aria-hidden="true">5.</strong> User Guide</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../usage/nrf52840.html"><strong aria-hidden="true">5.1.</strong> nrf52840</a></li><li class="chapter-item expanded "><a href="../usage/rpi4.html"><strong aria-hidden="true">5.2.</strong> rpi4</a></li><li class="chapter-item expanded "><a href="../usage/stm32f411.html" class="active"><strong aria-hidden="true">5.3.</strong> stm32f411</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Coding Guidelines and Testing</li><li class="chapter-item expanded "><a href="../coding_guide.html"><strong aria-hidden="true">6.</strong> Coding guidelines</a></li><li class="chapter-item expanded "><a href="../testing.html"><strong aria-hidden="true">7.</strong> Testing</a></li><li class="chapter-item expanded affix "><li class="part-title">Continuous Integration</li><li class="chapter-item expanded "><a href="../continuous-integration.html"><strong aria-hidden="true">8.</strong> Continuous Integration</a></li><li class="chapter-item expanded affix "><li class="part-title">For Developers</li><li class="chapter-item expanded "><a href="../for_developers/index.html"><strong aria-hidden="true">9.</strong> For Developers</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../for_developers/ref_guide.html"><strong aria-hidden="true">9.1.</strong> Reference Guide</a></li><li class="spacer"></li></ol></li><li class="chapter-item expanded "><a href="../misc/contributors.html">Contributors</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -113,7 +113,7 @@
                     <h1 class="menu-title">rustBoot Documentation</h1>
 
                     <div class="right-buttons">
-                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
                         <a href="https://github.com/nihalpasham/rustBoot-book" title="Git repository" aria-label="Git repository">
@@ -145,26 +145,17 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="design"><a class="header" href="#design">Design</a></h1>
-<p><code>rustBoot</code> aims to offer an OS and micro-architecture agnostic (i.e. highly portable) standards-based secure bootloader that’s easy to integrate into existing embedded software projects. Its architecture is designed around the idea – <code>a bootloader handles ONLY the bare-essentials and offloads the rest to systems that are better suited for the job.</code> </p>
-<h2 id="what-do-bootloaders-actually-do"><a class="header" href="#what-do-bootloaders-actually-do">What do bootloaders actually do?</a></h2>
-<ol>
-<li>Initialize bare-minimum requisite hardware. Ex: cpu-core, flash, gpios, uart, (RAM and hardware secure elements if needed).</li>
-<li>digitally verify i.e. authenticate code before booting</li>
-<li>Boot into firmware or OS i.e. <code>linux or RTOS or bare-metal</code></li>
-<li>If an update is available, perform the update and re-boot (with rollback protection in-case of firmware-corruption or if power is interrupted).</li>
-</ol>
-<p>In this chapter, we’ll talk about rustBoot’s design and its core components.</p>
+                        <h1 id="stm32f411"><a class="header" href="#stm32f411">stm32f411</a></h1>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="features.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../usage/rpi4.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next" href="design/core_components.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="../coding_guide.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -174,11 +165,11 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="features.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../usage/rpi4.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next" href="design/core_components.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="../coding_guide.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
@@ -193,17 +184,17 @@
         </script>
 
 
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
 
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
 
         <!-- Custom JS scripts -->
-        <script type="text/javascript" src="mermaid.min.js"></script>
-        <script type="text/javascript" src="mermaid-init.js"></script>
+        <script type="text/javascript" src="../mermaid.min.js"></script>
+        <script type="text/javascript" src="../mermaid-init.js"></script>
 
 
     </body>
