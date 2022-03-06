@@ -4,6 +4,8 @@ rustBoot's
 bootloader
 bootloaders
 bootloader's
+DepthCharge
+depthcharge
 Nihal
 Pasham
 microcontroller
@@ -29,6 +31,7 @@ bigrect
 parsers
 scalability
 uboot
+Uboot's
 facto
 SUIT's
 async
