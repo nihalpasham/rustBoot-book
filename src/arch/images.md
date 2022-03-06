@@ -2,39 +2,9 @@
 
 rustBoot images comprise of a `256-byte header` pre-pended to a firmware binary and are deliberately designed to be as simple as possible. 
 
-- it does not rely on the use of complex digital certificate formats to [`reduce its TCB`](../index.md#trusted-computing-base) and avoids uneccessary [code-complexity](../index.md#complexity--boot-time)
+- it does not rely on the use of complex digital certificate formats to [`reduce its TCB`](../index.md#trusted-computing-base) and avoids unnecessary [code-complexity](../index.md#complexity--boot-time)
 
-```svgbob
-
-o->  Simplified Block Diagram, 256 byte rustBoot header:
-
-
-+- - - -+- - - - --+-----+---------+-----+-----+-----------+-----+----------+-----+-----+---------------+-----+---------------+-----+-----------+- - -+
-| MAGIC | IMG SIZE | TLV | IMG VER | PAD | TLV | TIMESTAMP | TLV | IMG TYPE | PAD | TLV | SHA256 DIGEST | TLV | PUBKEY DIGEST | TLV | SIGNATURE | EOH |
-+- - - -+- - - - --+-----+---------+-----+-----+-----------+-----+----------+-----+-----+---------------+-----+---------------+-----+-----------+- - -+
-                                                                    |
-                                                                    |
-                                                                    |
-                                                                    |
-                                              .---------------------'
-                                              |
-                                              |
-                                              v
-                                +--------------------------+--------------------------------------+                  
-                                | 256 BYTE RUSTBOOT HEADER |            FIRMWARE IMAGE            |   
-                                +--------------------------+--------------------------------------+                 
-                                                           
-                                                           |
-                                                           |
-                                                           v
-
-                                                all valid rustBoot images 
-                                                are composed of a 256 byte 
-                                                header prepended to an
-                                                executable firmware
-                                                binary.
-                                                        
-```
+![rustBoot_header](https://github.com/imrank03/rustBoot-book-diagrams/blob/main/rustBoot_header.svg?raw=true "Simplified Block Diagram, 256 byte rustBoot header")
 
 ### rustBoot Image header layout:
 
