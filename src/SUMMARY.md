@@ -23,13 +23,14 @@
 - [User Guide](./user_guide.md)
     - [nrf52840](usage/nrf52840.md)
     - [rpi4](usage/rpi4.md)
+    - [stm32f411](usage/stm32f411.md)
 
 # Coding Guidelines and Testing
 
 - [Coding guidelines](./coding_guide.md)
 - [Testing](./testing.md)
 
-# Continuos Integration
+# Continuous Integration
 - [Continuous Integration](continuous-integration.md)
 
 # For Developers

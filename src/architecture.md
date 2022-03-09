@@ -10,123 +10,28 @@ For a high-level overview, you can think of rustBoot as operating in 2 independe
 ## Pre-handover stage: 
 
 - rustBoot provides a minimal hardware abstraction layer for a wide range of ARM microcontrollers (STM32, Nordic, Microchip etc.) and microprocessors (rpi4, NXP etc.). The HAL allows peripherals drivers to initialize requisite hardware such as flash memories, UART controllers, GPIO pins etc.  
-- an optional software-based crypto library in-case you dont need (or use) dedicated crypto hardware.
+- an optional software-based crypto library in-case you don't need (or use) dedicated crypto hardware.
 - rustBoot's core-bootloader houses all of the `actual boot-logic` such as
-  - firmware image `intergrity and authenticity verification` via digital signatures
+  - firmware image `integrity and authenticity verification` via digital signatures
   - power-interruptible firmware updates along with the assurance of fall-back availability. 
-  - `FITImage and device tree` parsing while booting linux.
+  - `FIT-Image and device tree` parsing while booting linux.
   - multi-slot partitioning of microcontroller flash memory
   - `anti-rollback protection` via version numbering.
 
 
-```svgbob
-
-o->  Simplified Block Diagram, Pre handover stage:
-
-
-                            .---------------------------------------------------------.
-                            |                                           .-----------. |
-                            |        {b}      rustBoot core             | Embedded  | |
-                            |                   bootloader              |  Pub Key  |-|-------> Embedded in software or 
-                            |                                           '-----------' |         in hardware
-                            '---------------------------------------------------------' 
-
-                             - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
-      Optional Software                                             .----------------.        
-            based           <------------------------------------   |  `RustCrypto`  | 
-        crypto library                                              '----------------' 
-                                                                            | 
-                             - - - - - - - - - - - - - - - - - - - - - - - - - - - - -        
-                                                                            |
-      Peripheral            .---------. .-------. .------. .------.         |
-        Drivers  <--------  | CRYPTO  | | FLASH | | GPIO | | UART |         |
-                            '---------' '-------' '------' '------'         |
-                                 |           |        |        |            |
-                                 v           v        v        v            |
-                            - - - - - - - - - - - - - - - - - - - - - - - - - - - - -        
-                            .--------------------------------------.        |  
-                            |                                      |        |
-  Board specific            |                RUST                  |        |
-      HAL        <--------  |                                      |        |
-                            |      Hardware Abstraction Layer      |        |
-                            |                                      |        |
-                            '--------------------------------------'        v 
-                            .--------------------------------------------------------.
-                            |                                                        |
-                            |   Secure Element    +     Hardware   ( MCU or MPU )    |
-                            |                                                        |     
-                            '--------------------------------------------------------'
-```
+![pre_handover_stage](https://github.com/imrank03/rustBoot-book-diagrams/blob/main/pre_handover_stage.svg?raw=true "Simplified Block Diagram, Pre handover stage:")
 
 ## Post-handover stage: 
 
 - At this stage, control has been handed over to firmware (or linux).
 - rustBoot `does not` have a networking stack. The job of downloading and installing an update is offloaded to firmware or linux ([`drastically reducing the TCB`](index.md#trusted-computing-base))
-- Firmware can trigger and confirm updates by setting the state of the `update or boot` partition via a rustBoot api. This removes the need for a filesystem ([`again smaller TCB`](index.md#trusted-computing-base)). 
+- Firmware can trigger and confirm updates by setting the state of the `update` partition via a rustBoot api. This removes the need for a filesystem ([`again smaller TCB`](index.md#trusted-computing-base)). 
   - However, not all systems can boot without a file-system. 
-  - If you need one, rustBoot offers a FAT16 or 32 implementation, written in safe rust. 
+  - If you need one, rustBoot offers a FAT 16/32 implementation, written in safe rust. 
 - Once an update is triggered, the device is reset (i.e. restarted). rustBoot takes over and attempts to verify the update. If everything checks out, it boots the updated firmware.
 
+![post_handover_stage](https://github.com/imrank03/rustBoot-book-diagrams/blob/main/post_handover_stage.svg?raw=true "Simplified Block Diagram, Post handover stage:")
 
-```svgbob
-
-o->  Simplified Block Diagram, Post handover stage:
-
-
-                            .----------------------------------------------------------.
-                            |  .------.   .--------------------.  .------------------. |
-                            |  | Apps |   | App to download    |  | App to trigger & | | 
-                            |  |      |   | and install update |  |  confirm updates | |
-                            |  '------'   '--------------------'  '------------------' |
-                            '------------------------|----------------------|----------' 
-                             - - - - - - - - - - - - - - - - - - - - - - -  v  - - - -  
-                                                     |             .----------------.           rustBoot provides a  
-                                                     |             | rustBoot flash | ------->  tiny api to trigger  
-                                                     |             |  {b} API       |           and confirm updates
-                                                     |             '----------------' 
-                                                     |                      | 
-                             - - - - - - - - - - - - v - - - - - - - - - - - - - - - -        
-                          .--------------------------------------.          |                                      
-      Transport           | .-----. .-----. .------------------. |          |
-        Options  <--------| | TCP | | UDP | | Custom Transport | |          |
-                          | '-----' '-----' '------------------' |          |
-                          '--------------------------------------'          v
-                            - - - - - - - - - - - - - - - - - - - - - - - - - - - - -        
-                            .-------------------------------------------------------.        
-                            |                                                       |
-                            |             Linux or Baremetal Firmware               |       
-                            |                                                       |              
-                            '-------------------------------------------------------'         
-                            .--------------------------------------------------------.
-                            |                                                        |
-                            |   Secure Element    +     Hardware   ( MCU or MPU )    |
-                            |                                                        |     
-                            '--------------------------------------------------------'
-
-# Legend:
-r1 = {
-    stroke: papayawhip;
-}
-r2 = {
-    fill: crimson;
-}
-a = {
-    stroke-dasharray: 8;
-    fill: lightblue;
-}
-b = {
-    stroke: purple;
-}
-bigrect = {
-    fill: yellow;
-    stroke: red;
-}
-red = {
-    fill:red;
-    stroke:blue;
-}
-
-```
 > **Notes:**
 > - rustBoot `can replace U-boot` in a trust-chain i.e. it can easily be integrated into an existing trust-chain, wherever U-boot is used.
 > - As it has a very small hardware abstraction layer, it is highly portable across Cortex-M and Cortex-A architectures. 
