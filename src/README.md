@@ -22,9 +22,11 @@ Open-source bootloaders have a large trusted computing base i.e. they (pretty mu
 - support for every possible filesystem you can think of.   
 - and more stuff.
 
-> **Note:** This includes [`U-boot`][uboot], the de-facto standard in the embedded-systems world. [`DepthCharge`][depthcharge] is an example of a U-Boot hacking toolkit for security researchers and tinkerers, designed to exploit U-boot's large attack surface. 
-
-![mental_map_uboot_attack_surface](https://raw.githubusercontent.com/imrank03/rustBoot-book-diagrams/main/Mental_map.svg)
+> **Note:** This includes [`U-boot`][uboot], the de-facto standard in the embedded-systems world. Here's a mental map of Uboot's potential attack surface. 
+>
+> [![mental_map_uboot_attack_surface](https://github.com/imrank03/rustBoot-book-diagrams/blob/main/Mental_map.svg?raw=true "mental_map_uboot_attack_surface")](https://github.com/imrank03/rustBoot-book-diagrams/blob/main/Mental_map.svg?raw=true)
+> 
+> - *[`DepthCharge`][depthcharge] is a U-Boot hacking toolkit for security researchers and tinkerers.*
 
 [uboot]: https://github.com/u-boot/u-boot
 [depthcharge]: https://github.com/nccgroup/depthcharge
