@@ -18,7 +18,7 @@ rustBoot requires `mcu flash` to be divided into (at-least) 4 non-overlapping me
 
 All 3 partition boundaries must be aligned to a physical sector as `rustBoot` erases all flash sectors prior to storing a new firmware image, and swaps the contents of the two partitions, one sector at a time.
 
-To ensure partition-sector aligments are maintained, before proceeding to partition a target system, the following points must be considered:
+To ensure partition-sector alignments are maintained, before proceeding to partition a target system, the following points must be considered:
 
 - `BOOT and UPDATE` partition must be of the same size.
 - `SWAP` partition `must be larger than the largest sector` in either `BOOT` or `UPDATE` partition.

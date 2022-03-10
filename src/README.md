@@ -29,7 +29,6 @@ Open-source bootloaders have a large trusted computing base i.e. they (pretty mu
 [uboot]: https://github.com/u-boot/u-boot
 [depthcharge]: https://github.com/nccgroup/depthcharge
 
-
 ### Memory safety: 
 A large TCB inevitably equates to a large attack surface. The vast majority of them are written in C or some combination of C and Assembly. `A quick analysis of CVEs` reported over the last 2 years (in u-boot, bare-box and other open-source ones) show that the bulk of them fall into the memory-safety category. 
 > **Note:** `addressable attack surface` is much larger, the above `attack surface` is only compounded when we add boot-time driver vulnerabilities.
