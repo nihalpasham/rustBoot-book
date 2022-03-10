@@ -2,9 +2,9 @@
 ![GitHub](https://img.shields.io/github/license/nihalpasham/rustBoot-book) ![GitHub Workflow Status (event)](https://img.shields.io/github/workflow/status/nihalpasham/rustBoot-book/ci) [![chat](https://img.shields.io/badge/chat-rustBoot%3Amatrix.org-brightgreen)](https://matrix.to/#/#rustBoot:matrix.org)
 # rustBoot Book
 
-This repository contains the source of [`rustBoot book`](https://nihalpasham.github.io/rustBoot-book/index.html).
+This repository contains the source for the `rustBoot book`.
 
-You can also read the book for free online. 
+You can read the book for [`free online`](https://nihalpasham.github.io/rustBoot-book/index.html).
 
 ## Contributing
 
