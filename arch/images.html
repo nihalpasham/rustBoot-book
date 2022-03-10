@@ -150,7 +150,7 @@
 <ul>
 <li>it does not rely on the use of complex digital certificate formats to <a href="../index.html#trusted-computing-base"><code>reduce its TCB</code></a> and avoids unnecessary <a href="../index.html#complexity--boot-time">code-complexity</a></li>
 </ul>
-<p><img src="https://github.com/imrank03/rustBoot-book-diagrams/blob/main/rustBoot_header.svg?raw=true" alt="rustBoot_header" title="Simplified Block Diagram, 256 byte rustBoot header" /></p>
+<p><a href="https://github.com/imrank03/rustBoot-book-diagrams/blob/main/rustBoot_header.svg?raw=true"><img src="https://github.com/imrank03/rustBoot-book-diagrams/blob/main/rustBoot_header.svg?raw=true" alt="rustBoot_header" title="Simplified Block Diagram, 256 byte rustBoot header" /></a></p>
 <h3 id="rustboot-image-header-layout"><a class="header" href="#rustboot-image-header-layout">rustBoot Image header layout:</a></h3>
 <p>The header always starts with a 4-byte magic number, followed by a 4-byte field indicating the size of the firmware image (excluding the header). All header contents are stored in little-endian format.</p>
 <p>The 2 (<code>magic and size</code>) fixed fields are followed by one or more <code>TLV(s) or Type, Length, Value</code> tags. A TLV has the following layout</p>
