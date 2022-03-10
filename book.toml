@@ -11,20 +11,7 @@ title = "rustBoot Documentation"
 command = "mdbook-mermaid"
 
 [preprocessor.svgbob2]
-# font_size = "14"
 font_family = "Lucida Console"
-# fill_color = "black"
-# background = "transparent"
-# stroke_color = "var(--fg)" # variable from the mdbook css files
-# stroke_width = "2.0" 
-# scale = "8.0"
-# enhance_circuitries = "true"
-# include_backdrop = "true"
-# include_styles = "true"
-# include_defs = "true"
-# merge_line_with_shapes = "false"
-# this is a non-svgbob custom setting
-# font_color = "var(--fg)"
 
 [output]
 
