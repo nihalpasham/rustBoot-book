@@ -32,3 +32,5 @@ font_family = "Lucida Console"
 additional-js = ["mermaid.min.js", "mermaid-init.js"]
 git-repository-url = "https://github.com/nihalpasham/rustBoot-book"
 git-repository-icon = "fa-github"
+default-theme = "rust"
+preferred-dark-theme = "navy"
