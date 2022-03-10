@@ -172,7 +172,7 @@
 </ul>
 <blockquote>
 <p><strong>Note:</strong> This includes <a href="https://github.com/u-boot/u-boot"><code>U-boot</code></a>, the de-facto standard in the embedded-systems world. Here’s a mental map of Uboot’s potential attack surface. </p>
-<p><img src="https://user-images.githubusercontent.com/20253082/156764949-e5660c14-449a-416a-9835-4c156dc15cbe.png" alt="mental_map_uboot_attack_surface" /></p>
+<p><img src="https://github.com/imrank03/rustBoot-book-diagrams/blob/main/Mental_map.svg?raw=true" alt="mental_map_uboot_attack_surface" title="mental_map_uboot_attack_surface" /></p>
 <ul>
 <li><em><a href="https://github.com/nccgroup/depthcharge"><code>DepthCharge</code></a> is a U-Boot hacking toolkit for security researchers and tinkerers.</em></li>
 </ul>
@@ -475,7 +475,7 @@ support for a highly secure and efficient <code>firmware transport</code> method
 <li><code>SWAP:</code> is an empty partition that is used while swapping contents of <code>BOOT</code> and <code>UPDATE</code>.</li>
 </ul>
 <p>All 3 partition boundaries must be aligned to a physical sector as <code>rustBoot</code> erases all flash sectors prior to storing a new firmware image, and swaps the contents of the two partitions, one sector at a time.</p>
-<p>To ensure partition-sector aligments are maintained, before proceeding to partition a target system, the following points must be considered:</p>
+<p>To ensure partition-sector alignments are maintained, before proceeding to partition a target system, the following points must be considered:</p>
 <ul>
 <li><code>BOOT and UPDATE</code> partition must be of the same size.</li>
 <li><code>SWAP</code> partition <code>must be larger than the largest sector</code> in either <code>BOOT</code> or <code>UPDATE</code> partition.</li>
