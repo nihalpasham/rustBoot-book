@@ -4,7 +4,7 @@ rustBoot images comprise of a `256-byte header` pre-pended to a firmware binary 
 
 - it does not rely on the use of complex digital certificate formats to [`reduce its TCB`](../index.md#trusted-computing-base) and avoids unnecessary [code-complexity](../index.md#complexity--boot-time)
 
-![rustBoot_header](https://github.com/imrank03/rustBoot-book-diagrams/blob/main/rustBoot_header.svg?raw=true "Simplified Block Diagram, 256 byte rustBoot header")
+[![rustBoot_header](https://github.com/imrank03/rustBoot-book-diagrams/blob/main/rustBoot_header.svg?raw=true "Simplified Block Diagram, 256 byte rustBoot header")](https://github.com/imrank03/rustBoot-book-diagrams/blob/main/rustBoot_header.svg?raw=true)
 
 ### rustBoot Image header layout:
 

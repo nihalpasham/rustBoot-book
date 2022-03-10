@@ -19,7 +19,7 @@ For a high-level overview, you can think of rustBoot as operating in 2 independe
   - `anti-rollback protection` via version numbering.
 
 
-![pre_handover_stage](https://github.com/imrank03/rustBoot-book-diagrams/blob/main/pre_handover_stage.svg?raw=true "Simplified Block Diagram, Pre handover stage:")
+[![pre_handover_stage](https://github.com/imrank03/rustBoot-book-diagrams/blob/main/pre_handover_stage.svg?raw=true "Simplified Block Diagram, Pre handover stage:")](https://github.com/imrank03/rustBoot-book-diagrams/blob/main/pre_handover_stage.svg?raw=true)
 
 ## Post-handover stage: 
 
@@ -30,7 +30,7 @@ For a high-level overview, you can think of rustBoot as operating in 2 independe
   - If you need one, rustBoot offers a FAT 16/32 implementation, written in safe rust. 
 - Once an update is triggered, the device is reset (i.e. restarted). rustBoot takes over and attempts to verify the update. If everything checks out, it boots the updated firmware.
 
-![post_handover_stage](https://github.com/imrank03/rustBoot-book-diagrams/blob/main/post_handover_stage.svg?raw=true "Simplified Block Diagram, Post handover stage:")
+[![post_handover_stage](https://github.com/imrank03/rustBoot-book-diagrams/blob/main/post_handover_stage.svg?raw=true "Simplified Block Diagram, Post handover stage:")](https://github.com/imrank03/rustBoot-book-diagrams/blob/main/post_handover_stage.svg?raw=true)
 
 > **Notes:**
 > - rustBoot `can replace U-boot` in a trust-chain i.e. it can easily be integrated into an existing trust-chain, wherever U-boot is used.
