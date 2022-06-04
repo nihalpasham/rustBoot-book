@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en" class="sidebar-visible no-js rust">
+<html lang="en" class="sidebar-visible no-js light">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
@@ -36,7 +36,7 @@
         <!-- Provide site root to javascript -->
         <script type="text/javascript">
             var path_to_root = "../";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "rust";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
@@ -62,7 +62,7 @@
             if (theme === null || theme === undefined) { theme = default_theme; }
             var html = document.querySelector('html');
             html.classList.remove('no-js')
-            html.classList.remove('rust')
+            html.classList.remove('light')
             html.classList.add(theme);
             html.classList.add('js');
         </script>
@@ -99,8 +99,8 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
@@ -145,7 +145,333 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="rpi4"><a class="header" href="#rpi4">rpi4</a></h1>
+                        <h1 id="raspberry-pi-4"><a class="header" href="#raspberry-pi-4">raspberry-pi 4</a></h1>
+<h2 id="table-of-contents"><a class="header" href="#table-of-contents">Table of contents:</a></h2>
+<ul>
+<li>  <a href="./rpi4.html#raspberry-pi-4-boot-sequence">raspberry-pi 4 boot-sequence</a>   🥧 </li>
+<li>  <a href="./rpi4.html#rustboot-execution-sequence">rustBoot execution-sequence:</a>   🦀 </li>
+<li>  <a href="./rpi4.html#booting-from-an-sd-card">Booting from an SD card:</a>   💾</li>
+<li>  <a href="./rpi4.html#compiling-rustboot">Compiling rustBoot:</a>   ⌛</li>
+<li>  <a href="./rpi4.html#copying-a-root-file-system">Copying a root file system:</a>   💼</li>
+<li>  <a href="./rpi4.html#uart-communication">UART communication:</a>   🚌</li>
+<li>  <a href="./rpi4.html#power-on-and-test">Power-on and test:</a>   🧪</li>
+</ul>
+<h3 id="raspberry-pi-4-boot-sequence"><a class="header" href="#raspberry-pi-4-boot-sequence">raspberry-pi 4 boot-sequence:</a></h3>
+<p>rpi4 has an unconventional boot process</p>
+<ul>
+<li>Upon initial power-on, the <code>bcm2711</code> SoC (CPU is offline but GPU is powered on) executes from the onboard bootROM i.e. <code>1st stage bootloader</code> </li>
+</ul>
+<blockquote>
+<p>Note: the GPU contains a tiny risc core that executes the <code>bootROM</code>. </p>
+</blockquote>
+<ul>
+<li><code>bootROM</code> checks an onboard SPI-EEPROM for a 2nd stage bootloader</li>
+<li>This <code>2nd stage bootloader</code> is loaded into the GPU's L2 cache for the GPU to execute. 
+<ul>
+<li>It initializes system clocks and SDRAM</li>
+<li>loads GPU firmware (start4.elf) into RAM</li>
+</ul>
+</li>
+<li>the <code>GPU firmware</code> performs RAM allocations i.e. 
+<ul>
+<li>RAM is shared between CPU and GPU </li>
+<li>enables BCM7211 CPU.</li>
+<li>loads <code>rustBoot-bootloader</code> from the SD card into CPU-assigned RAM and passes control of the ARMv8 core to rustBoot</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>Note: At this point, rustBoot has complete control over the CPU. </p>
+</blockquote>
+<h3 id="rustboot-execution-sequence"><a class="header" href="#rustboot-execution-sequence">rustBoot execution-sequence:</a></h3>
+<ul>
+<li>By default, rpi4 will always start executing in EL2. Since we are booting a traditional Kernel (i.e. linux), we have to transition into the more appropriate EL1.</li>
+</ul>
+<blockquote>
+<p>Note: EL1 and EL2 are abbreviations for ARMv8-A exception levels</p>
+</blockquote>
+<p>So, rustBoot checks the following</p>
+<ul>
+<li>is the core executing in <code>EL2</code>? </li>
+<li>are we executing on the <code>boot-core</code> i.e. is it core 0? </li>
+<li>if the answer to any of the above questions is <code>no</code>, then we park the core i.e. go into an inifinte wait state.</li>
+<li>If yes, then we initialize <code>DRAM</code>, <code>zero out bss</code>, transition to EL1 and finally jump to an early initialization routine called kernel_init.</li>
+<li><code>kernel_init</code> is an early initialization routine. It takes care of the following - 
+<ul>
+<li>enables exception handling</li>
+<li>enales the MMU along with instruction + data caching</li>
+<li>initializes a small set of peripheral drivers i.e EMMC controller, UART, GPIO</li>
+<li>and passes control to the core bootloader rountine called kernel_main.</li>
+</ul>
+</li>
+<li><code>kernel_main</code> takes care of loading, verifying and booting fit-images.
+<ul>
+<li>it uses rustBoot's (fat32) file-system to retrieve the first partition (or volume). </li>
+</ul>
+<blockquote>
+<p>Note:  rustBoot does not support GUID Partition Table disks.</p>
+</blockquote>
+<ul>
+<li>If the first volume is a <code>valid fat32</code> partition, it loads the supplied fit-image into RAM and attempts to verify its signature using the ecdsa algorithm.</li>
+<li>If the fit-image is authentic i.e. the signature check passes, it relocates the following components to an approriate location in memory. 
+<ul>
+<li><code>linux kernel</code></li>
+<li><code>fdt or dtb</code></li>
+<li><code>ramdisk or initramfs</code></li>
+</ul>
+</li>
+<li>additionally, it will patch the dtb with any supplied (boot-time) kernel command-line arguments. </li>
+</ul>
+<blockquote>
+<p>Note: kernel cmd-line arguments are set at package-build time i.e. when building the fit-image and cannot be interactively set at runtime.</p>
+</blockquote>
+<ul>
+<li>Finally, it disables the MMU and boots the linux kernel by jumping to its (relocated) entry point.</li>
+</ul>
+</li>
+</ul>
+<h3 id="booting-from-an-sd-card"><a class="header" href="#booting-from-an-sd-card">Booting from an SD card:</a></h3>
+<p>Raspberry Pi computers use a micro SD card to store a bootable image.</p>
+<p><em>SD card preparation:</em> </p>
+<ul>
+<li>make 2 partitions 
+<ul>
+<li>the first one must be a fat32 partition named <code>firmware</code>. It must at least 150 MB in size. For simplicity, you can use a 256MB partition.</li>
+<li>the second one can be ext2/3/4 partition. This is used to host the root file system. </li>
+</ul>
+</li>
+</ul>
+<p><em>FAT32 partition contents:</em></p>
+<ul>
+<li>On the card, generate a file named config.txt with the following contents:</li>
+</ul>
+<pre><code>    arm_64bit=1
+    enable_uart=1
+    init_uart_clock=4000000
+    kernel=rustBoot.bin
+</code></pre>
+<ul>
+<li>Copy the following files from the Raspberry Pi firmware repo onto the SD card:
+<ul>
+<li><a href="https://github.com/raspberrypi/firmware/raw/master/boot/fixup4.dat">fixup4.dat</a></li>
+<li><a href="https://github.com/raspberrypi/firmware/raw/master/boot/start4.elf">start4.elf</a></li>
+<li><a href="https://github.com/raspberrypi/firmware/raw/master/boot/bcm2711-rpi-4-b.dtb">bcm2711-rpi-4-b.dtb</a></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>Note: Should it not work on your rpi4, try renaming start4.elf to start.elf (without the 4) on the SD card.</p>
+</blockquote>
+<h3 id="compiling-rustboot"><a class="header" href="#compiling-rustboot">Compiling rustBoot:</a></h3>
+<p>You must have rust installed. You can install rust by following the installation instructions <a href="https://www.rust-lang.org/tools/install">here</a>. After installing rust, you'll need to switch to nightly toolchain and add the aarch64 compilation-target. This allows us to compile code for the rpi4 </p>
+<pre><code class="language-powershell">rustup default nightly
+rustup target add aarch64-unknown-none-softfloat
+</code></pre>
+<p>To verify that you have the pre-requisites installed, run the following command</p>
+<pre><code class="language-powershell">rustup show
+</code></pre>
+<p>In my case, <code>rustup show</code> returns the following output. </p>
+<pre><code class="language-powershell">rustup show
+Default host: aarch64-apple-darwin
+rustup home:  /Users/nihal.pasham/.rustup
+
+installed toolchains
+--------------------
+
+stable-aarch64-apple-darwin
+nightly-aarch64-apple-darwin (default)
+
+installed targets for active toolchain
+--------------------------------------
+
+aarch64-apple-darwin
+aarch64-unknown-none-softfloat
+thumbv7em-none-eabihf
+
+active toolchain
+----------------
+
+nightly-aarch64-apple-darwin (default)
+rustc 1.63.0-nightly (ee160f2f5 2022-05-23)
+</code></pre>
+<p>As you can see from the <code>installed targets for active toolchain</code> section, the <code>aarch64-unknown-none-softfloat</code> target is installed. To compile and extract rustBoot-bootloader, simply clone the <a href="https://github.com/nihalpasham/rustBoot"><code>rustBoot repo</code></a> and run the following command</p>
+<pre><code class="language-powershell">cargo rpi4 build rustBoot-only
+</code></pre>
+<p>The above command should output the following (output will be longer when compilng for the first time) logs, produce an executable bootloader named <code>rustBoot.bin</code> and store it in the following path <code>./rustBoot/boards/bootloaders/rpi4</code></p>
+<pre><code class="language-powershell">Output:
+   Compiling xtask v0.1.0 (/Users/nihal.pasham/devspace/rust/projects/prod/rustBoot/xtask)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.64s
+     Running `target/debug/xtask rpi4 build rustBoot-only`
+$ cargo build --release
+   Compiling rustBoot v0.1.0 (/Users/nihal.pasham/devspace/rust/projects/prod/rustBoot/rustBoot)
+   Compiling rustBoot-hal v0.1.0 (/Users/nihal.pasham/devspace/rust/projects/prod/rustBoot/boards/hal)
+   Compiling rpi4 v0.1.0 (/Users/nihal.pasham/devspace/rust/projects/prod/rustBoot/boards/bootloaders/rpi4)
+    Finished release [optimized] target(s) in 4.77s
+$ rust-objcopy --strip-all -O binary ../../target/aarch64-unknown-none-softfloat/release/kernel rustBoot.bin
+</code></pre>
+<p>After compiling rustBoot, copy <code>rustBoot.bin</code> file onto the sd card's fat32 partiton.</p>
+<p>The last step in preparing a bootable SD card is to copy a rustBoot fit-image that you'd like to boot onto the sd card's fat32 partition. prepar</p>
+<blockquote>
+<p>Note: </p>
+<ul>
+<li>to build a rustBoot fit-image, you can follow <a href="../arch/images.html#building-a-rustboot-compliant-fit-image">these instructions</a> and</li>
+<li>to sign a fit-image, you can follow <a href="../arch/images.html#signing-fit-images">these instructions</a>. </li>
+</ul>
+</blockquote>
+<p>Finally, once you've added the above mentioned files to your sd card. The fat32 partition should contain the following files: </p>
+<ul>
+<li>  config.txt</li>
+<li>  fixup4.dat</li>
+<li>  start4.elf</li>
+<li>  bcm2711-rpi-4-b.dtb</li>
+<li>  rustBoot.bin</li>
+<li>  signed-example-image.itb</li>
+</ul>
+<h3 id="copying-a-root-file-system"><a class="header" href="#copying-a-root-file-system">Copying a root file system:</a></h3>
+<p>There are many ways to add a root file-system to the second ext2/3/4 partition. One way is to copy a root file system to an empty ext2/3/4 drive: </p>
+<ul>
+<li>Maintainers of a particular linux distribution provide pre-built OS images. These images usually contain several partitions such as - 
+<ul>
+<li><code>boot:</code> contains the bootloader, kernel, dtb, ramdisk and other stuff</li>
+<li><code>system:</code> contains the root file system </li>
+<li><code>others:</code> may contain other partitions for things such as storage etc.</li>
+</ul>
+</li>
+<li>simply download an OS image or a pre-built linux distribution from the maintainers website.
+<ul>
+<li>In this example, I'll be using the <code>apertis</code> distribution.</li>
+</ul>
+</li>
+<li>it’s usually in a compressed (zImage) format. Decompress it using a tool like unarchiver to get a disk image.</li>
+<li>use <code>partx --show</code> to list all partitions</li>
+</ul>
+<pre><code class="language-powershell">$ partx --show __linux_image_filepath__
+NR  START     END SECTORS SIZE NAME UUID
+ 1   8192  532479  524288 256M      9730496b-01
+ 2 532480 3661823 3129344 1.5G      9730496b-02
+</code></pre>
+<ul>
+<li>in the above case, partition2 with a size of 1.5G contains the root file system. It's usually named <code>system</code>.</li>
+<li>calculate the offset to <code>system</code> volume/partition. You can do this like so. </li>
+</ul>
+<blockquote>
+<p><code>512</code> is the sector-size. We multiply sector-size with the sector offset to get the actual starting (byte) location of <code>system</code>.</p>
+</blockquote>
+<pre><code class="language-powershell">$ bc
+bc 1.07.1
+Copyright 1991-1994, 1997, 1998, 2000, 2004, 2006, 2008, 2012-2017 Free Software Foundation, Inc.
+This is free software with ABSOLUTELY NO WARRANTY.
+For details type `warranty'.
+&gt; 532480 * 512
+&gt; 272629760
+&gt; quit
+</code></pre>
+<ul>
+<li>mount the partition as an <code>ext4 filesystem</code> </li>
+</ul>
+<pre><code>$ sudo mkdir /mnt/other
+$ sudo mount -v -o offset=272629760 -t ext4 /_path_to_file_image/__filename__.img /mnt/other
+mount: /dev/loop0 mounted on /mnt/other.
+
+Check mounted image
+
+$ ls /mnt/other
+</code></pre>
+<ul>
+<li>copy all of (system partition's) contents to sd card's ext2/3/4 partition using the <code>cp</code> command. </li>
+</ul>
+<blockquote>
+<p>Note:</p>
+<ul>
+<li>the above method only works on linux or macOS.</li>
+<li>all symbolic links need to be copied. If required you can create symbolic links using <code>ln</code> command. Here' an example that creates a symbolic link called <code>sbin</code> to <code>usr/bin</code> </li>
+</ul>
+<pre><code class="language-powershell">ln -s usr/sbin sbin 
+</code></pre>
+</blockquote>
+<h3 id="uart-communication"><a class="header" href="#uart-communication">UART communication:</a></h3>
+<p>rustBoot will output boot-logs via the raspberry-pi 4's UART interface. These logs can be sent to a host computer (i.e. laptop/desktop).</p>
+<p>We'll need extra hardware for this:</p>
+<ul>
+<li><strong>a usb-to-serial ttl converter:</strong> is a tiny piece of hardware that allows us to send serial data from the rpi4's uart interface to the host
+<ul>
+<li>You can find USB-to-serial cables that should work right away at <a href="https://www.amazon.de/dp/B0757FQ5CX/ref=cm_sw_r_tw_dp_U_x_ozGRDbVTJAG4Q">[1]</a> <a href="https://www.adafruit.com/product/954">[2]</a>, but many others will work too. Ideally, your cable is based on the CP2102 chip.</li>
+<li>You connect it to GND and GPIO pins 14/15 as shown below.</li>
+</ul>
+</li>
+</ul>
+<p>Connect the USB-serial converter to your host computer as shown in the wiring diagram
+<a href="https://www.jeffgeerling.com/sites/default/files/images/raspberry-pi-serial-cable-connection.png?raw=true"><img src="https://www.jeffgeerling.com/sites/default/files/images/raspberry-pi-serial-cable-connection.png?raw=true" alt="wiring diagram" title="USB-Serial UART connection" /></a>.</p>
+<ul>
+<li>make sure that you DO NOT connect the power pin of the USB serial. Only RX/TX and GND.</li>
+<li>connect the rpi4 to the (USB) power cable and observe the output:</li>
+</ul>
+<p><strong>Serial console:</strong>
+To view rpi4's output on a host machine, you'll need a program/app/console that handles sending and receiving of serial data. There are a number of ways to interact with a serial console. I'll be using </p>
+<ul>
+<li><code>minicom</code> on linux</li>
+<li><code>screen</code> on the mac</li>
+<li><code>terminal-s</code> on windows</li>
+</ul>
+<blockquote>
+<p>❗ NOTE: 
+Depending on your host operating system, the device name might differ. For example, on macOS, it might be something like /dev/tty.usbserial-0001. In this case, please give the name explicitly:</p>
+</blockquote>
+<ul>
+<li><strong>Using minicom:</strong>
+<ul>
+<li>install minicom with <code>sudo apt-get install minicom</code>, so you can emulate a terminal connected over serial.</li>
+<li>and run </li>
+</ul>
+<pre><code class="language-powershell">minicom -b 115200 -D /dev/tty.usbserial-0001
+</code></pre>
+<ul>
+<li>boot the Pi.</li>
+<li>within a few seconds, you should see data in your session.</li>
+</ul>
+</li>
+<li><strong>Using screen:</strong>
+<ul>
+<li>on a mac, run </li>
+</ul>
+<pre><code class="language-powershell">screen /dev/tty.usbserial-0001 115200
+</code></pre>
+<ul>
+<li>boot the Pi.</li>
+<li>within a few seconds, you should see data in your session.</li>
+</ul>
+</li>
+<li><strong>Using terminal-s:</strong>
+<ul>
+<li>on a windows machine, install terminal-s (a python-based serial terminal) with <code>pip install terminal-s</code></li>
+<li>and run </li>
+</ul>
+<pre><code class="language-powershell">terminal-s
+</code></pre>
+<ul>
+<li>no need to provide a baud-rate. It will auto-detect the port and baud-rate (assuming its lower than 115200).</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>Note: </p>
+<ul>
+<li>To exit the screen session, press Ctrl-A, then Ctrl-K, and confirm you want to exit when using minicom or screen</li>
+<li>To exit terminal-s, press Ctrl-]</li>
+</ul>
+</blockquote>
+<h3 id="power-on-and-test"><a class="header" href="#power-on-and-test">Power-on and test</a></h3>
+<p>Now that you have a fully bootable SD card containing</p>
+<ul>
+<li>a <code>fat32 formatted</code> boot partition populated with the relevant boot files and</li>
+<li>a <code>ext2/3/4 formatted</code> root-file-system partition</li>
+</ul>
+<p>and have your uart-usb interface set-up, you are now ready to flip the switch i.e. </p>
+<ul>
+<li>insert the sd card into the pi's sd slot and</li>
+<li>supply power to your pi. </li>
+</ul>
+<p>Your serial console should now start <a href="https://github.com/nihalpasham/rustBoot/blob/main/boards/bootloaders/rpi4/debug.md">receiving boot-logs from the rpi4</a></p>
 
                     </main>
 

@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en" class="sidebar-visible no-js rust">
+<html lang="en" class="sidebar-visible no-js light">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
@@ -36,7 +36,7 @@
         <!-- Provide site root to javascript -->
         <script type="text/javascript">
             var path_to_root = "";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "rust";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
@@ -62,7 +62,7 @@
             if (theme === null || theme === undefined) { theme = default_theme; }
             var html = document.querySelector('html');
             html.classList.remove('no-js')
-            html.classList.remove('rust')
+            html.classList.remove('light')
             html.classList.add(theme);
             html.classList.add('js');
         </script>
@@ -99,8 +99,8 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
@@ -146,56 +146,51 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="goals"><a class="header" href="#goals">Goals</a></h1>
-<p>Contrary to prevailing wisdom, writing your own secure-bootloader is a complex project. The effort involved in developing/integrating one can be overwhelming. For example, we’ll need to address a plethora of accompanying tasks such as key-management, signing infrastructure, code-safety, trust-chains, reliable back-ups etc. before we even get to the <code>actual booting logic</code>. </p>
-<p>rustBoot’s purpose is to help simplify the entire process. Its primary goals are</p>
+<p>Contrary to prevailing wisdom, writing your own secure-bootloader is a complex project. The effort involved in developing/integrating one can be overwhelming. For example, we'll need to address a plethora of accompanying tasks such as key-management, signing infrastructure, code-safety, trust-chains, reliable back-ups etc. before we even get to the <code>actual booting logic</code>. </p>
+<p>rustBoot's purpose is to help simplify the entire process. Its primary goals are</p>
 <ul>
-<li>
-<p><strong>Complies with <em>some</em> key requirements of the <a href="https://datatracker.ietf.org/wg/suit/about/">IETF-SUIT</a> standard</strong> i.e.</p>
+<li><strong>Complies with <em>some</em> key requirements of the <a href="https://datatracker.ietf.org/wg/suit/about/">IETF-SUIT</a> standard</strong> i.e.
 <ul>
-<li>one of <code>SUIT's requirements</code> - transferring or downloading an <code>update</code> should be delegated to the firmware/OS to avoid <code>size or computational</code> limitations. In other words, the bootloader should NOT be required to download and install an update. This removes the need for a networking stack and provides for a drastic reduction in the bootloader’s attack surface.</li>
+<li>one of <code>SUIT's requirements</code> - transferring or downloading an <code>update</code> should be delegated to the firmware/OS to avoid <code>size or computational</code> limitations. In other words, the bootloader should NOT be required to download and install an update. This removes the need for a networking stack and provides for a drastic reduction in the bootloader's attack surface.</li>
 <li>SUIT also does not mandate the use of specific protocols or data link interfaces to transfer <code>updates</code> to a device. </li>
 <li>rustBoot fully complies with this requirement. </li>
 </ul>
 </li>
-<li>
-<p><strong>Reliable updates:</strong></p>
+<li><strong>Reliable updates:</strong>
 <ul>
 <li>reliable updates in rustBoot will take the form of
 <ul>
-<li><code>flash swap operations</code> for microcontroller based systems. We’ll use the <code>boot/update based multi-slot partitioning method</code> to replace currently active firmware with a newly received update and at the same time store a back-up copy of it in a (passive) secondary partition.</li>
+<li><code>flash swap operations</code> for microcontroller based systems. We'll use the <code>boot/update based multi-slot partitioning method</code> to replace currently active firmware with a newly received update and at the same time store a back-up copy of it in a (passive) secondary partition.</li>
 <li><code>ram swap operations</code> for more powerful system-on-chip boards which can boot Linux. </li>
 </ul>
 </li>
 </ul>
 </li>
-<li>
-<p><strong>Predictability over Performance:</strong> </p>
+<li><strong>Predictability over Performance:</strong> 
 <ul>
-<li>one of rustBoot’s core design objectives is to keep it simple and avoid complexity. So, there will be little to no application of meta or async programming constructs. </li>
+<li>one of rustBoot's core design objectives is to keep it simple and avoid complexity. So, there will be little to no application of meta or async programming constructs. </li>
 </ul>
 <blockquote>
-<p><strong>Note:</strong> We don’t actually need the extra performance. rustBoot can hit sub-second <code>secure boot-times</code> as we’ve stripped it down to the bare-essentials. This assumes flash load times are fast enough and a firmware binary-blob size of &lt; 1MB.</p>
+<p><strong>Note:</strong> We don't actually need the extra performance. rustBoot can hit sub-second <code>secure boot-times</code> as we've stripped it down to the bare-essentials. This assumes flash load times are fast enough and a firmware binary-blob size of &lt; 1MB.</p>
 </blockquote>
 </li>
-<li>
-<p><strong>Zero-dynamic memory allocation:</strong></p>
+<li><strong>Zero-dynamic memory allocation:</strong>
 <ul>
 <li>to make it highly portable, apart from its modular design, rustBoot relies on a zero dynamic memory allocation architecture i.e. no heap required. </li>
 </ul>
 </li>
-<li>
-<p><strong>Memory safety &amp; type-state programming:</strong> </p>
+<li><strong>Memory safety &amp; type-state programming:</strong> 
 <ul>
-<li>the entire bootloader is written in rust’s safe-fragment with a limited set of well-defined api(s) for unsafe HW access.</li>
+<li>the entire bootloader is written in rust's safe-fragment with a limited set of well-defined api(s) for unsafe HW access.</li>
 <li>as a consequence, it makes rustBoot immune to a whole host of memory safety bugs. ex: things like parsing image-headers (i.e. container-formats) in rustBoot is much safer.</li>
-<li>rustBoot takes advantage of rust’s powerful type-system to make <code>invalid boot-states, unrepresentable at compile time</code> and along with constructs such as sealed states, global singletons, it improves the overall security of the entire code-base.</li>
+<li>rustBoot takes advantage of rust's powerful type-system to make <code>invalid boot-states, unrepresentable at compile time</code> and along with constructs such as sealed states, global singletons, it improves the overall security of the entire code-base.</li>
 </ul>
 </li>
 </ul>
 <blockquote>
-<p>There is a plan to further add to rustBoot’s high levels of assurance by leveraging <code>formal methods</code> such as</p>
+<p>There is a plan to further add to rustBoot's high levels of assurance by leveraging <code>formal methods</code> such as</p>
 <ul>
-<li><code>property-based testing via symbolic execution:</code> to formally verify rustBoot’s parser.</li>
+<li><code>property-based testing via symbolic execution:</code> to formally verify rustBoot's parser.</li>
 <li><code>deductive verification:</code> for critical sections of code (ex: swapping contents of boot and update partitions).</li>
 </ul>
 </blockquote>

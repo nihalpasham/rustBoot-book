@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en" class="sidebar-visible no-js rust">
+<html lang="en" class="sidebar-visible no-js light">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
@@ -36,7 +36,7 @@
         <!-- Provide site root to javascript -->
         <script type="text/javascript">
             var path_to_root = "../";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "rust";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
@@ -62,7 +62,7 @@
             if (theme === null || theme === undefined) { theme = default_theme; }
             var html = document.querySelector('html');
             html.classList.remove('no-js')
-            html.classList.remove('rust')
+            html.classList.remove('light')
             html.classList.add(theme);
             html.classList.add('js');
         </script>
@@ -99,8 +99,8 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
@@ -146,6 +146,39 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="signing-utilities"><a class="header" href="#signing-utilities">Signing Utilities</a></h1>
+<p>As rustBoot supports 2 types of firmware image formats, depending on the underlying device i.e. either an</p>
+<ul>
+<li><a href="./images.html#mcu-image-format"><code>mcu-image:</code></a> a simple 256-byte firmware image format for microcontrollers or a</li>
+<li><a href="./images.html#fit-image-format"><code>fit-image:</code></a> the flattened-image-tree format for systems capable of booting linux.</li>
+</ul>
+<p>rustBoot <code>rbsigner</code> utility can produce 2 different types signed images. </p>
+<h3 id="signed-mcu-image"><a class="header" href="#signed-mcu-image">Signed mcu-image:</a></h3>
+<pre><code>[TODO ..]
+</code></pre>
+<h3 id="signed-fit-image"><a class="header" href="#signed-fit-image">Signed fit-image:</a></h3>
+<p>To sign a fit-image, rustBoot's <a href="https://github.com/nihalpasham/rustBoot/tree/main/rbsigner">image signing utility</a> takes 3 inputs </p>
+<ul>
+<li>an unsigned fit-image in the above format</li>
+<li>a raw signing-key or ecdsa private key</li>
+<li>the ecdsa curve-type - (nistp256 only for now).</li>
+</ul>
+<p>Here's an example for how to sign a fit-image:</p>
+<ul>
+<li><code>../boards/bootloaders/rpi4/apertis/rpi4-test-apertis.itb</code> is the path to my fit-image </li>
+<li><code>../boards/rbSigner/keygen/ecc256.der</code> is the path to my <code>test</code> signing-key</li>
+<li><code>nistp256</code> is the type ecdsa curve I'd like to use. Its the only one supported for now.</li>
+</ul>
+<p>Simply run the following command from root directory of the rustBoot project. </p>
+<pre><code>cargo run ../boards/bootloaders/rpi4/apertis/rpi4-test-apertis.itb ../boards/rbSigner/keygen/ecc256.der nistp256
+
+Output: 
+
+    Finished dev [unoptimized + debuginfo] target(s) in 0.04s
+     Running `/Users/nihal.pasham/devspace/rust/projects/prod/rustBoot/target/debug/rbsigner ../boards/bootloaders/rpi4/apertis/rpi4-test-apertis.itb ../boards/rbSigner/keygen/ecc256.der nistp256`
+signature: ecdsa::Signature&lt;NistP256&gt;([64, 147, 93, 99, 241, 5, 118, 167, 156, 150, 203, 234, 74, 207, 182, 243, 129, 143, 38, 2, 107, 85, 114, 145, 178, 163, 33, 153, 2, 100, 0, 114, 135, 18, 174, 183, 194, 110, 24, 186, 33, 36, 39, 105, 116, 74, 8, 118, 171, 237, 30, 108, 64, 205, 206, 14, 110, 226, 43, 143, 180, 193, 19, 33])
+bytes_written: 62202019
+</code></pre>
+<p>In this case, the <code>signed fit-image</code> will be stored at the following path - <code>../boards/bootloaders/rpi4/apertis/signed-rpi4-apertis.itb</code></p>
 
                     </main>
 

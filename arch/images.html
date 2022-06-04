@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en" class="sidebar-visible no-js rust">
+<html lang="en" class="sidebar-visible no-js light">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
@@ -36,7 +36,7 @@
         <!-- Provide site root to javascript -->
         <script type="text/javascript">
             var path_to_root = "../";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "rust";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
@@ -62,7 +62,7 @@
             if (theme === null || theme === undefined) { theme = default_theme; }
             var html = document.querySelector('html');
             html.classList.remove('no-js')
-            html.classList.remove('rust')
+            html.classList.remove('light')
             html.classList.add(theme);
             html.classList.add('js');
         </script>
@@ -99,8 +99,8 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
@@ -146,12 +146,18 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="rustboot-images"><a class="header" href="#rustboot-images">rustBoot Images</a></h1>
-<p>rustBoot images comprise of a <code>256-byte header</code> pre-pended to a firmware binary and are deliberately designed to be as simple as possible. </p>
+<p>rustBoot supports 2 types of firmware image formats, depending on the underlying device. It could either be an</p>
 <ul>
-<li>it does not rely on the use of complex digital certificate formats to <a href="../index.html#trusted-computing-base"><code>reduce its TCB</code></a> and avoids unnecessary <a href="../index.html#complexity--boot-time">code-complexity</a></li>
+<li><a href="./images.html#mcu-image-format"><code>mcu-image:</code></a> a simple 256-byte firmware image format for microcontrollers or a</li>
+<li><a href="./images.html#fit-image-format"><code>fit-image:</code></a> the flattened-image-tree format for systems capable of booting linux.</li>
+</ul>
+<h2 id="mcu-image-format"><a class="header" href="#mcu-image-format">MCU image format</a></h2>
+<p>rustBoot mcu-images comprise of a <code>256-byte header</code> pre-pended to a firmware binary and are deliberately designed to be as simple as possible. </p>
+<ul>
+<li>it does not rely on the use of complex digital certificate formats which keeps the <a href="../index.html#trusted-computing-base"><code>TCB</code></a> small and avoids unnecessary <a href="../index.html#complexity--boot-time">code-complexity</a></li>
 </ul>
 <p><a href="https://github.com/imrank03/rustBoot-book-diagrams/blob/main/rustBoot_header.svg?raw=true"><img src="https://github.com/imrank03/rustBoot-book-diagrams/blob/main/rustBoot_header.svg?raw=true" alt="rustBoot_header" title="Simplified Block Diagram, 256 byte rustBoot header" /></a></p>
-<h3 id="rustboot-image-header-layout"><a class="header" href="#rustboot-image-header-layout">rustBoot Image header layout:</a></h3>
+<h3 id="rustboot-image-header-layout"><a class="header" href="#rustboot-image-header-layout">rustBoot image header layout:</a></h3>
 <p>The header always starts with a 4-byte magic number, followed by a 4-byte field indicating the size of the firmware image (excluding the header). All header contents are stored in little-endian format.</p>
 <p>The 2 (<code>magic and size</code>) fixed fields are followed by one or more <code>TLV(s) or Type, Length, Value</code> tags. A TLV has the following layout</p>
 <ul>
@@ -159,9 +165,9 @@
 <li><strong>Length:</strong> 2 bytes to indicate the <code>length in bytes</code> of the tag (excluding the type and size bytes).</li>
 <li><strong>Value:</strong> N bytes of tag content</li>
 </ul>
-<h3 id="padding-and-end-of-header-bytes"><a class="header" href="#padding-and-end-of-header-bytes">Padding and End of Header bytes:</a></h3>
+<h3 id="padding-and-end-of-header-bytes"><a class="header" href="#padding-and-end-of-header-bytes">Padding and End of header bytes:</a></h3>
 <ul>
-<li>An <code>0xFF</code> byte in the <code>Type</code> field indicates a padding byte. A ‘padding’ byte does <em>NOT</em> have a size field, and the next byte is interpreted as <code>Type</code> again.</li>
+<li>An <code>0xFF</code> byte in the <code>Type</code> field indicates a padding byte. A 'padding' byte does <em>NOT</em> have a size field, and the next byte is interpreted as <code>Type</code> again.</li>
 <li>A 2 byte value of <code>0x0000</code> signals the end of the rustBoot header. </li>
 </ul>
 <h3 id="tags"><a class="header" href="#tags">Tags:</a></h3>
@@ -179,7 +185,7 @@
 <li>Length: 8 bytes</li>
 </ul>
 </li>
-<li>The <code>auth type</code> tag identifies the type of the authentication mechanism in use. Ex: which ECC curve are we using and what’s the key strength etc.
+<li>The <code>auth type</code> tag identifies the type of the authentication mechanism in use. Ex: which ECC curve are we using and what's the key strength etc.
 <ul>
 <li>Type: <code>0x0030</code></li>
 <li>Length: 2 bytes</li>
@@ -198,7 +204,7 @@
 </ul>
 </li>
 </ul>
-<h3 id="optional-tags"><a class="header" href="#optional-tags">Optional Tags:</a></h3>
+<h3 id="optional-tags"><a class="header" href="#optional-tags">Optional tags:</a></h3>
 <ul>
 <li><strong>Pubkey Hint:</strong> A <code>pubkey hint digest</code> tag can be included in the header.
 <ul>
@@ -209,14 +215,257 @@
 </li>
 </ul>
 <blockquote>
-<p><strong>rustBoot Defaults:</strong> </p>
+<p><strong>MCU defaults:</strong> </p>
 <ul>
 <li>By default, a valid rustBoot image is always signed.</li>
 <li>It relies on the 256-byte header for firmware validation.</li>
 <li>It will fail to boot an image
 <ul>
 <li>if it does not possess a <a href="images.html#rustboot-images"><code>valid rustBoot header</code></a> or</li>
-<li>if it isn’t signed or if it cannot be verified using the included the <a href="images.html#tags"><code>authentication-type</code></a>.</li>
+<li>if it isn't signed or if it cannot be verified using the included the <a href="images.html#tags"><code>authentication-type</code></a>.</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h2 id="fit-image-format"><a class="header" href="#fit-image-format">FIT-image format</a></h2>
+<p>rustBoot leverages Uboot's <a href="https://raw.githubusercontent.com/u-boot/u-boot/master/doc/uImage.FIT/howto.txt"><code>flattened-uImage-tree</code></a> format when booting the linux kernel. </p>
+<p>The FIT format is essentially an extension of  the <a href="https://github.com/devicetree-org/devicetree-specification/releases/tag/v0.4-rc1"><code>device-tree</code></a> format. FIT allows us to combine multiple binaries such as the kernel, ramdisk, device-tree-blob etc. into a single image. </p>
+<p>A typical rustBoot fit-image contains 4 items in the following order</p>
+<ul>
+<li>  kernel</li>
+<li>  fdt</li>
+<li>  initrd</li>
+<li>  rbconfig</li>
+</ul>
+<p><strong>Here's an example fit-image source file :</strong> It is also referred to as an image-tree source file or <code>.its</code> file.</p>
+<pre><code class="language-json">/dts-v1/;
+
+/ {
+        description = &quot;rustBoot FIT Image&quot;;
+        #address-cells = &lt;1&gt;;
+
+        images {
+                kernel {
+                        description = &quot;Kernel&quot;;
+                        data = /incbin/(&quot;vmlinuz&quot;);     
+                        type = &quot;kernel&quot;;
+                        arch = &quot;arm64&quot;;
+                        os = &quot;linux&quot;;
+                        compression = &quot;none&quot;;
+                        load = &lt;0x40480000&gt;;
+                        entry = &lt;0x40480000&gt;;
+                        hash {
+                                algo = &quot;sha256&quot;;
+                        };
+                };
+                fdt {
+                        description = &quot;DTB&quot;;
+                        data = /incbin/(&quot;unpatched-bcm2711-rpi-4-b.dtb&quot;);
+                        type = &quot;flat_dt&quot;;
+                        arch = &quot;arm64&quot;;
+                        compression = &quot;none&quot;;
+                        load = &lt;0x43000000&gt;;
+                        entry = &lt;0x43000000&gt;;
+                        hash {
+                                algo = &quot;sha256&quot;;
+                        };
+                };
+                initrd {
+                        description = &quot;Initrd&quot;;
+                        data = /incbin/(&quot;initramfs&quot;);
+                        type = &quot;ramdisk&quot;;
+                        arch = &quot;arm64&quot;;
+                        os = &quot;linux&quot;;
+                        compression = &quot;none&quot;;
+                        hash {
+                                algo = &quot;sha256&quot;;
+                        };
+                };
+                rbconfig {
+                        description = &quot;rustBoot Config&quot;;
+                        data = /incbin/(&quot;rbconfig.txt&quot;);
+                        type = &quot;rustBoot cmdline config&quot;;
+                        arch = &quot;none&quot;;
+                        os = &quot;linux&quot;;
+                        compression = &quot;none&quot;;
+                        hash {
+                                algo = &quot;sha256&quot;;
+                        };
+                };
+        };
+
+        configurations {
+                default = &quot;bootconfig&quot;;
+                bootconfig {
+                        description = &quot;Boot Config&quot;;
+                        kernel = &quot;kernel&quot;;
+                        fdt = &quot;fdt&quot;;
+                        ramdisk = &quot;initrd&quot;;
+                        rbconfig = &quot;rbconfig&quot;;
+                        signature@1 {
+				algo = &quot;sha256,ecdsa256,nistp256&quot;;
+				key-name-hint = &quot;dev&quot;;
+				signed-images = &quot;fdt&quot;, &quot;kernel&quot;, &quot;ramdisk&quot;, &quot;rbconfig&quot;;
+                                value = &quot;&quot;;
+			};
+                };
+        };
+
+};
+</code></pre>
+<p>The default configuration of an <code>.its</code> file determines which kernel, initrd, fdt and rbconfig is to be used for booting. In the above example, <code>bootconfig</code> is our default configuration. </p>
+<blockquote>
+<p>rustBoot's FIT parser will select the corresponding kernel, fdt, initrd and rbconfig associated with <code>bootconfig</code> for booting</p>
+</blockquote>
+<h3 id="building-a-rustboot-compliant-fit-image"><a class="header" href="#building-a-rustboot-compliant-fit-image">Building a rustBoot compliant fit-image:</a></h3>
+<p>As shown in the example above, a rustBoot compliant fit-image contains 4 items - </p>
+<ul>
+<li><code>kernel</code> - the linux kernel </li>
+<li><code>fdt</code> - the flattened device tree or device tree blob</li>
+<li><code>ramdisk</code>- a root filesystem that is embedded into the kernel and loaded at an early stage of the boot process. It is the successor of initrd. It can do things the kernel can't easily do by itself during the boot process. For example: customize the boot process (e.g., print a welcome message) </li>
+<li><code>rbconfig</code> - this is rustBoot's kernel configuraton. A simple <code>txt</code> file to add kernel command-line arguments.</li>
+</ul>
+<p>You can retrieve the first 3 (i.e. kernel, fdt, ramdisk) from a pre-built OS image: </p>
+<ul>
+<li>Maintainers of a particular linux distribution provide pre-built OS images. These images usually contain several partitions such as - 
+<ul>
+<li><code>boot:</code> contains the bootloader, kernel, dtb, ramdisk and other stuff</li>
+<li><code>system:</code> contains the root file system </li>
+<li><code>others:</code> may contain other partitions for things such as storage etc.</li>
+</ul>
+</li>
+<li>simply download an OS image or a pre-built linux distribution from the maintainers website.
+<ul>
+<li>In this example, I'll be using the <code>apertis</code> distribution.</li>
+</ul>
+</li>
+<li>it’s usually a compressed (zImage) format. Decompress it using a tool like unarchiver to get a disk image.</li>
+<li>use <code>partx --show</code> to list all partitions</li>
+</ul>
+<pre><code class="language-powershell">$ partx --show __linux_image_filepath__
+NR  START     END SECTORS SIZE NAME UUID
+ 1   8192  532479  524288 256M      9730496b-01
+ 2 532480 3661823 3129344 1.5G      9730496b-02
+</code></pre>
+<p>In the above case, the first partition with a size of 256MB contains our boot-files. It's usually named <code>boot</code>. We can calculate the offset to <code>boot</code> volume/partition with the following command </p>
+<pre><code class="language-powershell">$ bc
+bc 1.07.1
+Copyright 1991-1994, 1997, 1998, 2000, 2004, 2006, 2008, 2012-2017 Free Software Foundation, Inc.
+This is free software with ABSOLUTELY NO WARRANTY.
+For details type `warranty'.
+&gt; 8192 * 512
+&gt; 4194304
+&gt; quit
+</code></pre>
+<blockquote>
+<p><code>512</code> is the sector-size. We multiply sector-size with the sector offset to get the actual starting (byte) location of <code>boot</code>.</p>
+</blockquote>
+<p>mount the partition as an <code>ext4</code> file-system (or <code>fat</code> file-system, whichever)</p>
+<pre><code>$ sudo mkdir /mnt/other
+$ sudo mount -v -o offset=272629760 -t ext4 /_path_to_file_image/__filename__.img /mnt/other
+mount: /dev/loop0 mounted on /mnt/other.
+
+Check mounted image
+
+$ ls /mnt/other
+</code></pre>
+<p>Finally copy the <code>dtb</code>, <code>ramdisk</code> and <code>vmlinuz</code> image (i.e. kernel) from the mounted partition to a new folder. You can give it any name you want. I'll use <code>pkg</code> in this example.</p>
+<blockquote>
+<p>vmlinuz is a PE (portable executable) i.e. we can jump to it and it will in-turn jump to the kernel's entry point.</p>
+</blockquote>
+<p>After storing all 4 items in the <code>pkg</code> folder, you can build a fit-image by running the following commands. </p>
+<ul>
+<li>the <code>.its</code> file is the input to <code>mkimage</code> </li>
+<li>and the <code>.itb</code> filename is the generated fit-image, stored in the same <code>pkg</code> folder. </li>
+</ul>
+<p><strong>On a mac:</strong> </p>
+<pre><code class="language-powershell">brew install u-boot-tools
+</code></pre>
+<p><strong>On a linux machine:</strong></p>
+<pre><code class="language-powershell">sudo apt install u-boot-tools
+</code></pre>
+<p>and then run </p>
+<pre><code class="language-powershell">mkimage -f rpi4-apertis.its rpi4-test-apertis.itb
+
+Output:
+
+rpi4-apertis.its:65.37-70.6: Warning (unit_address_vs_reg): /configurations/bootconfig/signature@1: node has a unit name, but no reg or ranges property
+Image contains unit addresses @, this will break signing
+FIT description: rustBoot FIT Image
+Created:         Sat Jun  4 13:18:45 2022
+ Image 0 (kernel)
+  Description:  Kernel
+  Created:      Sat Jun  4 13:18:45 2022
+  Type:         Kernel Image
+  Compression:  uncompressed
+  Data Size:    29272576 Bytes = 28586.50 KiB = 27.92 MiB
+  Architecture: AArch64
+  OS:           Linux
+  Load Address: 0x40480000
+  Entry Point:  0x40480000
+  Hash algo:    sha256
+  Hash value:   97dcbff24ad0a60514e31a7a6b34a765681fea81f8dd11e4644f3ec81e1044fb
+ Image 1 (fdt)
+  Description:  DTB
+  Created:      Sat Jun  4 13:18:45 2022
+  Type:         Flat Device Tree
+  Compression:  uncompressed
+  Data Size:    25713 Bytes = 25.11 KiB = 0.02 MiB
+  Architecture: AArch64
+  Load Address: 0x43000000
+  Hash algo:    sha256
+  Hash value:   3572783be74511b710ed7fca9b3131e97fd8073c620a94269a4e4ce79d331540
+ Image 2 (initrd)
+  Description:  Initrd
+  Created:      Sat Jun  4 13:18:45 2022
+  Type:         RAMDisk Image
+  Compression:  uncompressed
+  Data Size:    32901194 Bytes = 32130.07 KiB = 31.38 MiB
+  Architecture: AArch64
+  OS:           Linux
+  Load Address: unavailable
+  Entry Point:  unavailable
+  Hash algo:    sha256
+  Hash value:   f1290587e2155e3a5c2c870fa1d6e3e2252fb0dddf74992113d2ed86bc67f37c
+ Image 3 (rbconfig)
+  Description:  rustBoot Config
+  Created:      Sat Jun  4 13:18:45 2022
+  Type:         Unknown Image
+  Compression:  uncompressed
+  Data Size:    141 Bytes = 0.14 KiB = 0.00 MiB
+  Hash algo:    sha256
+  Hash value:   b16d058c4f09abdb8da98561f3a15d06ff271c38a4655c2be11dec23567fd519
+ Default Configuration: 'bootconfig'
+ Configuration 0 (bootconfig)
+  Description:  Boot Config
+  Kernel:       kernel
+  Init Ramdisk: initrd
+  FDT:          fdt
+  Sign algo:    sha256,ecdsa256,nistp256:dev
+  Sign value:   00
+  Timestamp:    unavailable
+</code></pre>
+<p>The <code>.itb</code> file is our fit-image. It does not contain a signature yet i.e. it is not signed. You'll notice <code>sign-value</code> field is empty. </p>
+<h3 id="signing-fit-images"><a class="header" href="#signing-fit-images">Signing fit-images</a></h3>
+<p>rustBoot fit-images are signed with <code>ecdsa256</code>. The signature includes the kernel, fdt, initrd and rbconfig. </p>
+<p>Signing a rustBoot fit-image involves 2 steps: </p>
+<ul>
+<li><strong>Building a fit-image:</strong> As explained in <a href="./images.html#building-a-rustboot-compliant-fit-image">preceding section</a>, FIT images can be built using <code>mkimage</code> - a command-line utility from the <code>uboot-tools</code> package i.e. you can pass an <code>.its</code> file to the mkimage tool and mkimage will produce an <code>.itb</code> blob or a image-tree blob.</li>
+<li><strong>signing the fit-image:</strong>  once you've built your fit-image, you can pass the it along with a signing key to rustBoot's <code>rbsigner</code> utility to <a href="./signing_utilities.html#signed-fit-image">generate a signed fit-image</a>. </li>
+</ul>
+<blockquote>
+<p><strong>FIT-image defaults:</strong> </p>
+<ul>
+<li>By default, valid rustBoot images are always signed.</li>
+<li>It will fail to boot an image
+<ul>
+<li>if the image fails fit-validation i.e. if its not a properly formatted fit-image or if the fit-parser cant find the specified default config or its components. </li>
+<li>if it isn't signed or if it cannot be verified using the included algo.</li>
+</ul>
+</li>
+<li>rustBoot's fit parser currently supports the following architectures
+<ul>
+<li><code>Aarch64</code></li>
 </ul>
 </li>
 </ul>

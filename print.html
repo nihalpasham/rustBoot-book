@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en" class="sidebar-visible no-js rust">
+<html lang="en" class="sidebar-visible no-js light">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
@@ -37,7 +37,7 @@
         <!-- Provide site root to javascript -->
         <script type="text/javascript">
             var path_to_root = "";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "rust";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
@@ -63,7 +63,7 @@
             if (theme === null || theme === undefined) { theme = default_theme; }
             var html = document.querySelector('html');
             html.classList.remove('no-js')
-            html.classList.remove('rust')
+            html.classList.remove('light')
             html.classList.add(theme);
             html.classList.add('js');
         </script>
@@ -100,8 +100,8 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
@@ -171,7 +171,7 @@
 <li>and more stuff.</li>
 </ul>
 <blockquote>
-<p><strong>Note:</strong> This includes <a href="https://github.com/u-boot/u-boot"><code>U-boot</code></a>, the de-facto standard in the embedded-systems world. <a href="https://github.com/nccgroup/depthcharge"><code>DepthCharge</code></a> is an example of a U-Boot hacking toolkit for security researchers and tinkerers, designed to exploit U-boot’s large attack surface. </p>
+<p><strong>Note:</strong> This includes <a href="https://github.com/u-boot/u-boot"><code>U-boot</code></a>, the de-facto standard in the embedded-systems world. <a href="https://github.com/nccgroup/depthcharge"><code>DepthCharge</code></a> is an example of a U-Boot hacking toolkit for security researchers and tinkerers, designed to exploit U-boot's large attack surface. </p>
 </blockquote>
 <p><img src="https://raw.githubusercontent.com/imrank03/rustBoot-book-diagrams/main/Mental_map.svg?raw=true" alt="mental_map_uboot_attack_surface" /></p>
 <h3 id="memory-safety"><a class="header" href="#memory-safety">Memory safety:</a></h3>
@@ -188,56 +188,51 @@
 <h3 id="vendor-dependencies"><a class="header" href="#vendor-dependencies">Vendor dependencies:</a></h3>
 <p>Vendor-specific or custom chain of trust dependencies make it difficult to port bootloader implementations across boards.  This is in-part attributable to <code>non-standards based solutions</code>. </p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="goals"><a class="header" href="#goals">Goals</a></h1>
-<p>Contrary to prevailing wisdom, writing your own secure-bootloader is a complex project. The effort involved in developing/integrating one can be overwhelming. For example, we’ll need to address a plethora of accompanying tasks such as key-management, signing infrastructure, code-safety, trust-chains, reliable back-ups etc. before we even get to the <code>actual booting logic</code>. </p>
-<p>rustBoot’s purpose is to help simplify the entire process. Its primary goals are</p>
+<p>Contrary to prevailing wisdom, writing your own secure-bootloader is a complex project. The effort involved in developing/integrating one can be overwhelming. For example, we'll need to address a plethora of accompanying tasks such as key-management, signing infrastructure, code-safety, trust-chains, reliable back-ups etc. before we even get to the <code>actual booting logic</code>. </p>
+<p>rustBoot's purpose is to help simplify the entire process. Its primary goals are</p>
 <ul>
-<li>
-<p><strong>Complies with <em>some</em> key requirements of the <a href="https://datatracker.ietf.org/wg/suit/about/">IETF-SUIT</a> standard</strong> i.e.</p>
+<li><strong>Complies with <em>some</em> key requirements of the <a href="https://datatracker.ietf.org/wg/suit/about/">IETF-SUIT</a> standard</strong> i.e.
 <ul>
-<li>one of <code>SUIT's requirements</code> - transferring or downloading an <code>update</code> should be delegated to the firmware/OS to avoid <code>size or computational</code> limitations. In other words, the bootloader should NOT be required to download and install an update. This removes the need for a networking stack and provides for a drastic reduction in the bootloader’s attack surface.</li>
+<li>one of <code>SUIT's requirements</code> - transferring or downloading an <code>update</code> should be delegated to the firmware/OS to avoid <code>size or computational</code> limitations. In other words, the bootloader should NOT be required to download and install an update. This removes the need for a networking stack and provides for a drastic reduction in the bootloader's attack surface.</li>
 <li>SUIT also does not mandate the use of specific protocols or data link interfaces to transfer <code>updates</code> to a device. </li>
 <li>rustBoot fully complies with this requirement. </li>
 </ul>
 </li>
-<li>
-<p><strong>Reliable updates:</strong></p>
+<li><strong>Reliable updates:</strong>
 <ul>
 <li>reliable updates in rustBoot will take the form of
 <ul>
-<li><code>flash swap operations</code> for microcontroller based systems. We’ll use the <code>boot/update based multi-slot partitioning method</code> to replace currently active firmware with a newly received update and at the same time store a back-up copy of it in a (passive) secondary partition.</li>
+<li><code>flash swap operations</code> for microcontroller based systems. We'll use the <code>boot/update based multi-slot partitioning method</code> to replace currently active firmware with a newly received update and at the same time store a back-up copy of it in a (passive) secondary partition.</li>
 <li><code>ram swap operations</code> for more powerful system-on-chip boards which can boot Linux. </li>
 </ul>
 </li>
 </ul>
 </li>
-<li>
-<p><strong>Predictability over Performance:</strong> </p>
+<li><strong>Predictability over Performance:</strong> 
 <ul>
-<li>one of rustBoot’s core design objectives is to keep it simple and avoid complexity. So, there will be little to no application of meta or async programming constructs. </li>
+<li>one of rustBoot's core design objectives is to keep it simple and avoid complexity. So, there will be little to no application of meta or async programming constructs. </li>
 </ul>
 <blockquote>
-<p><strong>Note:</strong> We don’t actually need the extra performance. rustBoot can hit sub-second <code>secure boot-times</code> as we’ve stripped it down to the bare-essentials. This assumes flash load times are fast enough and a firmware binary-blob size of &lt; 1MB.</p>
+<p><strong>Note:</strong> We don't actually need the extra performance. rustBoot can hit sub-second <code>secure boot-times</code> as we've stripped it down to the bare-essentials. This assumes flash load times are fast enough and a firmware binary-blob size of &lt; 1MB.</p>
 </blockquote>
 </li>
-<li>
-<p><strong>Zero-dynamic memory allocation:</strong></p>
+<li><strong>Zero-dynamic memory allocation:</strong>
 <ul>
 <li>to make it highly portable, apart from its modular design, rustBoot relies on a zero dynamic memory allocation architecture i.e. no heap required. </li>
 </ul>
 </li>
-<li>
-<p><strong>Memory safety &amp; type-state programming:</strong> </p>
+<li><strong>Memory safety &amp; type-state programming:</strong> 
 <ul>
-<li>the entire bootloader is written in rust’s safe-fragment with a limited set of well-defined api(s) for unsafe HW access.</li>
+<li>the entire bootloader is written in rust's safe-fragment with a limited set of well-defined api(s) for unsafe HW access.</li>
 <li>as a consequence, it makes rustBoot immune to a whole host of memory safety bugs. ex: things like parsing image-headers (i.e. container-formats) in rustBoot is much safer.</li>
-<li>rustBoot takes advantage of rust’s powerful type-system to make <code>invalid boot-states, unrepresentable at compile time</code> and along with constructs such as sealed states, global singletons, it improves the overall security of the entire code-base.</li>
+<li>rustBoot takes advantage of rust's powerful type-system to make <code>invalid boot-states, unrepresentable at compile time</code> and along with constructs such as sealed states, global singletons, it improves the overall security of the entire code-base.</li>
 </ul>
 </li>
 </ul>
 <blockquote>
-<p>There is a plan to further add to rustBoot’s high levels of assurance by leveraging <code>formal methods</code> such as</p>
+<p>There is a plan to further add to rustBoot's high levels of assurance by leveraging <code>formal methods</code> such as</p>
 <ul>
-<li><code>property-based testing via symbolic execution:</code> to formally verify rustBoot’s parser.</li>
+<li><code>property-based testing via symbolic execution:</code> to formally verify rustBoot's parser.</li>
 <li><code>deductive verification:</code> for critical sections of code (ex: swapping contents of boot and update partitions).</li>
 </ul>
 </blockquote>
@@ -272,7 +267,7 @@ support for <code>ARM TrustZone-M and A</code> and certified <code>secure hardwa
 support for a highly secure and efficient <code>firmware transport</code> method over end-end mutually authenticated and encrypted channels via <a href="https://github.com/ockam-network/ockam/tree/develop/documentation/use-cases/end-to-end-encryption-with-rust#readme">ockam-networking-libraries</a>.</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="design"><a class="header" href="#design">Design</a></h1>
-<p><code>rustBoot</code> aims to offer an OS and micro-architecture agnostic (i.e. highly portable) standards-based secure bootloader that’s easy to integrate into existing embedded software projects. Its architecture is designed around the idea – <code>a bootloader handles ONLY the bare-essentials and offloads the rest to systems that are better suited for the job.</code> </p>
+<p><code>rustBoot</code> aims to offer an OS and micro-architecture agnostic (i.e. highly portable) standards-based secure bootloader that's easy to integrate into existing embedded software projects. Its architecture is designed around the idea – <code>a bootloader handles ONLY the bare-essentials and offloads the rest to systems that are better suited for the job.</code> </p>
 <h2 id="what-do-bootloaders-actually-do"><a class="header" href="#what-do-bootloaders-actually-do">What do bootloaders actually do?</a></h2>
 <ol>
 <li>Initialize bare-minimum requisite hardware. Ex: cpu-core, flash, gpios, uart, (RAM and hardware secure elements if needed).</li>
@@ -280,7 +275,7 @@ support for a highly secure and efficient <code>firmware transport</code> method
 <li>Boot into firmware or OS i.e. <code>linux or RTOS or bare-metal</code></li>
 <li>If an update is available, perform the update and re-boot (with rollback protection in-case of firmware-corruption or if power is interrupted).</li>
 </ol>
-<p>In this chapter, we’ll talk about rustBoot’s design and its core components.</p>
+<p>In this chapter, we'll talk about rustBoot's design and its core components.</p>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="components-of-rustboot"><a class="header" href="#components-of-rustboot">Components of rustBoot</a></h2>
 <p>At its core, <code>rustBoot</code> is comprised of 4 components</p>
 <ul>
@@ -327,7 +322,7 @@ support for a highly secure and efficient <code>firmware transport</code> method
 <p>Note: In the above context, firmware refers to either linux or bare-metal firmware. </p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="high-level-overview"><a class="header" href="#high-level-overview">High Level Overview</a></h1>
-<p>rustBoot’s architecture reflects its focus on <code>simplicity and security above all else</code>. </p>
+<p>rustBoot's architecture reflects its focus on <code>simplicity and security</code>, above everything else. </p>
 <p>For a high-level overview, you can think of rustBoot as operating in 2 independent stages. </p>
 <ul>
 <li><strong>Pre-handover stage:</strong> post power-on, the BootROM (or some other intermediate-stage bootloader) executes and hands control over to <code>rustBoot</code>. This is a stage where <code>rustBoot</code> has full <code>execution control</code>.</li>
@@ -336,8 +331,8 @@ support for a highly secure and efficient <code>firmware transport</code> method
 <h2 id="pre-handover-stage"><a class="header" href="#pre-handover-stage">Pre-handover stage:</a></h2>
 <ul>
 <li>rustBoot provides a minimal hardware abstraction layer for a wide range of ARM microcontrollers (STM32, Nordic, Microchip etc.) and microprocessors (rpi4, NXP etc.). The HAL allows peripherals drivers to initialize requisite hardware such as flash memories, UART controllers, GPIO pins etc.</li>
-<li>an optional software-based crypto library in-case you don’t need (or use) dedicated crypto hardware.</li>
-<li>rustBoot’s core-bootloader houses all of the <code>actual boot-logic</code> such as
+<li>an optional software-based crypto library in-case you don't need (or use) dedicated crypto hardware.</li>
+<li>rustBoot's core-bootloader houses all of the <code>actual boot-logic</code> such as
 <ul>
 <li>firmware image <code>integrity and authenticity verification</code> via digital signatures</li>
 <li>power-interruptible firmware updates along with the assurance of fall-back availability. </li>
@@ -371,12 +366,18 @@ support for a highly secure and efficient <code>firmware transport</code> method
 </ul>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="rustboot-images"><a class="header" href="#rustboot-images">rustBoot Images</a></h1>
-<p>rustBoot images comprise of a <code>256-byte header</code> pre-pended to a firmware binary and are deliberately designed to be as simple as possible. </p>
+<p>rustBoot supports 2 types of firmware image formats, depending on the underlying device. It could either be an</p>
 <ul>
-<li>it does not rely on the use of complex digital certificate formats to <a href="arch/../index.html#trusted-computing-base"><code>reduce its TCB</code></a> and avoids unnecessary <a href="arch/../index.html#complexity--boot-time">code-complexity</a></li>
+<li><a href="arch/./images.html#mcu-image-format"><code>mcu-image:</code></a> a simple 256-byte firmware image format for microcontrollers or a</li>
+<li><a href="arch/./images.html#fit-image-format"><code>fit-image:</code></a> the flattened-image-tree format for systems capable of booting linux.</li>
+</ul>
+<h2 id="mcu-image-format"><a class="header" href="#mcu-image-format">MCU image format</a></h2>
+<p>rustBoot mcu-images comprise of a <code>256-byte header</code> pre-pended to a firmware binary and are deliberately designed to be as simple as possible. </p>
+<ul>
+<li>it does not rely on the use of complex digital certificate formats which keeps the <a href="arch/../index.html#trusted-computing-base"><code>TCB</code></a> small and avoids unnecessary <a href="arch/../index.html#complexity--boot-time">code-complexity</a></li>
 </ul>
 <p><a href="https://github.com/imrank03/rustBoot-book-diagrams/blob/main/rustBoot_header.svg?raw=true"><img src="https://github.com/imrank03/rustBoot-book-diagrams/blob/main/rustBoot_header.svg?raw=true" alt="rustBoot_header" title="Simplified Block Diagram, 256 byte rustBoot header" /></a></p>
-<h3 id="rustboot-image-header-layout"><a class="header" href="#rustboot-image-header-layout">rustBoot Image header layout:</a></h3>
+<h3 id="rustboot-image-header-layout"><a class="header" href="#rustboot-image-header-layout">rustBoot image header layout:</a></h3>
 <p>The header always starts with a 4-byte magic number, followed by a 4-byte field indicating the size of the firmware image (excluding the header). All header contents are stored in little-endian format.</p>
 <p>The 2 (<code>magic and size</code>) fixed fields are followed by one or more <code>TLV(s) or Type, Length, Value</code> tags. A TLV has the following layout</p>
 <ul>
@@ -384,9 +385,9 @@ support for a highly secure and efficient <code>firmware transport</code> method
 <li><strong>Length:</strong> 2 bytes to indicate the <code>length in bytes</code> of the tag (excluding the type and size bytes).</li>
 <li><strong>Value:</strong> N bytes of tag content</li>
 </ul>
-<h3 id="padding-and-end-of-header-bytes"><a class="header" href="#padding-and-end-of-header-bytes">Padding and End of Header bytes:</a></h3>
+<h3 id="padding-and-end-of-header-bytes"><a class="header" href="#padding-and-end-of-header-bytes">Padding and End of header bytes:</a></h3>
 <ul>
-<li>An <code>0xFF</code> byte in the <code>Type</code> field indicates a padding byte. A ‘padding’ byte does <em>NOT</em> have a size field, and the next byte is interpreted as <code>Type</code> again.</li>
+<li>An <code>0xFF</code> byte in the <code>Type</code> field indicates a padding byte. A 'padding' byte does <em>NOT</em> have a size field, and the next byte is interpreted as <code>Type</code> again.</li>
 <li>A 2 byte value of <code>0x0000</code> signals the end of the rustBoot header. </li>
 </ul>
 <h3 id="tags"><a class="header" href="#tags">Tags:</a></h3>
@@ -404,7 +405,7 @@ support for a highly secure and efficient <code>firmware transport</code> method
 <li>Length: 8 bytes</li>
 </ul>
 </li>
-<li>The <code>auth type</code> tag identifies the type of the authentication mechanism in use. Ex: which ECC curve are we using and what’s the key strength etc.
+<li>The <code>auth type</code> tag identifies the type of the authentication mechanism in use. Ex: which ECC curve are we using and what's the key strength etc.
 <ul>
 <li>Type: <code>0x0030</code></li>
 <li>Length: 2 bytes</li>
@@ -423,7 +424,7 @@ support for a highly secure and efficient <code>firmware transport</code> method
 </ul>
 </li>
 </ul>
-<h3 id="optional-tags"><a class="header" href="#optional-tags">Optional Tags:</a></h3>
+<h3 id="optional-tags"><a class="header" href="#optional-tags">Optional tags:</a></h3>
 <ul>
 <li><strong>Pubkey Hint:</strong> A <code>pubkey hint digest</code> tag can be included in the header.
 <ul>
@@ -434,32 +435,272 @@ support for a highly secure and efficient <code>firmware transport</code> method
 </li>
 </ul>
 <blockquote>
-<p><strong>rustBoot Defaults:</strong> </p>
+<p><strong>MCU defaults:</strong> </p>
 <ul>
 <li>By default, a valid rustBoot image is always signed.</li>
 <li>It relies on the 256-byte header for firmware validation.</li>
 <li>It will fail to boot an image
 <ul>
 <li>if it does not possess a <a href="arch/images.html#rustboot-images"><code>valid rustBoot header</code></a> or</li>
-<li>if it isn’t signed or if it cannot be verified using the included the <a href="arch/images.html#tags"><code>authentication-type</code></a>.</li>
+<li>if it isn't signed or if it cannot be verified using the included the <a href="arch/images.html#tags"><code>authentication-type</code></a>.</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h2 id="fit-image-format"><a class="header" href="#fit-image-format">FIT-image format</a></h2>
+<p>rustBoot leverages Uboot's <a href="https://raw.githubusercontent.com/u-boot/u-boot/master/doc/uImage.FIT/howto.txt"><code>flattened-uImage-tree</code></a> format when booting the linux kernel. </p>
+<p>The FIT format is essentially an extension of  the <a href="https://github.com/devicetree-org/devicetree-specification/releases/tag/v0.4-rc1"><code>device-tree</code></a> format. FIT allows us to combine multiple binaries such as the kernel, ramdisk, device-tree-blob etc. into a single image. </p>
+<p>A typical rustBoot fit-image contains 4 items in the following order</p>
+<ul>
+<li>  kernel</li>
+<li>  fdt</li>
+<li>  initrd</li>
+<li>  rbconfig</li>
+</ul>
+<p><strong>Here's an example fit-image source file :</strong> It is also referred to as an image-tree source file or <code>.its</code> file.</p>
+<pre><code class="language-json">/dts-v1/;
+
+/ {
+        description = &quot;rustBoot FIT Image&quot;;
+        #address-cells = &lt;1&gt;;
+
+        images {
+                kernel {
+                        description = &quot;Kernel&quot;;
+                        data = /incbin/(&quot;vmlinuz&quot;);     
+                        type = &quot;kernel&quot;;
+                        arch = &quot;arm64&quot;;
+                        os = &quot;linux&quot;;
+                        compression = &quot;none&quot;;
+                        load = &lt;0x40480000&gt;;
+                        entry = &lt;0x40480000&gt;;
+                        hash {
+                                algo = &quot;sha256&quot;;
+                        };
+                };
+                fdt {
+                        description = &quot;DTB&quot;;
+                        data = /incbin/(&quot;unpatched-bcm2711-rpi-4-b.dtb&quot;);
+                        type = &quot;flat_dt&quot;;
+                        arch = &quot;arm64&quot;;
+                        compression = &quot;none&quot;;
+                        load = &lt;0x43000000&gt;;
+                        entry = &lt;0x43000000&gt;;
+                        hash {
+                                algo = &quot;sha256&quot;;
+                        };
+                };
+                initrd {
+                        description = &quot;Initrd&quot;;
+                        data = /incbin/(&quot;initramfs&quot;);
+                        type = &quot;ramdisk&quot;;
+                        arch = &quot;arm64&quot;;
+                        os = &quot;linux&quot;;
+                        compression = &quot;none&quot;;
+                        hash {
+                                algo = &quot;sha256&quot;;
+                        };
+                };
+                rbconfig {
+                        description = &quot;rustBoot Config&quot;;
+                        data = /incbin/(&quot;rbconfig.txt&quot;);
+                        type = &quot;rustBoot cmdline config&quot;;
+                        arch = &quot;none&quot;;
+                        os = &quot;linux&quot;;
+                        compression = &quot;none&quot;;
+                        hash {
+                                algo = &quot;sha256&quot;;
+                        };
+                };
+        };
+
+        configurations {
+                default = &quot;bootconfig&quot;;
+                bootconfig {
+                        description = &quot;Boot Config&quot;;
+                        kernel = &quot;kernel&quot;;
+                        fdt = &quot;fdt&quot;;
+                        ramdisk = &quot;initrd&quot;;
+                        rbconfig = &quot;rbconfig&quot;;
+                        signature@1 {
+				algo = &quot;sha256,ecdsa256,nistp256&quot;;
+				key-name-hint = &quot;dev&quot;;
+				signed-images = &quot;fdt&quot;, &quot;kernel&quot;, &quot;ramdisk&quot;, &quot;rbconfig&quot;;
+                                value = &quot;&quot;;
+			};
+                };
+        };
+
+};
+</code></pre>
+<p>The default configuration of an <code>.its</code> file determines which kernel, initrd, fdt and rbconfig is to be used for booting. In the above example, <code>bootconfig</code> is our default configuration. </p>
+<blockquote>
+<p>rustBoot's FIT parser will select the corresponding kernel, fdt, initrd and rbconfig associated with <code>bootconfig</code> for booting</p>
+</blockquote>
+<h3 id="building-a-rustboot-compliant-fit-image"><a class="header" href="#building-a-rustboot-compliant-fit-image">Building a rustBoot compliant fit-image:</a></h3>
+<p>As shown in the example above, a rustBoot compliant fit-image contains 4 items - </p>
+<ul>
+<li><code>kernel</code> - the linux kernel </li>
+<li><code>fdt</code> - the flattened device tree or device tree blob</li>
+<li><code>ramdisk</code>- a root filesystem that is embedded into the kernel and loaded at an early stage of the boot process. It is the successor of initrd. It can do things the kernel can't easily do by itself during the boot process. For example: customize the boot process (e.g., print a welcome message) </li>
+<li><code>rbconfig</code> - this is rustBoot's kernel configuraton. A simple <code>txt</code> file to add kernel command-line arguments.</li>
+</ul>
+<p>You can retrieve the first 3 (i.e. kernel, fdt, ramdisk) from a pre-built OS image: </p>
+<ul>
+<li>Maintainers of a particular linux distribution provide pre-built OS images. These images usually contain several partitions such as - 
+<ul>
+<li><code>boot:</code> contains the bootloader, kernel, dtb, ramdisk and other stuff</li>
+<li><code>system:</code> contains the root file system </li>
+<li><code>others:</code> may contain other partitions for things such as storage etc.</li>
+</ul>
+</li>
+<li>simply download an OS image or a pre-built linux distribution from the maintainers website.
+<ul>
+<li>In this example, I'll be using the <code>apertis</code> distribution.</li>
+</ul>
+</li>
+<li>it’s usually a compressed (zImage) format. Decompress it using a tool like unarchiver to get a disk image.</li>
+<li>use <code>partx --show</code> to list all partitions</li>
+</ul>
+<pre><code class="language-powershell">$ partx --show __linux_image_filepath__
+NR  START     END SECTORS SIZE NAME UUID
+ 1   8192  532479  524288 256M      9730496b-01
+ 2 532480 3661823 3129344 1.5G      9730496b-02
+</code></pre>
+<p>In the above case, the first partition with a size of 256MB contains our boot-files. It's usually named <code>boot</code>. We can calculate the offset to <code>boot</code> volume/partition with the following command </p>
+<pre><code class="language-powershell">$ bc
+bc 1.07.1
+Copyright 1991-1994, 1997, 1998, 2000, 2004, 2006, 2008, 2012-2017 Free Software Foundation, Inc.
+This is free software with ABSOLUTELY NO WARRANTY.
+For details type `warranty'.
+&gt; 8192 * 512
+&gt; 4194304
+&gt; quit
+</code></pre>
+<blockquote>
+<p><code>512</code> is the sector-size. We multiply sector-size with the sector offset to get the actual starting (byte) location of <code>boot</code>.</p>
+</blockquote>
+<p>mount the partition as an <code>ext4</code> file-system (or <code>fat</code> file-system, whichever)</p>
+<pre><code>$ sudo mkdir /mnt/other
+$ sudo mount -v -o offset=272629760 -t ext4 /_path_to_file_image/__filename__.img /mnt/other
+mount: /dev/loop0 mounted on /mnt/other.
+
+Check mounted image
+
+$ ls /mnt/other
+</code></pre>
+<p>Finally copy the <code>dtb</code>, <code>ramdisk</code> and <code>vmlinuz</code> image (i.e. kernel) from the mounted partition to a new folder. You can give it any name you want. I'll use <code>pkg</code> in this example.</p>
+<blockquote>
+<p>vmlinuz is a PE (portable executable) i.e. we can jump to it and it will in-turn jump to the kernel's entry point.</p>
+</blockquote>
+<p>After storing all 4 items in the <code>pkg</code> folder, you can build a fit-image by running the following commands. </p>
+<ul>
+<li>the <code>.its</code> file is the input to <code>mkimage</code> </li>
+<li>and the <code>.itb</code> filename is the generated fit-image, stored in the same <code>pkg</code> folder. </li>
+</ul>
+<p><strong>On a mac:</strong> </p>
+<pre><code class="language-powershell">brew install u-boot-tools
+</code></pre>
+<p><strong>On a linux machine:</strong></p>
+<pre><code class="language-powershell">sudo apt install u-boot-tools
+</code></pre>
+<p>and then run </p>
+<pre><code class="language-powershell">mkimage -f rpi4-apertis.its rpi4-test-apertis.itb
+
+Output:
+
+rpi4-apertis.its:65.37-70.6: Warning (unit_address_vs_reg): /configurations/bootconfig/signature@1: node has a unit name, but no reg or ranges property
+Image contains unit addresses @, this will break signing
+FIT description: rustBoot FIT Image
+Created:         Sat Jun  4 13:18:45 2022
+ Image 0 (kernel)
+  Description:  Kernel
+  Created:      Sat Jun  4 13:18:45 2022
+  Type:         Kernel Image
+  Compression:  uncompressed
+  Data Size:    29272576 Bytes = 28586.50 KiB = 27.92 MiB
+  Architecture: AArch64
+  OS:           Linux
+  Load Address: 0x40480000
+  Entry Point:  0x40480000
+  Hash algo:    sha256
+  Hash value:   97dcbff24ad0a60514e31a7a6b34a765681fea81f8dd11e4644f3ec81e1044fb
+ Image 1 (fdt)
+  Description:  DTB
+  Created:      Sat Jun  4 13:18:45 2022
+  Type:         Flat Device Tree
+  Compression:  uncompressed
+  Data Size:    25713 Bytes = 25.11 KiB = 0.02 MiB
+  Architecture: AArch64
+  Load Address: 0x43000000
+  Hash algo:    sha256
+  Hash value:   3572783be74511b710ed7fca9b3131e97fd8073c620a94269a4e4ce79d331540
+ Image 2 (initrd)
+  Description:  Initrd
+  Created:      Sat Jun  4 13:18:45 2022
+  Type:         RAMDisk Image
+  Compression:  uncompressed
+  Data Size:    32901194 Bytes = 32130.07 KiB = 31.38 MiB
+  Architecture: AArch64
+  OS:           Linux
+  Load Address: unavailable
+  Entry Point:  unavailable
+  Hash algo:    sha256
+  Hash value:   f1290587e2155e3a5c2c870fa1d6e3e2252fb0dddf74992113d2ed86bc67f37c
+ Image 3 (rbconfig)
+  Description:  rustBoot Config
+  Created:      Sat Jun  4 13:18:45 2022
+  Type:         Unknown Image
+  Compression:  uncompressed
+  Data Size:    141 Bytes = 0.14 KiB = 0.00 MiB
+  Hash algo:    sha256
+  Hash value:   b16d058c4f09abdb8da98561f3a15d06ff271c38a4655c2be11dec23567fd519
+ Default Configuration: 'bootconfig'
+ Configuration 0 (bootconfig)
+  Description:  Boot Config
+  Kernel:       kernel
+  Init Ramdisk: initrd
+  FDT:          fdt
+  Sign algo:    sha256,ecdsa256,nistp256:dev
+  Sign value:   00
+  Timestamp:    unavailable
+</code></pre>
+<p>The <code>.itb</code> file is our fit-image. It does not contain a signature yet i.e. it is not signed. You'll notice <code>sign-value</code> field is empty. </p>
+<h3 id="signing-fit-images"><a class="header" href="#signing-fit-images">Signing fit-images</a></h3>
+<p>rustBoot fit-images are signed with <code>ecdsa256</code>. The signature includes the kernel, fdt, initrd and rbconfig. </p>
+<p>Signing a rustBoot fit-image involves 2 steps: </p>
+<ul>
+<li><strong>Building a fit-image:</strong> As explained in <a href="arch/./images.html#building-a-rustboot-compliant-fit-image">preceding section</a>, FIT images can be built using <code>mkimage</code> - a command-line utility from the <code>uboot-tools</code> package i.e. you can pass an <code>.its</code> file to the mkimage tool and mkimage will produce an <code>.itb</code> blob or a image-tree blob.</li>
+<li><strong>signing the fit-image:</strong>  once you've built your fit-image, you can pass the it along with a signing key to rustBoot's <code>rbsigner</code> utility to <a href="arch/./signing_utilities.html#signed-fit-image">generate a signed fit-image</a>. </li>
+</ul>
+<blockquote>
+<p><strong>FIT-image defaults:</strong> </p>
+<ul>
+<li>By default, valid rustBoot images are always signed.</li>
+<li>It will fail to boot an image
+<ul>
+<li>if the image fails fit-validation i.e. if its not a properly formatted fit-image or if the fit-parser cant find the specified default config or its components. </li>
+<li>if it isn't signed or if it cannot be verified using the included algo.</li>
+</ul>
+</li>
+<li>rustBoot's fit parser currently supports the following architectures
+<ul>
+<li><code>Aarch64</code></li>
 </ul>
 </li>
 </ul>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="rustboot-partitions"><a class="header" href="#rustboot-partitions">rustBoot Partitions</a></h1>
-<p><code>rustBoot</code> offers 2 <code>update-types</code>, depending on the type of the underlying system.</p>
+<p><code>rustBoot</code> has 2 distinct partioning schemes, depending on the type of the underlying system.</p>
 <ul>
-<li>
-<p><strong>micro-controller updates:</strong> uses the concept of <a href="https://github.com/nihalpasham/rustBoot/issues/2"><code>swappable flash partitions</code></a> to update micro-controller firmware. </p>
+<li><a href="arch/./partitions.html#micro-controller-partitions"><strong>micro-controller partitions:</strong></a> uses the concept of <a href="https://github.com/nihalpasham/rustBoot/issues/2"><code>swappable flash partitions</code></a> to update micro-controller firmware. 
 <blockquote>
 <p>This usually means bare-metal firmware but it is also applicable to <code>RTOS(s)</code>.</p>
 </blockquote>
 </li>
-<li>
-<p><strong>linux system updates:</strong> uses the traditional <code>ram based swap</code> method to update linux distributions running atop micro-processors.</p>
-</li>
+<li><a href="arch/./partitions.html#linux-system-partitions"><strong>linux system partitions:</strong></a> uses a single fat32 partition to host the <code>rustBoot-bootloader</code> and  (boot/update) fit-images. This method uses a <code>rustBoot-state</code> file to determine which image is to be booted.</li>
 </ul>
-<h2 id="micro-controller-updates"><a class="header" href="#micro-controller-updates">Micro-controller Updates:</a></h2>
+<h2 id="micro-controller-partitions"><a class="header" href="#micro-controller-partitions">Micro-controller Partitions:</a></h2>
 <p><a href="https://github.com/imrank03/rustBoot-book-diagrams/blob/main/partition.svg?raw=true"><img src="https://github.com/imrank03/rustBoot-book-diagrams/blob/main/partition.svg?raw=true" alt="partition" title="Simplified Block Diagram, 256 byte rustBoot header" /></a></p>
 <blockquote>
 <p>Note: <code>BOOT</code>, <code>UPDATE</code> and <code>SWAP</code> partitions need <strong>NOT</strong> be consecutively laid out in flash memory. The above diagram only serves as a visual aid.</p>
@@ -494,7 +735,7 @@ support for a highly secure and efficient <code>firmware transport</code> method
 </ul>
 <p>BOOT, UPDATE, SWAP addresses and SECTOR_SIZE, PARTITION_SIZE values can be set via command line options or developers <code>constants.rs</code>.</p>
 <blockquote>
-<p><strong>rustBoot Defaults:</strong></p>
+<p><strong>MCU defaults:</strong></p>
 <ul>
 <li>By default, public keys used for firmware validation are embedded in <code>rustBoot-firmware</code> during a factory-image-burn. However, rustBoot also offers the option to retrieve them from secure-hardware (ex: crypto-elements).</li>
 <li>The <code>BOOT</code> partiton is the only partition from which we can boot a firmware image. The firmware image must be linked so that its entry-point is at address <code>256 + BOOT_PARTITION_ADDRESS</code>.</li>
@@ -502,12 +743,383 @@ support for a highly secure and efficient <code>firmware transport</code> method
 </ul>
 </blockquote>
 <h2 id="linux-system-updates"><a class="header" href="#linux-system-updates">Linux System Updates:</a></h2>
+<p>To boot into linux systems, rustBoot includes support for the fat32 file-system. </p>
+<p>Boot-storage media must contain a fat32 partition </p>
+<ul>
+<li>of at least 150 MiB to accomodate the bootloader, boot + update fit-images and other vendor-specific boot files.</li>
+<li>in order to integrate rustBoot, you can either implement the <code>BlockDevice</code> trait for your board's boot-storage media <code>controller</code> or simply use an existing implementation included in the repo.</li>
+</ul>
+<blockquote>
+<p><strong>note:</strong> rustBoot comes with batteries-included. It provides <code>rusty</code> implementations for basic peripherals such as flash, uart, crypto, gpio (out of the box) along with the necessary arch-specific initialization routines.</p>
+<ul>
+<li>for example: the rustBoot implementation for <code>rpi4</code> includes bare-metal drivers for the on-board emmc controller, gpio and uart peripherals. </li>
+</ul>
+</blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="rustboot-boot-flow"><a class="header" href="#rustboot-boot-flow">rustBoot Boot Flow</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="rustboot-update-flow"><a class="header" href="#rustboot-update-flow">rustBoot Update Flow</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="signing-utilities"><a class="header" href="#signing-utilities">Signing Utilities</a></h1>
+<p>As rustBoot supports 2 types of firmware image formats, depending on the underlying device i.e. either an</p>
+<ul>
+<li><a href="arch/./images.html#mcu-image-format"><code>mcu-image:</code></a> a simple 256-byte firmware image format for microcontrollers or a</li>
+<li><a href="arch/./images.html#fit-image-format"><code>fit-image:</code></a> the flattened-image-tree format for systems capable of booting linux.</li>
+</ul>
+<p>rustBoot <code>rbsigner</code> utility can produce 2 different types signed images. </p>
+<h3 id="signed-mcu-image"><a class="header" href="#signed-mcu-image">Signed mcu-image:</a></h3>
+<pre><code>[TODO ..]
+</code></pre>
+<h3 id="signed-fit-image"><a class="header" href="#signed-fit-image">Signed fit-image:</a></h3>
+<p>To sign a fit-image, rustBoot's <a href="https://github.com/nihalpasham/rustBoot/tree/main/rbsigner">image signing utility</a> takes 3 inputs </p>
+<ul>
+<li>an unsigned fit-image in the above format</li>
+<li>a raw signing-key or ecdsa private key</li>
+<li>the ecdsa curve-type - (nistp256 only for now).</li>
+</ul>
+<p>Here's an example for how to sign a fit-image:</p>
+<ul>
+<li><code>../boards/bootloaders/rpi4/apertis/rpi4-test-apertis.itb</code> is the path to my fit-image </li>
+<li><code>../boards/rbSigner/keygen/ecc256.der</code> is the path to my <code>test</code> signing-key</li>
+<li><code>nistp256</code> is the type ecdsa curve I'd like to use. Its the only one supported for now.</li>
+</ul>
+<p>Simply run the following command from root directory of the rustBoot project. </p>
+<pre><code>cargo run ../boards/bootloaders/rpi4/apertis/rpi4-test-apertis.itb ../boards/rbSigner/keygen/ecc256.der nistp256
+
+Output: 
+
+    Finished dev [unoptimized + debuginfo] target(s) in 0.04s
+     Running `/Users/nihal.pasham/devspace/rust/projects/prod/rustBoot/target/debug/rbsigner ../boards/bootloaders/rpi4/apertis/rpi4-test-apertis.itb ../boards/rbSigner/keygen/ecc256.der nistp256`
+signature: ecdsa::Signature&lt;NistP256&gt;([64, 147, 93, 99, 241, 5, 118, 167, 156, 150, 203, 234, 74, 207, 182, 243, 129, 143, 38, 2, 107, 85, 114, 145, 178, 163, 33, 153, 2, 100, 0, 114, 135, 18, 174, 183, 194, 110, 24, 186, 33, 36, 39, 105, 116, 74, 8, 118, 171, 237, 30, 108, 64, 205, 206, 14, 110, 226, 43, 143, 180, 193, 19, 33])
+bytes_written: 62202019
+</code></pre>
+<p>In this case, the <code>signed fit-image</code> will be stored at the following path - <code>../boards/bootloaders/rpi4/apertis/signed-rpi4-apertis.itb</code></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="user-guide"><a class="header" href="#user-guide">User Guide</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="nrf52840"><a class="header" href="#nrf52840">nrf52840</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="rpi4"><a class="header" href="#rpi4">rpi4</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="raspberry-pi-4"><a class="header" href="#raspberry-pi-4">raspberry-pi 4</a></h1>
+<h2 id="table-of-contents"><a class="header" href="#table-of-contents">Table of contents:</a></h2>
+<ul>
+<li>  <a href="usage/./rpi4.html#raspberry-pi-4-boot-sequence">raspberry-pi 4 boot-sequence</a>   🥧 </li>
+<li>  <a href="usage/./rpi4.html#rustboot-execution-sequence">rustBoot execution-sequence:</a>   🦀 </li>
+<li>  <a href="usage/./rpi4.html#booting-from-an-sd-card">Booting from an SD card:</a>   💾</li>
+<li>  <a href="usage/./rpi4.html#compiling-rustboot">Compiling rustBoot:</a>   ⌛</li>
+<li>  <a href="usage/./rpi4.html#copying-a-root-file-system">Copying a root file system:</a>   💼</li>
+<li>  <a href="usage/./rpi4.html#uart-communication">UART communication:</a>   🚌</li>
+<li>  <a href="usage/./rpi4.html#power-on-and-test">Power-on and test:</a>   🧪</li>
+</ul>
+<h3 id="raspberry-pi-4-boot-sequence"><a class="header" href="#raspberry-pi-4-boot-sequence">raspberry-pi 4 boot-sequence:</a></h3>
+<p>rpi4 has an unconventional boot process</p>
+<ul>
+<li>Upon initial power-on, the <code>bcm2711</code> SoC (CPU is offline but GPU is powered on) executes from the onboard bootROM i.e. <code>1st stage bootloader</code> </li>
+</ul>
+<blockquote>
+<p>Note: the GPU contains a tiny risc core that executes the <code>bootROM</code>. </p>
+</blockquote>
+<ul>
+<li><code>bootROM</code> checks an onboard SPI-EEPROM for a 2nd stage bootloader</li>
+<li>This <code>2nd stage bootloader</code> is loaded into the GPU's L2 cache for the GPU to execute. 
+<ul>
+<li>It initializes system clocks and SDRAM</li>
+<li>loads GPU firmware (start4.elf) into RAM</li>
+</ul>
+</li>
+<li>the <code>GPU firmware</code> performs RAM allocations i.e. 
+<ul>
+<li>RAM is shared between CPU and GPU </li>
+<li>enables BCM7211 CPU.</li>
+<li>loads <code>rustBoot-bootloader</code> from the SD card into CPU-assigned RAM and passes control of the ARMv8 core to rustBoot</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>Note: At this point, rustBoot has complete control over the CPU. </p>
+</blockquote>
+<h3 id="rustboot-execution-sequence"><a class="header" href="#rustboot-execution-sequence">rustBoot execution-sequence:</a></h3>
+<ul>
+<li>By default, rpi4 will always start executing in EL2. Since we are booting a traditional Kernel (i.e. linux), we have to transition into the more appropriate EL1.</li>
+</ul>
+<blockquote>
+<p>Note: EL1 and EL2 are abbreviations for ARMv8-A exception levels</p>
+</blockquote>
+<p>So, rustBoot checks the following</p>
+<ul>
+<li>is the core executing in <code>EL2</code>? </li>
+<li>are we executing on the <code>boot-core</code> i.e. is it core 0? </li>
+<li>if the answer to any of the above questions is <code>no</code>, then we park the core i.e. go into an inifinte wait state.</li>
+<li>If yes, then we initialize <code>DRAM</code>, <code>zero out bss</code>, transition to EL1 and finally jump to an early initialization routine called kernel_init.</li>
+<li><code>kernel_init</code> is an early initialization routine. It takes care of the following - 
+<ul>
+<li>enables exception handling</li>
+<li>enales the MMU along with instruction + data caching</li>
+<li>initializes a small set of peripheral drivers i.e EMMC controller, UART, GPIO</li>
+<li>and passes control to the core bootloader rountine called kernel_main.</li>
+</ul>
+</li>
+<li><code>kernel_main</code> takes care of loading, verifying and booting fit-images.
+<ul>
+<li>it uses rustBoot's (fat32) file-system to retrieve the first partition (or volume). </li>
+</ul>
+<blockquote>
+<p>Note:  rustBoot does not support GUID Partition Table disks.</p>
+</blockquote>
+<ul>
+<li>If the first volume is a <code>valid fat32</code> partition, it loads the supplied fit-image into RAM and attempts to verify its signature using the ecdsa algorithm.</li>
+<li>If the fit-image is authentic i.e. the signature check passes, it relocates the following components to an approriate location in memory. 
+<ul>
+<li><code>linux kernel</code></li>
+<li><code>fdt or dtb</code></li>
+<li><code>ramdisk or initramfs</code></li>
+</ul>
+</li>
+<li>additionally, it will patch the dtb with any supplied (boot-time) kernel command-line arguments. </li>
+</ul>
+<blockquote>
+<p>Note: kernel cmd-line arguments are set at package-build time i.e. when building the fit-image and cannot be interactively set at runtime.</p>
+</blockquote>
+<ul>
+<li>Finally, it disables the MMU and boots the linux kernel by jumping to its (relocated) entry point.</li>
+</ul>
+</li>
+</ul>
+<h3 id="booting-from-an-sd-card"><a class="header" href="#booting-from-an-sd-card">Booting from an SD card:</a></h3>
+<p>Raspberry Pi computers use a micro SD card to store a bootable image.</p>
+<p><em>SD card preparation:</em> </p>
+<ul>
+<li>make 2 partitions 
+<ul>
+<li>the first one must be a fat32 partition named <code>firmware</code>. It must at least 150 MB in size. For simplicity, you can use a 256MB partition.</li>
+<li>the second one can be ext2/3/4 partition. This is used to host the root file system. </li>
+</ul>
+</li>
+</ul>
+<p><em>FAT32 partition contents:</em></p>
+<ul>
+<li>On the card, generate a file named config.txt with the following contents:</li>
+</ul>
+<pre><code>    arm_64bit=1
+    enable_uart=1
+    init_uart_clock=4000000
+    kernel=rustBoot.bin
+</code></pre>
+<ul>
+<li>Copy the following files from the Raspberry Pi firmware repo onto the SD card:
+<ul>
+<li><a href="https://github.com/raspberrypi/firmware/raw/master/boot/fixup4.dat">fixup4.dat</a></li>
+<li><a href="https://github.com/raspberrypi/firmware/raw/master/boot/start4.elf">start4.elf</a></li>
+<li><a href="https://github.com/raspberrypi/firmware/raw/master/boot/bcm2711-rpi-4-b.dtb">bcm2711-rpi-4-b.dtb</a></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>Note: Should it not work on your rpi4, try renaming start4.elf to start.elf (without the 4) on the SD card.</p>
+</blockquote>
+<h3 id="compiling-rustboot"><a class="header" href="#compiling-rustboot">Compiling rustBoot:</a></h3>
+<p>You must have rust installed. You can install rust by following the installation instructions <a href="https://www.rust-lang.org/tools/install">here</a>. After installing rust, you'll need to switch to nightly toolchain and add the aarch64 compilation-target. This allows us to compile code for the rpi4 </p>
+<pre><code class="language-powershell">rustup default nightly
+rustup target add aarch64-unknown-none-softfloat
+</code></pre>
+<p>To verify that you have the pre-requisites installed, run the following command</p>
+<pre><code class="language-powershell">rustup show
+</code></pre>
+<p>In my case, <code>rustup show</code> returns the following output. </p>
+<pre><code class="language-powershell">rustup show
+Default host: aarch64-apple-darwin
+rustup home:  /Users/nihal.pasham/.rustup
+
+installed toolchains
+--------------------
+
+stable-aarch64-apple-darwin
+nightly-aarch64-apple-darwin (default)
+
+installed targets for active toolchain
+--------------------------------------
+
+aarch64-apple-darwin
+aarch64-unknown-none-softfloat
+thumbv7em-none-eabihf
+
+active toolchain
+----------------
+
+nightly-aarch64-apple-darwin (default)
+rustc 1.63.0-nightly (ee160f2f5 2022-05-23)
+</code></pre>
+<p>As you can see from the <code>installed targets for active toolchain</code> section, the <code>aarch64-unknown-none-softfloat</code> target is installed. To compile and extract rustBoot-bootloader, simply clone the <a href="https://github.com/nihalpasham/rustBoot"><code>rustBoot repo</code></a> and run the following command</p>
+<pre><code class="language-powershell">cargo rpi4 build rustBoot-only
+</code></pre>
+<p>The above command should output the following (output will be longer when compilng for the first time) logs, produce an executable bootloader named <code>rustBoot.bin</code> and store it in the following path <code>./rustBoot/boards/bootloaders/rpi4</code></p>
+<pre><code class="language-powershell">Output:
+   Compiling xtask v0.1.0 (/Users/nihal.pasham/devspace/rust/projects/prod/rustBoot/xtask)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.64s
+     Running `target/debug/xtask rpi4 build rustBoot-only`
+$ cargo build --release
+   Compiling rustBoot v0.1.0 (/Users/nihal.pasham/devspace/rust/projects/prod/rustBoot/rustBoot)
+   Compiling rustBoot-hal v0.1.0 (/Users/nihal.pasham/devspace/rust/projects/prod/rustBoot/boards/hal)
+   Compiling rpi4 v0.1.0 (/Users/nihal.pasham/devspace/rust/projects/prod/rustBoot/boards/bootloaders/rpi4)
+    Finished release [optimized] target(s) in 4.77s
+$ rust-objcopy --strip-all -O binary ../../target/aarch64-unknown-none-softfloat/release/kernel rustBoot.bin
+</code></pre>
+<p>After compiling rustBoot, copy <code>rustBoot.bin</code> file onto the sd card's fat32 partiton.</p>
+<p>The last step in preparing a bootable SD card is to copy a rustBoot fit-image that you'd like to boot onto the sd card's fat32 partition. prepar</p>
+<blockquote>
+<p>Note: </p>
+<ul>
+<li>to build a rustBoot fit-image, you can follow <a href="usage/../arch/images.html#building-a-rustboot-compliant-fit-image">these instructions</a> and</li>
+<li>to sign a fit-image, you can follow <a href="usage/../arch/images.html#signing-fit-images">these instructions</a>. </li>
+</ul>
+</blockquote>
+<p>Finally, once you've added the above mentioned files to your sd card. The fat32 partition should contain the following files: </p>
+<ul>
+<li>  config.txt</li>
+<li>  fixup4.dat</li>
+<li>  start4.elf</li>
+<li>  bcm2711-rpi-4-b.dtb</li>
+<li>  rustBoot.bin</li>
+<li>  signed-example-image.itb</li>
+</ul>
+<h3 id="copying-a-root-file-system"><a class="header" href="#copying-a-root-file-system">Copying a root file system:</a></h3>
+<p>There are many ways to add a root file-system to the second ext2/3/4 partition. One way is to copy a root file system to an empty ext2/3/4 drive: </p>
+<ul>
+<li>Maintainers of a particular linux distribution provide pre-built OS images. These images usually contain several partitions such as - 
+<ul>
+<li><code>boot:</code> contains the bootloader, kernel, dtb, ramdisk and other stuff</li>
+<li><code>system:</code> contains the root file system </li>
+<li><code>others:</code> may contain other partitions for things such as storage etc.</li>
+</ul>
+</li>
+<li>simply download an OS image or a pre-built linux distribution from the maintainers website.
+<ul>
+<li>In this example, I'll be using the <code>apertis</code> distribution.</li>
+</ul>
+</li>
+<li>it’s usually in a compressed (zImage) format. Decompress it using a tool like unarchiver to get a disk image.</li>
+<li>use <code>partx --show</code> to list all partitions</li>
+</ul>
+<pre><code class="language-powershell">$ partx --show __linux_image_filepath__
+NR  START     END SECTORS SIZE NAME UUID
+ 1   8192  532479  524288 256M      9730496b-01
+ 2 532480 3661823 3129344 1.5G      9730496b-02
+</code></pre>
+<ul>
+<li>in the above case, partition2 with a size of 1.5G contains the root file system. It's usually named <code>system</code>.</li>
+<li>calculate the offset to <code>system</code> volume/partition. You can do this like so. </li>
+</ul>
+<blockquote>
+<p><code>512</code> is the sector-size. We multiply sector-size with the sector offset to get the actual starting (byte) location of <code>system</code>.</p>
+</blockquote>
+<pre><code class="language-powershell">$ bc
+bc 1.07.1
+Copyright 1991-1994, 1997, 1998, 2000, 2004, 2006, 2008, 2012-2017 Free Software Foundation, Inc.
+This is free software with ABSOLUTELY NO WARRANTY.
+For details type `warranty'.
+&gt; 532480 * 512
+&gt; 272629760
+&gt; quit
+</code></pre>
+<ul>
+<li>mount the partition as an <code>ext4 filesystem</code> </li>
+</ul>
+<pre><code>$ sudo mkdir /mnt/other
+$ sudo mount -v -o offset=272629760 -t ext4 /_path_to_file_image/__filename__.img /mnt/other
+mount: /dev/loop0 mounted on /mnt/other.
+
+Check mounted image
+
+$ ls /mnt/other
+</code></pre>
+<ul>
+<li>copy all of (system partition's) contents to sd card's ext2/3/4 partition using the <code>cp</code> command. </li>
+</ul>
+<blockquote>
+<p>Note:</p>
+<ul>
+<li>the above method only works on linux or macOS.</li>
+<li>all symbolic links need to be copied. If required you can create symbolic links using <code>ln</code> command. Here' an example that creates a symbolic link called <code>sbin</code> to <code>usr/bin</code> </li>
+</ul>
+<pre><code class="language-powershell">ln -s usr/sbin sbin 
+</code></pre>
+</blockquote>
+<h3 id="uart-communication"><a class="header" href="#uart-communication">UART communication:</a></h3>
+<p>rustBoot will output boot-logs via the raspberry-pi 4's UART interface. These logs can be sent to a host computer (i.e. laptop/desktop).</p>
+<p>We'll need extra hardware for this:</p>
+<ul>
+<li><strong>a usb-to-serial ttl converter:</strong> is a tiny piece of hardware that allows us to send serial data from the rpi4's uart interface to the host
+<ul>
+<li>You can find USB-to-serial cables that should work right away at <a href="https://www.amazon.de/dp/B0757FQ5CX/ref=cm_sw_r_tw_dp_U_x_ozGRDbVTJAG4Q">[1]</a> <a href="https://www.adafruit.com/product/954">[2]</a>, but many others will work too. Ideally, your cable is based on the CP2102 chip.</li>
+<li>You connect it to GND and GPIO pins 14/15 as shown below.</li>
+</ul>
+</li>
+</ul>
+<p>Connect the USB-serial converter to your host computer as shown in the wiring diagram
+<a href="https://www.jeffgeerling.com/sites/default/files/images/raspberry-pi-serial-cable-connection.png?raw=true"><img src="https://www.jeffgeerling.com/sites/default/files/images/raspberry-pi-serial-cable-connection.png?raw=true" alt="wiring diagram" title="USB-Serial UART connection" /></a>.</p>
+<ul>
+<li>make sure that you DO NOT connect the power pin of the USB serial. Only RX/TX and GND.</li>
+<li>connect the rpi4 to the (USB) power cable and observe the output:</li>
+</ul>
+<p><strong>Serial console:</strong>
+To view rpi4's output on a host machine, you'll need a program/app/console that handles sending and receiving of serial data. There are a number of ways to interact with a serial console. I'll be using </p>
+<ul>
+<li><code>minicom</code> on linux</li>
+<li><code>screen</code> on the mac</li>
+<li><code>terminal-s</code> on windows</li>
+</ul>
+<blockquote>
+<p>❗ NOTE: 
+Depending on your host operating system, the device name might differ. For example, on macOS, it might be something like /dev/tty.usbserial-0001. In this case, please give the name explicitly:</p>
+</blockquote>
+<ul>
+<li><strong>Using minicom:</strong>
+<ul>
+<li>install minicom with <code>sudo apt-get install minicom</code>, so you can emulate a terminal connected over serial.</li>
+<li>and run </li>
+</ul>
+<pre><code class="language-powershell">minicom -b 115200 -D /dev/tty.usbserial-0001
+</code></pre>
+<ul>
+<li>boot the Pi.</li>
+<li>within a few seconds, you should see data in your session.</li>
+</ul>
+</li>
+<li><strong>Using screen:</strong>
+<ul>
+<li>on a mac, run </li>
+</ul>
+<pre><code class="language-powershell">screen /dev/tty.usbserial-0001 115200
+</code></pre>
+<ul>
+<li>boot the Pi.</li>
+<li>within a few seconds, you should see data in your session.</li>
+</ul>
+</li>
+<li><strong>Using terminal-s:</strong>
+<ul>
+<li>on a windows machine, install terminal-s (a python-based serial terminal) with <code>pip install terminal-s</code></li>
+<li>and run </li>
+</ul>
+<pre><code class="language-powershell">terminal-s
+</code></pre>
+<ul>
+<li>no need to provide a baud-rate. It will auto-detect the port and baud-rate (assuming its lower than 115200).</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>Note: </p>
+<ul>
+<li>To exit the screen session, press Ctrl-A, then Ctrl-K, and confirm you want to exit when using minicom or screen</li>
+<li>To exit terminal-s, press Ctrl-]</li>
+</ul>
+</blockquote>
+<h3 id="power-on-and-test"><a class="header" href="#power-on-and-test">Power-on and test</a></h3>
+<p>Now that you have a fully bootable SD card containing</p>
+<ul>
+<li>a <code>fat32 formatted</code> boot partition populated with the relevant boot files and</li>
+<li>a <code>ext2/3/4 formatted</code> root-file-system partition</li>
+</ul>
+<p>and have your uart-usb interface set-up, you are now ready to flip the switch i.e. </p>
+<ul>
+<li>insert the sd card into the pi's sd slot and</li>
+<li>supply power to your pi. </li>
+</ul>
+<p>Your serial console should now start <a href="https://github.com/nihalpasham/rustBoot/blob/main/boards/bootloaders/rpi4/debug.md">receiving boot-logs from the rpi4</a></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="stm32f411"><a class="header" href="#stm32f411">stm32f411</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="secure-coding-guidelines"><a class="header" href="#secure-coding-guidelines">Secure Coding guidelines</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="testing"><a class="header" href="#testing">Testing</a></h1>
@@ -517,7 +1129,7 @@ support for a highly secure and efficient <code>firmware transport</code> method
 <div style="break-before: page; page-break-before: always;"></div><h1 id="contributors"><a class="header" href="#contributors">Contributors</a></h1>
 <p>Here is a list of the contributors who have helped improve <code>rustBoot</code>. Big shout-out to them!</p>
 <p><a href="https://github.com/imrank03" title="@imrank03"><strong><code>Imran K</code></strong> <img src="https://img.icons8.com/ios-glyphs/20/11/github.png"/></a></p>
-<p>If you feel you’re missing from this list, feel free to add yourself in a PR.</p>
+<p>If you feel you're missing from this list, feel free to add yourself in a PR.</p>
 
                     </main>
 

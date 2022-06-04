@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en" class="sidebar-visible no-js rust">
+<html lang="en" class="sidebar-visible no-js light">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
@@ -36,7 +36,7 @@
         <!-- Provide site root to javascript -->
         <script type="text/javascript">
             var path_to_root = "../";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "rust";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
@@ -62,7 +62,7 @@
             if (theme === null || theme === undefined) { theme = default_theme; }
             var html = document.querySelector('html');
             html.classList.remove('no-js')
-            html.classList.remove('rust')
+            html.classList.remove('light')
             html.classList.add(theme);
             html.classList.add('js');
         </script>
@@ -99,8 +99,8 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
@@ -146,19 +146,16 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="rustboot-partitions"><a class="header" href="#rustboot-partitions">rustBoot Partitions</a></h1>
-<p><code>rustBoot</code> offers 2 <code>update-types</code>, depending on the type of the underlying system.</p>
+<p><code>rustBoot</code> has 2 distinct partioning schemes, depending on the type of the underlying system.</p>
 <ul>
-<li>
-<p><strong>micro-controller updates:</strong> uses the concept of <a href="https://github.com/nihalpasham/rustBoot/issues/2"><code>swappable flash partitions</code></a> to update micro-controller firmware. </p>
+<li><a href="./partitions.html#micro-controller-partitions"><strong>micro-controller partitions:</strong></a> uses the concept of <a href="https://github.com/nihalpasham/rustBoot/issues/2"><code>swappable flash partitions</code></a> to update micro-controller firmware. 
 <blockquote>
 <p>This usually means bare-metal firmware but it is also applicable to <code>RTOS(s)</code>.</p>
 </blockquote>
 </li>
-<li>
-<p><strong>linux system updates:</strong> uses the traditional <code>ram based swap</code> method to update linux distributions running atop micro-processors.</p>
-</li>
+<li><a href="./partitions.html#linux-system-partitions"><strong>linux system partitions:</strong></a> uses a single fat32 partition to host the <code>rustBoot-bootloader</code> and  (boot/update) fit-images. This method uses a <code>rustBoot-state</code> file to determine which image is to be booted.</li>
 </ul>
-<h2 id="micro-controller-updates"><a class="header" href="#micro-controller-updates">Micro-controller Updates:</a></h2>
+<h2 id="micro-controller-partitions"><a class="header" href="#micro-controller-partitions">Micro-controller Partitions:</a></h2>
 <p><a href="https://github.com/imrank03/rustBoot-book-diagrams/blob/main/partition.svg?raw=true"><img src="https://github.com/imrank03/rustBoot-book-diagrams/blob/main/partition.svg?raw=true" alt="partition" title="Simplified Block Diagram, 256 byte rustBoot header" /></a></p>
 <blockquote>
 <p>Note: <code>BOOT</code>, <code>UPDATE</code> and <code>SWAP</code> partitions need <strong>NOT</strong> be consecutively laid out in flash memory. The above diagram only serves as a visual aid.</p>
@@ -193,7 +190,7 @@
 </ul>
 <p>BOOT, UPDATE, SWAP addresses and SECTOR_SIZE, PARTITION_SIZE values can be set via command line options or developers <code>constants.rs</code>.</p>
 <blockquote>
-<p><strong>rustBoot Defaults:</strong></p>
+<p><strong>MCU defaults:</strong></p>
 <ul>
 <li>By default, public keys used for firmware validation are embedded in <code>rustBoot-firmware</code> during a factory-image-burn. However, rustBoot also offers the option to retrieve them from secure-hardware (ex: crypto-elements).</li>
 <li>The <code>BOOT</code> partiton is the only partition from which we can boot a firmware image. The firmware image must be linked so that its entry-point is at address <code>256 + BOOT_PARTITION_ADDRESS</code>.</li>
@@ -201,6 +198,18 @@
 </ul>
 </blockquote>
 <h2 id="linux-system-updates"><a class="header" href="#linux-system-updates">Linux System Updates:</a></h2>
+<p>To boot into linux systems, rustBoot includes support for the fat32 file-system. </p>
+<p>Boot-storage media must contain a fat32 partition </p>
+<ul>
+<li>of at least 150 MiB to accomodate the bootloader, boot + update fit-images and other vendor-specific boot files.</li>
+<li>in order to integrate rustBoot, you can either implement the <code>BlockDevice</code> trait for your board's boot-storage media <code>controller</code> or simply use an existing implementation included in the repo.</li>
+</ul>
+<blockquote>
+<p><strong>note:</strong> rustBoot comes with batteries-included. It provides <code>rusty</code> implementations for basic peripherals such as flash, uart, crypto, gpio (out of the box) along with the necessary arch-specific initialization routines.</p>
+<ul>
+<li>for example: the rustBoot implementation for <code>rpi4</code> includes bare-metal drivers for the on-board emmc controller, gpio and uart peripherals. </li>
+</ul>
+</blockquote>
 
                     </main>
 
