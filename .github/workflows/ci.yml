@@ -50,7 +50,6 @@ jobs:
         run: |
           cargo install mdbook 
           cargo install mdbook-mermaid 
-          cargo install mdbook-svgbob2
       - name: Build book
         run: mdbook build
       - name: Deploy 🚀

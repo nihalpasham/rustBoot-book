@@ -1,14 +1,14 @@
 # `raspberry-pi 4`
 
-## Table of contents:
+## `Table of contents:`
 
-- &nbsp; [`raspberry-pi 4 boot-sequence:`](./rpi4.md#🥧-nbsp-raspberry-pi-4-boot-sequence) &nbsp; 🥧 
-- &nbsp; [`rustBoot execution-sequence:`](./rpi4.md#rustboot-execution-sequence) &nbsp; 🦀 
-- &nbsp; [`Booting from an SD card:`](./rpi4.md#💾-nbsp-booting-from-an-sd-card) &nbsp; 💾
-- &nbsp; [`Compiling rustBoot:`](./rpi4.md#⌛-nbsp-compiling-rustboot) &nbsp; ⌛
-- &nbsp; [`Adding a root file system:`](./rpi4.md#💼-nbsp-adding-a-root-file-system) &nbsp; 💼
-- &nbsp; [`UART communication:`](./rpi4.md#🚌-nbsp-uart-communication) &nbsp; 🚌
-- &nbsp; [`Power-on and test:`](./rpi4.md#🧪-nbsp-power-on-and-test) &nbsp; 🧪
+- &nbsp; [`raspberry-pi 4 boot-sequence:`](./rpi4.md#---raspberry-pi-4-boot-sequence) &nbsp; 🥧 
+- &nbsp; [`rustBoot execution-sequence:`](./rpi4.md#---rustboot-execution-sequence) &nbsp; 🦀 
+- &nbsp; [`Booting from an SD card:`](./rpi4.md#---booting-from-an-sd-card) &nbsp; 💾
+- &nbsp; [`Compiling rustBoot:`](./rpi4.md#---compiling-rustboot) &nbsp; ⌛
+- &nbsp; [`Adding a root file system:`](./rpi4.md#---adding-a-root-file-system) &nbsp; 💼
+- &nbsp; [`UART communication:`](./rpi4.md#---uart-communication) &nbsp; 🚌
+- &nbsp; [`Power-on and test:`](./rpi4.md#---power-on-and-test) &nbsp; 🧪
 
 ### 🥧 &nbsp; raspberry-pi 4 boot-sequence:
 rpi4 has an unconventional boot process  
@@ -55,8 +55,8 @@ Raspberry Pi computers use a micro SD card to store a bootable image.
 
 *SD card preparation:* 
 - make 2 partitions 
-    - the first one must be a fat32 partition named `firmware`. It must at least 150 MB in size. For simplicity, you can use a 256MB partition.  
-    - the second one can be ext2/3/4 partition. This is used to host the root file system. 
+    - the first one must be a `fat32` partition named `firmware`. It must at least 150 MB in size. For simplicity, you can use a 256MB partition.  
+    - the second one can be `ext2/3/4` partition. This is used to host the root file system. 
 
 *FAT32 partition contents:*
 - Create a file named `config.txt` with the following contents in the fat partition.
@@ -73,7 +73,7 @@ Raspberry Pi computers use a micro SD card to store a bootable image.
 
 > Note: Should it not work on your rpi4, try renaming start4.elf to start.elf (without the 4) on the SD card.
 
-### ⌛ &nbsp; Compiling rustBoot: 
+### ⌛ &nbsp; `Compiling rustBoot:` 
 You must have rust installed. You can install rust by following the installation instructions [here](https://www.rust-lang.org/tools/install). After installing rust, you'll need to switch to rust's `nightly` toolchain and add the `aarch64` compilation-target. This will allow us to compile code for the rpi4 
 
 ```powershell
@@ -242,7 +242,7 @@ To view rpi4's output on a host machine, you'll need a tool/app/console that han
 > - To exit the screen session, press Ctrl-A, then Ctrl-K, and confirm you want to exit when using minicom or screen
 > - To exit terminal-s, press Ctrl-]
 
-### 🧪 &nbsp; Power-on and test
+### 🧪 &nbsp; Power-on and test:
 Now that you have a fully bootable SD card containing  
 - a `fat32 formatted` boot partition populated with the relevant boot files and
 - a `ext2/3/4 formatted` root-file-system

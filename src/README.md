@@ -1,4 +1,4 @@
-# rustBoot 
+# `rustBoot` 
 
 *by Nihal Pasham* 
 

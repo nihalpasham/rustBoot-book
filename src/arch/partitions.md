@@ -1,4 +1,4 @@
-# rustBoot Partitions
+# `rustBoot Partitions`
 
 `rustBoot` has 2 distinct partioning schemes, depending on the type of the underlying system.
 - [**micro-controller partitions:**](./partitions.md#micro-controller-partitions) uses the concept of [`swappable flash partitions`](https://github.com/nihalpasham/rustBoot/issues/2) to update micro-controller firmware. 
@@ -47,5 +47,5 @@ Boot-storage media must contain a fat32 partition
 - of at least 150 MiB to accomodate the bootloader, boot + update fit-images and other vendor-specific boot files and
 - to add rustBoot support for your board, you can either implement the `BlockDevice` trait for your board's boot-storage media `controller` or simply use an existing implementation from the repo.
 
-> **note:** rustBoot comes with batteries-included. It provides `rusty` implementations for basic peripherals such as flash, uart, crypto, gpio (out of the box) along with the necessary arch-specific initialization routines.
+> Note: rustBoot comes with batteries-included. It provides `rusty` implementations for basic peripherals such as flash, uart, crypto, gpio (out of the box) along with the necessary arch-specific initialization routines.
 > - for example: the rustBoot implementation for `rpi4` includes bare-metal drivers for the on-board emmc controller, gpio and uart peripherals. 

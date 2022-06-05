@@ -193,7 +193,7 @@ For details type `warranty'.
 mount the partition as an `ext4` file-system (or `fat` file-system, whichever)
 ```
 $ sudo mkdir /mnt/other
-$ sudo mount -v -o offset=4194304 -t ext4 /_path_to_file_image/__filename__.img /mnt/other
+$ sudo mount -v -o offset=272629760 -t ext4 /_path_to_file_image/__filename__.img /mnt/other
 mount: /dev/loop0 mounted on /mnt/other.
 
 Check mounted image
