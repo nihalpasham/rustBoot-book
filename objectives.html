@@ -149,14 +149,14 @@
 <p>Contrary to prevailing wisdom, writing your own secure-bootloader is a complex project. The effort involved in developing/integrating one can be overwhelming. For example, we'll need to address a plethora of accompanying tasks such as key-management, signing infrastructure, code-safety, trust-chains, reliable back-ups etc. before we even get to the <code>actual booting logic</code>. </p>
 <p>rustBoot's purpose is to help simplify the entire process. Its primary goals are</p>
 <ul>
-<li><strong>Complies with <em>some</em> key requirements of the <a href="https://datatracker.ietf.org/wg/suit/about/">IETF-SUIT</a> standard</strong> i.e.
+<li><strong>complies with key requirements of the <a href="https://datatracker.ietf.org/wg/suit/about/">IETF-SUIT</a> standard</strong> i.e.
 <ul>
 <li>one of <code>SUIT's requirements</code> - transferring or downloading an <code>update</code> should be delegated to the firmware/OS to avoid <code>size or computational</code> limitations. In other words, the bootloader should NOT be required to download and install an update. This removes the need for a networking stack and provides for a drastic reduction in the bootloader's attack surface.</li>
 <li>SUIT also does not mandate the use of specific protocols or data link interfaces to transfer <code>updates</code> to a device. </li>
 <li>rustBoot fully complies with this requirement. </li>
 </ul>
 </li>
-<li><strong>Reliable updates:</strong>
+<li><strong>reliable updates:</strong>
 <ul>
 <li>reliable updates in rustBoot will take the form of
 <ul>
@@ -166,7 +166,7 @@
 </li>
 </ul>
 </li>
-<li><strong>Predictability over Performance:</strong> 
+<li><strong>predictability over performance:</strong> 
 <ul>
 <li>one of rustBoot's core design objectives is to keep it simple and avoid complexity. So, there will be little to no application of meta or async programming constructs. </li>
 </ul>
@@ -174,12 +174,12 @@
 <p><strong>Note:</strong> We don't actually need the extra performance. rustBoot can hit sub-second <code>secure boot-times</code> as we've stripped it down to the bare-essentials. This assumes flash load times are fast enough and a firmware binary-blob size of &lt; 1MB.</p>
 </blockquote>
 </li>
-<li><strong>Zero-dynamic memory allocation:</strong>
+<li><strong>zero-dynamic memory allocation:</strong>
 <ul>
 <li>to make it highly portable, apart from its modular design, rustBoot relies on a zero dynamic memory allocation architecture i.e. no heap required. </li>
 </ul>
 </li>
-<li><strong>Memory safety &amp; type-state programming:</strong> 
+<li><strong>memory safety &amp; type-state programming:</strong> 
 <ul>
 <li>the entire bootloader is written in rust's safe-fragment with a limited set of well-defined api(s) for unsafe HW access.</li>
 <li>as a consequence, it makes rustBoot immune to a whole host of memory safety bugs. ex: things like parsing image-headers (i.e. container-formats) in rustBoot is much safer.</li>

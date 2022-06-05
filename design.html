@@ -146,13 +146,13 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="design"><a class="header" href="#design">Design</a></h1>
-<p><code>rustBoot</code> aims to offer an OS and micro-architecture agnostic (i.e. highly portable) standards-based secure bootloader that's easy to integrate into existing embedded software projects. Its architecture is designed around the idea – <code>a bootloader handles ONLY the bare-essentials and offloads the rest to systems that are better suited for the job.</code> </p>
-<h2 id="what-do-bootloaders-actually-do"><a class="header" href="#what-do-bootloaders-actually-do">What do bootloaders actually do?</a></h2>
+<p><code>rustBoot</code> aims to offer an OS and micro-architecture agnostic (i.e. highly portable) standards-based secure bootloader that's easy to integrate into existing embedded software projects. Its architecture is designed around a simple idea – <code>a bootloader handles ONLY the bare-essentials and offloads the rest to systems that are better suited for the job.</code> </p>
+<h2 id="what-does-a-bootloader-actually-do"><a class="header" href="#what-does-a-bootloader-actually-do">What does a bootloader actually do?</a></h2>
 <ol>
-<li>Initialize bare-minimum requisite hardware. Ex: cpu-core, flash, gpios, uart, (RAM and hardware secure elements if needed).</li>
-<li>digitally verify i.e. authenticate code before booting</li>
-<li>Boot into firmware or OS i.e. <code>linux or RTOS or bare-metal</code></li>
-<li>If an update is available, perform the update and re-boot (with rollback protection in-case of firmware-corruption or if power is interrupted).</li>
+<li>it initializes (the bare-minimum) requisite hardware. Ex: cpu-core, flash, gpios, uart, (RAM and hardware secure elements if needed).</li>
+<li>digitally verifies or authenticates firmware.</li>
+<li>boots or passes control over to firmware or an OS i.e. <code>linux or RTOS or bare-metal</code> and</li>
+<li>if an update is available, it validates and applies the update before performing a re-boot. </li>
 </ol>
 <p>In this chapter, we'll talk about rustBoot's design and its core components.</p>
 

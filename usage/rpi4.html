@@ -146,15 +146,15 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="raspberry-pi-4"><a class="header" href="#raspberry-pi-4"><code>raspberry-pi 4</code></a></h1>
-<h2 id="table-of-contents"><a class="header" href="#table-of-contents">Table of contents:</a></h2>
+<h2 id="table-of-contents"><a class="header" href="#table-of-contents"><code>Table of contents:</code></a></h2>
 <ul>
-<li>  <a href="./rpi4.html#%F0%9F%A5%A7-nbsp-raspberry-pi-4-boot-sequence"><code>raspberry-pi 4 boot-sequence:</code></a>   🥧 </li>
-<li>  <a href="./rpi4.html#rustboot-execution-sequence"><code>rustBoot execution-sequence:</code></a>   🦀 </li>
-<li>  <a href="./rpi4.html#%F0%9F%92%BE-nbsp-booting-from-an-sd-card"><code>Booting from an SD card:</code></a>   💾</li>
-<li>  <a href="./rpi4.html#%E2%8C%9B-nbsp-compiling-rustboot"><code>Compiling rustBoot:</code></a>   ⌛</li>
-<li>  <a href="./rpi4.html#%F0%9F%92%BC-nbsp-adding-a-root-file-system"><code>Adding a root file system:</code></a>   💼</li>
-<li>  <a href="./rpi4.html#%F0%9F%9A%8C-nbsp-uart-communication"><code>UART communication:</code></a>   🚌</li>
-<li>  <a href="./rpi4.html#%F0%9F%A7%AA-nbsp-power-on-and-test"><code>Power-on and test:</code></a>   🧪</li>
+<li>  <a href="./rpi4.html#---raspberry-pi-4-boot-sequence"><code>raspberry-pi 4 boot-sequence:</code></a>   🥧 </li>
+<li>  <a href="./rpi4.html#---rustboot-execution-sequence"><code>rustBoot execution-sequence:</code></a>   🦀 </li>
+<li>  <a href="./rpi4.html#---booting-from-an-sd-card"><code>Booting from an SD card:</code></a>   💾</li>
+<li>  <a href="./rpi4.html#---compiling-rustboot"><code>Compiling rustBoot:</code></a>   ⌛</li>
+<li>  <a href="./rpi4.html#---adding-a-root-file-system"><code>Adding a root file system:</code></a>   💼</li>
+<li>  <a href="./rpi4.html#---uart-communication"><code>UART communication:</code></a>   🚌</li>
+<li>  <a href="./rpi4.html#---power-on-and-test"><code>Power-on and test:</code></a>   🧪</li>
 </ul>
 <h3 id="---raspberry-pi-4-boot-sequence"><a class="header" href="#---raspberry-pi-4-boot-sequence">🥧   raspberry-pi 4 boot-sequence:</a></h3>
 <p>rpi4 has an unconventional boot process</p>
@@ -236,8 +236,8 @@
 <ul>
 <li>make 2 partitions 
 <ul>
-<li>the first one must be a fat32 partition named <code>firmware</code>. It must at least 150 MB in size. For simplicity, you can use a 256MB partition.</li>
-<li>the second one can be ext2/3/4 partition. This is used to host the root file system. </li>
+<li>the first one must be a <code>fat32</code> partition named <code>firmware</code>. It must at least 150 MB in size. For simplicity, you can use a 256MB partition.</li>
+<li>the second one can be <code>ext2/3/4</code> partition. This is used to host the root file system. </li>
 </ul>
 </li>
 </ul>
@@ -262,7 +262,7 @@
 <blockquote>
 <p>Note: Should it not work on your rpi4, try renaming start4.elf to start.elf (without the 4) on the SD card.</p>
 </blockquote>
-<h3 id="---compiling-rustboot"><a class="header" href="#---compiling-rustboot">⌛   Compiling rustBoot:</a></h3>
+<h3 id="---compiling-rustboot"><a class="header" href="#---compiling-rustboot">⌛   <code>Compiling rustBoot:</code></a></h3>
 <p>You must have rust installed. You can install rust by following the installation instructions <a href="https://www.rust-lang.org/tools/install">here</a>. After installing rust, you'll need to switch to rust's <code>nightly</code> toolchain and add the <code>aarch64</code> compilation-target. This will allow us to compile code for the rpi4 </p>
 <pre><code class="language-powershell">rustup default nightly
 rustup target add aarch64-unknown-none-softfloat
@@ -460,7 +460,7 @@ Depending on your host operating system, the device name might differ. For examp
 <li>To exit terminal-s, press Ctrl-]</li>
 </ul>
 </blockquote>
-<h3 id="---power-on-and-test"><a class="header" href="#---power-on-and-test">🧪   Power-on and test</a></h3>
+<h3 id="---power-on-and-test"><a class="header" href="#---power-on-and-test">🧪   Power-on and test:</a></h3>
 <p>Now that you have a fully bootable SD card containing</p>
 <ul>
 <li>a <code>fat32 formatted</code> boot partition populated with the relevant boot files and</li>
