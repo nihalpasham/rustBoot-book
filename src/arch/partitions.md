@@ -39,13 +39,13 @@ BOOT, UPDATE, SWAP addresses and SECTOR_SIZE, PARTITION_SIZE values can be set v
 > - The `BOOT` partiton is the only partition from which we can boot a firmware image. The firmware image must be linked so that its entry-point is at address `256 + BOOT_PARTITION_ADDRESS`.
 > - `BOOT` firmware is responsible for downloading a new firmware image via a secure channel and installing it in the `UPDATE` partition. To trigger an update, the `BOOT` firmware updates the `status byte` of the `UPDATE` partition and performs a reboot. This will allow the bootloader to `swap the contents` of `BOOT` partition with that of the `UPDATE` partition. 
 
-## Linux System Updates:
+## Linux system partitions:
 
-To boot into linux systems, rustBoot includes support for the fat32 file-system. 
+To boot into a linux system, rustBoot includes support for the fat32 file-system. 
 
 Boot-storage media must contain a fat32 partition 
-- of at least 150 MiB to accomodate the bootloader, boot + update fit-images and other vendor-specific boot files.
-- in order to integrate rustBoot, you can either implement the `BlockDevice` trait for your board's boot-storage media `controller` or simply use an existing implementation included in the repo.
+- of at least 150 MiB to accomodate the bootloader, boot + update fit-images and other vendor-specific boot files and
+- to add rustBoot support for your board, you can either implement the `BlockDevice` trait for your board's boot-storage media `controller` or simply use an existing implementation from the repo.
 
 > **note:** rustBoot comes with batteries-included. It provides `rusty` implementations for basic peripherals such as flash, uart, crypto, gpio (out of the box) along with the necessary arch-specific initialization routines.
 > - for example: the rustBoot implementation for `rpi4` includes bare-metal drivers for the on-board emmc controller, gpio and uart peripherals. 

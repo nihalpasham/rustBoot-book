@@ -1,16 +1,16 @@
-# raspberry-pi 4
+# `raspberry-pi 4`
 
 ## Table of contents:
 
-- &nbsp; [raspberry-pi 4 boot-sequence](./rpi4.md#raspberry-pi-4-boot-sequence) &nbsp; 🥧 
-- &nbsp; [rustBoot execution-sequence:](./rpi4.md#rustboot-execution-sequence) &nbsp; 🦀 
-- &nbsp; [Booting from an SD card:](./rpi4.md#booting-from-an-sd-card) &nbsp; 💾
-- &nbsp; [Compiling rustBoot:](./rpi4.md#compiling-rustboot) &nbsp; ⌛
-- &nbsp; [Copying a root file system:](./rpi4.md#copying-a-root-file-system) &nbsp; 💼
-- &nbsp; [UART communication:](./rpi4.md#uart-communication) &nbsp; 🚌
-- &nbsp; [Power-on and test:](./rpi4.md#power-on-and-test) &nbsp; 🧪
+- &nbsp; [`raspberry-pi 4 boot-sequence:`](./rpi4.md#🥧-nbsp-raspberry-pi-4-boot-sequence) &nbsp; 🥧 
+- &nbsp; [`rustBoot execution-sequence:`](./rpi4.md#rustboot-execution-sequence) &nbsp; 🦀 
+- &nbsp; [`Booting from an SD card:`](./rpi4.md#💾-nbsp-booting-from-an-sd-card) &nbsp; 💾
+- &nbsp; [`Compiling rustBoot:`](./rpi4.md#⌛-nbsp-compiling-rustboot) &nbsp; ⌛
+- &nbsp; [`Adding a root file system:`](./rpi4.md#💼-nbsp-adding-a-root-file-system) &nbsp; 💼
+- &nbsp; [`UART communication:`](./rpi4.md#🚌-nbsp-uart-communication) &nbsp; 🚌
+- &nbsp; [`Power-on and test:`](./rpi4.md#🧪-nbsp-power-on-and-test) &nbsp; 🧪
 
-### raspberry-pi 4 boot-sequence: 
+### 🥧 &nbsp; raspberry-pi 4 boot-sequence:
 rpi4 has an unconventional boot process  
 - Upon initial power-on, the `bcm2711` SoC (CPU is offline but GPU is powered on) executes from the onboard bootROM i.e. `1st stage bootloader` 
 > Note: the GPU contains a tiny risc core that executes the `bootROM`. 
@@ -24,7 +24,7 @@ rpi4 has an unconventional boot process
     - loads `rustBoot-bootloader` from the SD card into CPU-assigned RAM and passes control of the ARMv8 core to rustBoot   
 > Note: At this point, rustBoot has complete control over the CPU. 
 
-### rustBoot execution-sequence:
+### 🦀 &nbsp; rustBoot execution-sequence:
 - By default, rpi4 will always start executing in EL2. Since we are booting a traditional Kernel (i.e. linux), we have to transition into the more appropriate EL1.
 > Note: EL1 and EL2 are abbreviations for ARMv8-A exception levels
 
@@ -50,7 +50,7 @@ So, rustBoot checks the following
     > Note: kernel cmd-line arguments are set at package-build time i.e. when building the fit-image and cannot be interactively set at runtime.
     - Finally, it disables the MMU and boots the linux kernel by jumping to its (relocated) entry point.
 
-### Booting from an SD card:
+### 💾 &nbsp; Booting from an SD card:
 Raspberry Pi computers use a micro SD card to store a bootable image.
 
 *SD card preparation:* 
@@ -59,22 +59,22 @@ Raspberry Pi computers use a micro SD card to store a bootable image.
     - the second one can be ext2/3/4 partition. This is used to host the root file system. 
 
 *FAT32 partition contents:*
-- On the card, generate a file named config.txt with the following contents:
+- Create a file named `config.txt` with the following contents in the fat partition.
 ```
     arm_64bit=1
     enable_uart=1
     init_uart_clock=4000000
     kernel=rustBoot.bin
 ```    
-- Copy the following files from the Raspberry Pi firmware repo onto the SD card:
+- Copy the following files from the Raspberry Pi firmware repo onto the fat partition:
     - [fixup4.dat](https://github.com/raspberrypi/firmware/raw/master/boot/fixup4.dat)
     - [start4.elf](https://github.com/raspberrypi/firmware/raw/master/boot/start4.elf)
     - [bcm2711-rpi-4-b.dtb](https://github.com/raspberrypi/firmware/raw/master/boot/bcm2711-rpi-4-b.dtb)
 
 > Note: Should it not work on your rpi4, try renaming start4.elf to start.elf (without the 4) on the SD card.
 
-### Compiling rustBoot: 
-You must have rust installed. You can install rust by following the installation instructions [here](https://www.rust-lang.org/tools/install). After installing rust, you'll need to switch to nightly toolchain and add the aarch64 compilation-target. This allows us to compile code for the rpi4 
+### ⌛ &nbsp; Compiling rustBoot: 
+You must have rust installed. You can install rust by following the installation instructions [here](https://www.rust-lang.org/tools/install). After installing rust, you'll need to switch to rust's `nightly` toolchain and add the `aarch64` compilation-target. This will allow us to compile code for the rpi4 
 
 ```powershell
 rustup default nightly
@@ -110,7 +110,7 @@ active toolchain
 nightly-aarch64-apple-darwin (default)
 rustc 1.63.0-nightly (ee160f2f5 2022-05-23)
 ```
-As you can see from the `installed targets for active toolchain` section, the `aarch64-unknown-none-softfloat` target is installed. To compile and extract rustBoot-bootloader, simply clone the [`rustBoot repo`](https://github.com/nihalpasham/rustBoot) and run the following command
+You should be able see `aarch64-unknown-none-softfloat` in the installed targets for active toolchain section. To compile and extract rustBoot-bootloader, simply clone the [`rustBoot repo`](https://github.com/nihalpasham/rustBoot) and run the following command
 
 ```powershell
 cargo rpi4 build rustBoot-only
@@ -131,7 +131,7 @@ $ rust-objcopy --strip-all -O binary ../../target/aarch64-unknown-none-softfloat
 ```
 After compiling rustBoot, copy `rustBoot.bin` file onto the sd card's fat32 partiton.
 
-The last step in preparing a bootable SD card is to copy a rustBoot fit-image that you'd like to boot onto the sd card's fat32 partition. prepar
+The last step in preparing a bootable SD card is to copy the rustBoot fit-image that you'd like to boot onto the sd card's fat32 partition.
 
 > Note: 
 > - to build a rustBoot fit-image, you can follow [these instructions](../arch/images.md#building-a-rustboot-compliant-fit-image) and
@@ -145,15 +145,15 @@ Finally, once you've added the above mentioned files to your sd card. The fat32 
 - &nbsp; rustBoot.bin
 - &nbsp; signed-example-image.itb
 
-### Copying a root file system: 
+### 💼 &nbsp; Adding a root file system: 
 There are many ways to add a root file-system to the second ext2/3/4 partition. One way is to copy a root file system to an empty ext2/3/4 drive: 
-- Maintainers of a particular linux distribution provide pre-built OS images. These images usually contain several partitions such as - 
+- Maintainers of a linux distribution provide pre-built OS images. These images usually contain several partitions such as - 
     - `boot:` contains the bootloader, kernel, dtb, ramdisk and other stuff
     - `system:` contains the root file system 
     - `others:` may contain other partitions for things such as storage etc.
 - simply download an OS image or a pre-built linux distribution from the maintainers website.
-    - In this example, I'll be using the `apertis` distribution.
-- it’s usually in a compressed (zImage) format. Decompress it using a tool like unarchiver to get a disk image.  
+    - in this example, I'll be using the [`apertis`](https://www.apertis.org/download/) distribution.
+- it’s usually in a compressed (zImage) format, decompress it using a tool like unarchiver to get a disk image.  
 - use `partx --show` to list all partitions
 ```powershell
 $ partx --show __linux_image_filepath__
@@ -161,8 +161,8 @@ NR  START     END SECTORS SIZE NAME UUID
  1   8192  532479  524288 256M      9730496b-01
  2 532480 3661823 3129344 1.5G      9730496b-02
 ```
-- in the above case, partition2 with a size of 1.5G contains the root file system. It's usually named `system`.
-- calculate the offset to `system` volume/partition. You can do this like so. 
+- in the above example, partition 2 with a size of 1.5G contains the root file system. It's usually named `system`.
+- calculate the offset to the `system` volume/partition. You can do this with the `bc` command. 
 > `512` is the sector-size. We multiply sector-size with the sector offset to get the actual starting (byte) location of `system`.
 ```powershell
 $ bc
@@ -187,13 +187,13 @@ $ ls /mnt/other
 - copy all of (system partition's) contents to sd card's ext2/3/4 partition using the `cp` command. 
 
 > Note:
-> - the above method only works on linux or macOS.
+> - this method only works on linux or macOS and does not work on WSL2.
 > - all symbolic links need to be copied. If required you can create symbolic links using `ln` command. Here' an example that creates a symbolic link called `sbin` to `usr/bin` 
 > ```powershell
 > ln -s usr/sbin sbin 
 > ```
 
-### UART communication:
+### 🚌 &nbsp; UART communication:
 rustBoot will output boot-logs via the raspberry-pi 4's UART interface. These logs can be sent to a host computer (i.e. laptop/desktop).
 
 We'll need extra hardware for this:
@@ -207,7 +207,7 @@ Connect the USB-serial converter to your host computer as shown in the wiring di
 - connect the rpi4 to the (USB) power cable and observe the output:
 
 **Serial console:**
-To view rpi4's output on a host machine, you'll need a program/app/console that handles sending and receiving of serial data. There are a number of ways to interact with a serial console. I'll be using 
+To view rpi4's output on a host machine, you'll need a tool/app/console that handles sending and receiving of serial data. There are a number of ways to interact with a serial console. I'll be using 
 - `minicom` on linux
 - `screen` on the mac
 - `terminal-s` on windows
@@ -242,10 +242,10 @@ To view rpi4's output on a host machine, you'll need a program/app/console that 
 > - To exit the screen session, press Ctrl-A, then Ctrl-K, and confirm you want to exit when using minicom or screen
 > - To exit terminal-s, press Ctrl-]
 
-### Power-on and test
+### 🧪 &nbsp; Power-on and test
 Now that you have a fully bootable SD card containing  
 - a `fat32 formatted` boot partition populated with the relevant boot files and
-- a `ext2/3/4 formatted` root-file-system partition
+- a `ext2/3/4 formatted` root-file-system
 
 and have your uart-usb interface set-up, you are now ready to flip the switch i.e. 
 - insert the sd card into the pi's sd slot and

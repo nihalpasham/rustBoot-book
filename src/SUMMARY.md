@@ -14,8 +14,7 @@
 - [Architecture](./architecture.md)
     - [rustBoot Images](arch/images.md)
     - [rustBoot Partitions](arch/partitions.md)
-    - [rustBoot Secure-Boot Flow](arch/boot_flow.md)
-    - [rustBoot Secure-Update Flow](arch/update_flow.md)
+    - [Secure-Boot & Update](arch/secure_boot_update.md)
     - [Signing Utilities](arch/signing_utilities.md)
 
 # Usage

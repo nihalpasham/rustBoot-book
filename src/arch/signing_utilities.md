@@ -13,15 +13,16 @@ To sign a fit-image, rustBoot's [image signing utility](https://github.com/nihal
 - a raw signing-key or ecdsa private key
 - the ecdsa curve-type - (nistp256 only for now).
 
-Here's an example for how to sign a fit-image:
+Simply run the following command from root directory of the rustBoot project. 
+```
+cargo run ../boards/bootloaders/rpi4/apertis/rpi4-test-apertis.itb ../boards/rbSigner/keygen/ecc256.der nistp256
+```
+In the above example:
 - `../boards/bootloaders/rpi4/apertis/rpi4-test-apertis.itb` is the path to my fit-image 
 - `../boards/rbSigner/keygen/ecc256.der` is the path to my `test` signing-key
 - `nistp256` is the type ecdsa curve I'd like to use. Its the only one supported for now.
 
-Simply run the following command from root directory of the rustBoot project. 
 ```
-cargo run ../boards/bootloaders/rpi4/apertis/rpi4-test-apertis.itb ../boards/rbSigner/keygen/ecc256.der nistp256
-
 Output: 
 
     Finished dev [unoptimized + debuginfo] target(s) in 0.04s
@@ -29,4 +30,4 @@ Output:
 signature: ecdsa::Signature<NistP256>([64, 147, 93, 99, 241, 5, 118, 167, 156, 150, 203, 234, 74, 207, 182, 243, 129, 143, 38, 2, 107, 85, 114, 145, 178, 163, 33, 153, 2, 100, 0, 114, 135, 18, 174, 183, 194, 110, 24, 186, 33, 36, 39, 105, 116, 74, 8, 118, 171, 237, 30, 108, 64, 205, 206, 14, 110, 226, 43, 143, 180, 193, 19, 33])
 bytes_written: 62202019
 ```
-In this case, the `signed fit-image` will be stored at the following path - `../boards/bootloaders/rpi4/apertis/signed-rpi4-apertis.itb`
+In the above example, the `signed fit-image` will be stored at the following path - `../boards/bootloaders/rpi4/apertis/signed-rpi4-apertis.itb`

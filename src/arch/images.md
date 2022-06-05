@@ -62,7 +62,7 @@ Each tag represents some information about the firmware. `rustBoot` requires the
 >    - if it isn't signed or if it cannot be verified using the included the [`authentication-type`](images.md#tags).
 
 ## FIT-image format
-rustBoot leverages Uboot's [`flattened-uImage-tree`](https://raw.githubusercontent.com/u-boot/u-boot/master/doc/uImage.FIT/howto.txt) format when booting the linux kernel. 
+rustBoot leverages Uboot's [`flattened-uImage-tree`](https://raw.githubusercontent.com/u-boot/u-boot/master/doc/uImage.FIT/howto.txt) format to boot the linux kernel. 
 
 The FIT format is essentially an extension of  the [`device-tree`](https://github.com/devicetree-org/devicetree-specification/releases/tag/v0.4-rc1) format. FIT allows us to combine multiple binaries such as the kernel, ramdisk, device-tree-blob etc. into a single image. 
 
@@ -72,7 +72,7 @@ A typical rustBoot fit-image contains 4 items in the following order
 - &nbsp; initrd
 - &nbsp; rbconfig
 
-**Here's an example fit-image source file :** It is also referred to as an image-tree source file or `.its` file.
+**Here's an example fit-image source file :** It is also referred to as an `image-tree` source file or `.its` file.
 
 ```json
 /dts-v1/;
@@ -163,13 +163,13 @@ As shown in the example above, a rustBoot compliant fit-image contains 4 items -
 - `rbconfig` - this is rustBoot's kernel configuraton. A simple `txt` file to add kernel command-line arguments.
 
 You can retrieve the first 3 (i.e. kernel, fdt, ramdisk) from a pre-built OS image: 
-- Maintainers of a particular linux distribution provide pre-built OS images. These images usually contain several partitions such as - 
+- Maintainers of a linux distribution provide pre-built OS images. These images usually contain several partitions such as - 
     - `boot:` contains the bootloader, kernel, dtb, ramdisk and other stuff
     - `system:` contains the root file system 
     - `others:` may contain other partitions for things such as storage etc.
 - simply download an OS image or a pre-built linux distribution from the maintainers website.
-    - In this example, I'll be using the `apertis` distribution.
-- it’s usually a compressed (zImage) format. Decompress it using a tool like unarchiver to get a disk image.  
+    - in this example, I'll be using the [`apertis`](https://www.apertis.org/download/) distribution.
+- it’s usually a compressed (zImage) format, decompress it using a tool like unarchiver to get a disk image.  
 - use `partx --show` to list all partitions
 ```powershell
 $ partx --show __linux_image_filepath__
@@ -177,7 +177,7 @@ NR  START     END SECTORS SIZE NAME UUID
  1   8192  532479  524288 256M      9730496b-01
  2 532480 3661823 3129344 1.5G      9730496b-02
 ```
-In the above case, the first partition with a size of 256MB contains our boot-files. It's usually named `boot`. We can calculate the offset to `boot` volume/partition with the following command 
+In the above case, the first partition with a size of 256MB contains the boot-files. It's usually named `boot`. We can calculate the offset to the `boot` volume/partition with the following command 
 ```powershell
 $ bc
 bc 1.07.1
@@ -193,19 +193,24 @@ For details type `warranty'.
 mount the partition as an `ext4` file-system (or `fat` file-system, whichever)
 ```
 $ sudo mkdir /mnt/other
-$ sudo mount -v -o offset=272629760 -t ext4 /_path_to_file_image/__filename__.img /mnt/other
+$ sudo mount -v -o offset=4194304 -t ext4 /_path_to_file_image/__filename__.img /mnt/other
 mount: /dev/loop0 mounted on /mnt/other.
 
 Check mounted image
 
 $ ls /mnt/other
 ```
-Finally copy the `dtb`, `ramdisk` and `vmlinuz` image (i.e. kernel) from the mounted partition to a new folder. You can give it any name you want. I'll use `pkg` in this example.
+ Copy the `dtb`, `ramdisk` and `vmlinuz` image (i.e. kernel) from the mounted partition to a new folder. You can give it any name you want. I'll use `pkg` for this example.
 > vmlinuz is a PE (portable executable) i.e. we can jump to it and it will in-turn jump to the kernel's entry point.  
 
-After storing all 4 items in the `pkg` folder, you can build a fit-image by running the following commands. 
-- the `.its` file is the input to `mkimage` 
-- and the `.itb` filename is the generated fit-image, stored in the same `pkg` folder. 
+`rbconfig:` Lastly, create a file named `rbconfig.txt` in the pkg folder. This file will be used by rustBoot to pass command-line parameters to the linux kernel. 
+
+Here's an example of the `rbconfig.txt` file -
+```powershell
+bootargs="root=UUID=64bc182a-ca9d-4aa1-8936-d2919863c22a rootwait ro plymouth.ignore-serial-consoles fsck.mode=auto fsck.repair=yes cma=128M"
+```
+
+When you have added all 4 items to the `pkg` folder, you can build a fit-image by running the following commands. 
 
 **On a mac:** 
 ```powershell
@@ -219,7 +224,11 @@ and then run
 
 ```powershell
 mkimage -f rpi4-apertis.its rpi4-test-apertis.itb
+```
+> - the input to `mkimage` is an `.its` file.  
+> - and `.itb` filename we've specified is the name given to the generated fit-image (that's stored in the `pkg` folder). 
 
+```
 Output:
 
 rpi4-apertis.its:65.37-70.6: Warning (unit_address_vs_reg): /configurations/bootconfig/signature@1: node has a unit name, but no reg or ranges property
@@ -278,7 +287,7 @@ Created:         Sat Jun  4 13:18:45 2022
   Sign value:   00
   Timestamp:    unavailable
 ```
-The `.itb` file is our fit-image. It does not contain a signature yet i.e. it is not signed. You'll notice `sign-value` field is empty. 
+This `.itb` file is our fit-image. It does not contain a signature yet i.e. it is not signed - notice the `sign-value` field is empty. 
 ### Signing fit-images
 rustBoot fit-images are signed with `ecdsa256`. The signature includes the kernel, fdt, initrd and rbconfig. 
 
@@ -290,6 +299,6 @@ Signing a rustBoot fit-image involves 2 steps:
 > - By default, valid rustBoot images are always signed.
 > - It will fail to boot an image
 >   - if the image fails fit-validation i.e. if its not a properly formatted fit-image or if the fit-parser cant find the specified default config or its components. 
->   - if it isn't signed or if it cannot be verified using the included algo.
+>   - if it isn't signed or if it cannot be verified using the specified algo.
 > - rustBoot's fit parser currently supports the following architectures
 >   - `Aarch64`

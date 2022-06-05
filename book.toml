@@ -5,13 +5,8 @@ multilingual = false
 src = "src"
 title = "rustBoot Documentation"
 
-# [preprocessor]
-
-# [preprocessor.mermaid]
-# command = "mdbook-mermaid"
-
-# [preprocessor.svgbob2]
-# font_family = "Lucida Console"
+[preprocessor.mermaid]
+command = "mdbook-mermaid"
 
 [output]
 
