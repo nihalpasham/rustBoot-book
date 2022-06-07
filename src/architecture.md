@@ -1,6 +1,6 @@
 # High Level Overview
 
-rustBoot's architecture reflects its focus on `simplicity and security above all else`. 
+rustBoot's architecture reflects its focus on `simplicity and security`, above everything else. 
 
 For a high-level overview, you can think of rustBoot as operating in 2 independent stages. 
 

@@ -1,10 +1,10 @@
-# rustBoot Partitions
+# `rustBoot Partitions`
 
-`rustBoot` offers 2 `update-types`, depending on the type of the underlying system.
-- **micro-controller updates:** uses the concept of [`swappable flash partitions`](https://github.com/nihalpasham/rustBoot/issues/2) to update micro-controller firmware. 
+`rustBoot` has 2 distinct partioning schemes, depending on the type of the underlying system.
+- [**micro-controller partitions:**](./partitions.md#micro-controller-partitions) uses the concept of [`swappable flash partitions`](https://github.com/nihalpasham/rustBoot/issues/2) to update micro-controller firmware. 
     > This usually means bare-metal firmware but it is also applicable to `RTOS(s)`.
-- **linux system updates:** uses the traditional `ram based swap` method to update linux distributions running atop micro-processors.
-## Micro-controller Updates:
+- [**linux system partitions:**](./partitions.md#linux-system-partitions) uses a single fat32 partition to host the `rustBoot-bootloader` and  (boot/update) fit-images. This method uses a `rustBoot-state` file to determine which image is to be booted.
+## Micro-controller Partitions:
 
 [![partition](https://github.com/imrank03/rustBoot-book-diagrams/blob/main/partition.svg?raw=true "Simplified Block Diagram, 256 byte rustBoot header")](https://github.com/imrank03/rustBoot-book-diagrams/blob/main/partition.svg?raw=true)
 
@@ -34,9 +34,18 @@ MCU flash memory is partitioned as follows:
 
 BOOT, UPDATE, SWAP addresses and SECTOR_SIZE, PARTITION_SIZE values can be set via command line options or developers `constants.rs`.
 
-> **rustBoot Defaults:**
+> **MCU defaults:**
 > - By default, public keys used for firmware validation are embedded in `rustBoot-firmware` during a factory-image-burn. However, rustBoot also offers the option to retrieve them from secure-hardware (ex: crypto-elements).
 > - The `BOOT` partiton is the only partition from which we can boot a firmware image. The firmware image must be linked so that its entry-point is at address `256 + BOOT_PARTITION_ADDRESS`.
 > - `BOOT` firmware is responsible for downloading a new firmware image via a secure channel and installing it in the `UPDATE` partition. To trigger an update, the `BOOT` firmware updates the `status byte` of the `UPDATE` partition and performs a reboot. This will allow the bootloader to `swap the contents` of `BOOT` partition with that of the `UPDATE` partition. 
 
-## Linux System Updates:
+## Linux system partitions:
+
+To boot into a linux system, rustBoot includes support for the fat32 file-system. 
+
+Boot-storage media must contain a fat32 partition 
+- of at least 150 MiB to accomodate the bootloader, boot + update fit-images and other vendor-specific boot files and
+- to add rustBoot support for your board, you can either implement the `BlockDevice` trait for your board's boot-storage media `controller` or simply use an existing implementation from the repo.
+
+> Note: rustBoot comes with batteries-included. It provides `rusty` implementations for basic peripherals such as flash, uart, crypto, gpio (out of the box) along with the necessary arch-specific initialization routines.
+> - for example: the rustBoot implementation for `rpi4` includes bare-metal drivers for the on-board emmc controller, gpio and uart peripherals. 
