@@ -229,7 +229,7 @@ mkimage -f rpi4-apertis.its rpi4-test-apertis.itb
 ```
 > - the input to `mkimage` is an `.its` file.
 > - and `.itb` filename we've specified is the name given to the generated fit-image (that's stored in the `pkg` folder). 
-> - you can copy the contents of the [example `fit-image`](./images.md#heres-an-example-fit-image-source-file) file into a new `.its` file named `rpi4-apertis.its` in the pkg folder.
+> - you can copy the contents of the example [`fit-image`](./images.md#heres-an-example-fit-image-source-file) file above into a new `.its` file named `rpi4-apertis.its` in the pkg folder.
 
 ```
 Output:
