@@ -72,8 +72,7 @@ A typical rustBoot fit-image contains 4 items in the following order
 - &nbsp; initrd
 - &nbsp; rbconfig
 
-### Here's an example fit-image source file :
-
+### An example fit-image source file:
 It is also referred to as an `image-tree` source file or `.its` file.
 
 ```json
@@ -229,7 +228,7 @@ mkimage -f rpi4-apertis.its rpi4-test-apertis.itb
 ```
 > - the input to `mkimage` is an `.its` file.
 > - and `.itb` filename we've specified is the name given to the generated fit-image (that's stored in the `pkg` folder). 
-> - you can copy the contents of the example [`fit-image`](./images.md#heres-an-example-fit-image-source-file) file above into a new `.its` file named `rpi4-apertis.its` in the pkg folder.
+> - you can copy the contents of the example [`fit-image`](./images.md#an-example-fit-image-source-file) file above into a new `.its` file named `rpi4-apertis.its` and add it to the pkg folder.
 
 ```
 Output:
