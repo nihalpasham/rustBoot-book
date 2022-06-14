@@ -4,7 +4,7 @@
 
 This repository contains the source for the `rustBoot book`.
 
-You can read the book for [`free online`](https://nihalpasham.github.io/rustBoot-book/index.html).
+You can read the book for <a href="https://nihalpasham.github.io/rustBoot-book/index.html" target="_blank">`free online`.</a>
 
 ## Contributing
 

@@ -72,7 +72,9 @@ A typical rustBoot fit-image contains 4 items in the following order
 - &nbsp; initrd
 - &nbsp; rbconfig
 
-**Here's an example fit-image source file :** It is also referred to as an `image-tree` source file or `.its` file.
+### Here's an example fit-image source file :
+
+It is also referred to as an `image-tree` source file or `.its` file.
 
 ```json
 /dts-v1/;
@@ -193,7 +195,7 @@ For details type `warranty'.
 mount the partition as an `ext4` file-system (or `fat` file-system, whichever)
 ```
 $ sudo mkdir /mnt/other
-$ sudo mount -v -o offset=272629760 -t ext4 /_path_to_file_image/__filename__.img /mnt/other
+$ sudo mount -v -o offset=4194304 -t ext4 /_path_to_file_image/__filename__.img /mnt/other
 mount: /dev/loop0 mounted on /mnt/other.
 
 Check mounted image
@@ -225,8 +227,9 @@ and then run
 ```powershell
 mkimage -f rpi4-apertis.its rpi4-test-apertis.itb
 ```
-> - the input to `mkimage` is an `.its` file.  
+> - the input to `mkimage` is an `.its` file.
 > - and `.itb` filename we've specified is the name given to the generated fit-image (that's stored in the `pkg` folder). 
+> - you can copy the contents of the [example `fit-image`](./images.md#heres-an-example-fit-image-source-file) file into a new `.its` file named `rpi4-apertis.its` in the pkg folder.
 
 ```
 Output:

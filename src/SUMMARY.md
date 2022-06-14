@@ -19,7 +19,7 @@
 
 # Usage
 
-- [User Guide](./user_guide.md)
+- [Build & Flash](./user_guide.md)
     - [nrf52840](usage/nrf52840.md)
     - [rpi4](usage/rpi4.md)
     - [stm32f411](usage/stm32f411.md)
