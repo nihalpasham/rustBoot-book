@@ -11,7 +11,7 @@
 > Note: `BOOT`, `UPDATE` and `SWAP` partitions need **NOT** be consecutively laid out in flash memory. The above diagram only serves as a visual aid.
 
 rustBoot requires `mcu flash` to be divided into (at-least) 4 non-overlapping memory regions (i.e. partitions). 
-- `rustBoot`: contains the bootloader. This starts starts at `address 0x0` in flash. 
+- `rustBoot`: contains the bootloader. This usually starts at `address 0x0` in flash-memory. 
 - `BOOT:` contains boot firmware. `rustBoot` always boots from this partition address.
 - `UPDATE:` contains update firmware i.e. downloaded update firmware is placed in this partition.
 - `SWAP:` is an empty partition that is used while swapping contents of `BOOT` and `UPDATE`.
