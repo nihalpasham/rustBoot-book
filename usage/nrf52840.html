@@ -148,10 +148,17 @@
                         <h1 id="nrf52840"><a class="header" href="#nrf52840"><code>nrf52840</code></a></h1>
 <p>The <code>nrf52840</code> example uses a <a href="https://wiki.makerdiary.com/nrf52840-mdk/">maker-diary board</a>. It has a custom led configuration. </p>
 <blockquote>
-<p>If you're using a different version of the board, you'll probably need to edit firmware partitions adddresses to accomodate for differences. Just make sure you dont change the name of files/folders or the folder structure, as cargo xtask looks for these file/folder names.</p>
+<p>Note:</p>
+<ul>
+<li>If you're using a different version of the board, you'll probably need to edit firmware partitions adddresses to accomodate for differences. </li>
+<li>Just make sure you dont change the name of files/folders or the folder structure, as cargo xtask looks for these file/folder names.</li>
+</ul>
 </blockquote>
 <h2 id="partitioning"><a class="header" href="#partitioning">Partitioning:</a></h2>
-<p>The first step in integrating rustBoot is <code>flash-memory partitioning</code> i.e. we divide the <code>nrf52840</code>'s flash-memory into 4 partitions, taking into account the geometry of the flash memory. You can read more about <code>mcu</code> partitoning <a href="../arch/partitions.html#micro-controller-partitions">here</a></p>
+<p>The first step in integrating rustBoot is <code>flash-memory partitioning</code> i.e. we divide the <code>nrf52840</code>'s flash-memory into 4 partitions, taking into account the geometry of the flash memory. </p>
+<blockquote>
+<p>You can read more about <code>mcu</code> partitoning <a href="../arch/partitions.html#micro-controller-partitions">here</a></p>
+</blockquote>
 <p>In this example, we'll be using the following partitioning scheme. You can locate these constants in the <a href="https://github.com/nihalpasham/rustBoot/blob/main/rustBoot/src/constants.rs">constants module</a></p>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
@@ -169,31 +176,28 @@ pub const UPDATE_PARTITION_ADDRESS: usize = 0x58000;
 <span class="boring">}
 </span></code></pre></pre>
 <ul>
-<li><strong>rustBoot partition:</strong> contains the bootloader (its code and data) and a (test) public-key embedded as part of the firmware image, starts at address 0x0.</li>
-<li><strong>BOOT partition:</strong> contains boot firmware, starts at address <code>PARTITION_BOOT_ADDRESS</code>.</li>
-<li><strong>UPDATE partition:</strong> contains update firmware, starts at address <code>UPDATE_PARTITION_ADDRESS</code>. The boot firmware is responsible for downloading and installed the update firmware into this partition via a secure channel.</li>
-<li><strong>SWAP partition:</strong> is used as a temporary swap space, starts at address <code>SWAP_PARTITION_ADDRESS</code>. </li>
+<li><strong><code>RUSTBOOT partition:</code></strong> contains the bootloader (its code and data) and a (test) public-key embedded as part of the firmware image, starts at address <code>0x0</code>.</li>
+<li><strong><code>BOOT partition:</code></strong> contains boot firmware, starts at address <code>PARTITION_BOOT_ADDRESS</code>.</li>
+<li><strong><code>UPDATE partition:</code></strong> contains update firmware, starts at address <code>UPDATE_PARTITION_ADDRESS</code>. The boot firmware is responsible for downloading and installed the update firmware into this partition via a secure channel.</li>
+<li><strong><code>SWAP partition:</code></strong> is used as a temporary swap space, starts at address <code>SWAP_PARTITION_ADDRESS</code>. </li>
 </ul>
 <h2 id="compiling-signing-and-programming"><a class="header" href="#compiling-signing-and-programming">Compiling, Signing and Programming:</a></h2>
-<p>Now that we have partitioned the <code>nrf52840</code>'s flash-storage, the next step <code>compiling, signing and programming </code> </p>
-<p>We will compile the following and sign both pieces of firmware with a (test) private-key.</p>
+<p>Now that we have partitioned the <code>nrf52840</code>'s flash-storage, the next step is - <code>compiling, signing and programming </code> </p>
+<p>We will compile the following and sign both pieces of firmware with a (test) <a href="https://github.com/nihalpasham/rustBoot/tree/main/boards/rbSigner/keygen">private-key</a>.</p>
 <ul>
 <li>bootloader </li>
-<li>boot and update firmware
-<ul>
-<li>sign both boot and update firmware</li>
+<li>boot and update firmware</li>
 </ul>
-</li>
-</ul>
+<p>and finally create valid <a href="../arch/images.html#mcu-image-format"><code>rustBoot mcu-images</code></a> i.e. signed boot and update firmware.</p>
 <p>Compiling, signing and programming can be performed via a single command</p>
 <pre><code class="language-powershell">cargo nrf52840 build-sign-flash rustBoot
 </code></pre>
-<p>This will build, sign and flash all 3 packages (i.e. bootloader + bootfw + updatefw) onto the board.</p>
+<p>This will build, sign and flash all 3 packages (i.e. bootloader + boot-fw + update-fw) onto the board.</p>
 <blockquote>
 <p>Note: </p>
 <ul>
 <li>The corresponding public-key is embedded in the bootloader's source.</li>
-<li>In order to test this example you'll need a couple of pre-requisites - pyocd, python3 </li>
+<li>In order to test this example you'll have to install a couple of pre-requisites - pyocd, python3 </li>
 <li>The above command only works in a linux environment or with WSL2 in a windows environment. </li>
 </ul>
 </blockquote>
