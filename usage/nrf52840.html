@@ -146,6 +146,148 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="nrf52840"><a class="header" href="#nrf52840"><code>nrf52840</code></a></h1>
+<p>The <code>nrf52840</code> example uses a <a href="https://wiki.makerdiary.com/nrf52840-mdk/">maker-diary board</a>. It has a custom led configuration. </p>
+<blockquote>
+<p>If you're using a different version of the board, you'll probably need to edit firmware partitions adddresses to accomodate for differences. Just make sure you dont change the name of files/folders or the folder structure, as cargo xtask looks for these file/folder names.</p>
+</blockquote>
+<h2 id="partitioning"><a class="header" href="#partitioning">Partitioning:</a></h2>
+<p>The first step in integrating rustBoot is <code>flash-memory partitioning</code> i.e. we divide the <code>nrf52840</code>'s flash-memory into 4 partitions, taking into account the geometry of the flash memory. You can read more about <code>mcu</code> partitoning <a href="../arch/partitions.html#micro-controller-partitions">here</a></p>
+<p>In this example, we'll be using the following partitioning scheme. You can locate these constants in the <a href="https://github.com/nihalpasham/rustBoot/blob/main/rustBoot/src/constants.rs">constants module</a></p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[cfg(feature = &quot;nrf52840&quot;)]
+pub const SECTOR_SIZE: usize = 0x1000;
+#[cfg(feature = &quot;nrf52840&quot;)]
+pub const PARTITION_SIZE: usize = 0x28000;
+#[cfg(feature = &quot;nrf52840&quot;)]
+pub const BOOT_PARTITION_ADDRESS: usize = 0x2f000;
+#[cfg(feature = &quot;nrf52840&quot;)]
+pub const SWAP_PARTITION_ADDRESS: usize = 0x57000;
+#[cfg(feature = &quot;nrf52840&quot;)]
+pub const UPDATE_PARTITION_ADDRESS: usize = 0x58000;
+<span class="boring">}
+</span></code></pre></pre>
+<ul>
+<li><strong>rustBoot partition:</strong> contains the bootloader (its code and data) and a (test) public-key embedded as part of the firmware image, starts at address 0x0.</li>
+<li><strong>BOOT partition:</strong> contains boot firmware, starts at address <code>PARTITION_BOOT_ADDRESS</code>.</li>
+<li><strong>UPDATE partition:</strong> contains update firmware, starts at address <code>UPDATE_PARTITION_ADDRESS</code>. The boot firmware is responsible for downloading and installed the update firmware into this partition via a secure channel.</li>
+<li><strong>SWAP partition:</strong> is used as a temporary swap space, starts at address <code>SWAP_PARTITION_ADDRESS</code>. </li>
+</ul>
+<h2 id="compiling-signing-and-programming"><a class="header" href="#compiling-signing-and-programming">Compiling, Signing and Programming:</a></h2>
+<p>Now that we have partitioned the <code>nrf52840</code>'s flash-storage, the next step <code>compiling, signing and programming </code> </p>
+<p>We will compile the following and sign both pieces of firmware with a (test) private-key.</p>
+<ul>
+<li>bootloader </li>
+<li>boot and update firmware
+<ul>
+<li>sign both boot and update firmware</li>
+</ul>
+</li>
+</ul>
+<p>Compiling, signing and programming can be performed via a single command</p>
+<pre><code class="language-powershell">cargo nrf52840 build-sign-flash rustBoot
+</code></pre>
+<p>This will build, sign and flash all 3 packages (i.e. bootloader + bootfw + updatefw) onto the board.</p>
+<blockquote>
+<p>Note: </p>
+<ul>
+<li>The corresponding public-key is embedded in the bootloader's source.</li>
+<li>In order to test this example you'll need a couple of pre-requisites - pyocd, python3 </li>
+<li>The above command only works in a linux environment or with WSL2 in a windows environment. </li>
+</ul>
+</blockquote>
+<p>Here's the command line output that should be produced.</p>
+<pre><code class="language-powershell">PS C:\Users\Nil\devspace\rust\projects\rb&gt; cargo xtask build-sign-flash rustBoot nrf52840
+   Compiling xtask v0.1.0 (C:\Users\Nil\devspace\rust\projects\rb\xtask)
+    Finished dev [unoptimized + debuginfo] target(s) in 1.06s
+     Running `target\debug\xtask.exe build-sign-flash rustBoot nrf52840`
+$ cargo build --release
+   Compiling rand_core v0.6.3
+   Compiling nb v1.0.0
+   ...
+   ...
+   Compiling nrf52840_bootfw v0.1.0 (C:\Users\Nil\devspace\rust\projects\rb\boards\test_firmware\nrf52840\boot_fw_blinky_blue)
+    Finished release [optimized + debuginfo] target(s) in 46.70s
+$ cargo build --release
+   Compiling nrf52840_updtfw v0.1.0 (C:\Users\Nil\devspace\rust\projects\rb\boards\test_firmware\nrf52840\updt_fw_blinky_red)
+    Finished release [optimized + debuginfo] target(s) in 2.22s
+$ cargo build --release
+   Compiling defmt-rtt v0.2.0
+   Compiling nrf52840 v0.1.0 (C:\Users\Nil\devspace\rust\projects\rb\boards\test_impls\nrf52840)
+    Finished release [optimized + debuginfo] target(s) in 5.52s
+$ python3 convert2bin.py
+$ wsl python3 signer.py
+['sign.py', '--ecc256', '--sha256', 'nrf52840_bootfw.bin', 'ecc256.der', '1234']
+Update type:          Firmware
+Input image:          nrf52840_bootfw.bin
+Selected cipher:      ecc256
+Public key:           ecc256.der
+Output image:         nrf52840_bootfw_v1234_signed.bin
+Not Encrypted
+Calculating sha256 digest...
+Signing the firmware...
+Done.
+Output image successfully created.
+Update type:          Firmware
+Input image:          nrf52840_updtfw.bin
+Selected cipher:      ecc256
+Public key:           ecc256.der
+Output image:         nrf52840_updtfw_v1235_signed.bin
+Not Encrypted
+Calculating sha256 digest...
+Signing the firmware...
+Done.
+Output image successfully created.
+$ pyocd erase -t nrf52 --mass-erase
+0001530:INFO:eraser:Successfully erased.
+$ pyocd flash -t nrf52840 --base-address 0x2f000 nrf52840_bootfw_v1234_signed.bin
+[====================] 100%
+0001848:INFO:loader:Erased 4096 bytes (1 sector), programmed 4096 bytes (1 page), skipped 0 bytes (0 pages) at 4.84 kB/s
+$ pyocd flash -t nrf52840 --base-address 0x56ffc trailer_magic.bin
+[====================] 100%
+0002045:INFO:loader:Erased 4096 bytes (1 sector), programmed 4096 bytes (1 page), skipped 0 bytes (0 pages) at 4.23 kB/s
+$ pyocd flash -t nrf52840 --base-address 0x58000 nrf52840_updtfw_v1235_signed.bin
+[====================] 100%
+[====================] 100%
+0001983:INFO:loader:Erased 4096 bytes (1 sector), programmed 4096 bytes (1 page), skipped 0 bytes (0 pages) at 4.22 kB/s
+    Finished release [optimized + debuginfo] target(s) in 0.15s
+    Flashing C:\Users\Nil\devspace\rust\projects\rb\boards\target\thumbv7em-none-eabihf\release\nrf52840
+     Erasing sectors ✔ [00:00:01] [############################################################################] 44.00KiB/44.00KiB @ 24.39KiB/s (eta 0s )
+ Programming pages   ✔ [00:00:03] [############################################################################] 44.00KiB/44.00KiB @  5.43KiB/s (eta 0s )
+    Finished in 4.995s
+PS C:\Users\Nil\devspace\rust\projects\rb&gt;
+</code></pre>
+<h2 id="verifying"><a class="header" href="#verifying">Verifying:</a></h2>
+<p><code>blinky leds</code> are used to confirm that rustBoot works as expected. Here's the flow</p>
+<ul>
+<li>Upon supplying power to the board, rustBoot takes over 
+<ul>
+<li>validates the firmware image stored in the BOOT partition</li>
+<li>verifies the signature attached against a known public key stored in the rustBoot image.</li>
+</ul>
+</li>
+<li>If the signature checks out, rustBoot boots into the bootfw and blinks a <code>green-led</code> for a few seconds, 
+<ul>
+<li>post which, the boot firmware triggers the update and performs a system reset. </li>
+</ul>
+</li>
+<li>Upon reset, the rustBoot again takes over 
+<ul>
+<li>validates the firmware image stored in the UPDATE partition </li>
+<li>swaps the contents of the BOOT and the UPDATE partitions</li>
+<li>marks the new firmware in the BOOT partition as in state STATE_TESTING</li>
+<li>boots into the UPDATE'd firmware </li>
+</ul>
+</li>
+<li>Now that execution-control has been transfered to the UPDATE'd firmware
+<ul>
+<li>it will attempt to blink a <code>red-led</code> </li>
+<li>and set a <code>confirmation flag</code> to indicate that the update was successful.</li>
+<li>post which, it continuosly blinks a <code>red-led</code>.</li>
+</ul>
+</li>
+</ul>
 
                     </main>
 

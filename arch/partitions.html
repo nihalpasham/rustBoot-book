@@ -162,7 +162,7 @@
 </blockquote>
 <p>rustBoot requires <code>mcu flash</code> to be divided into (at-least) 4 non-overlapping memory regions (i.e. partitions). </p>
 <ul>
-<li><code>rustBoot</code>: contains the bootloader. This starts starts at <code>address 0x0</code> in flash. </li>
+<li><code>rustBoot</code>: contains the bootloader. This usually starts at <code>address 0x0</code> in flash-memory. </li>
 <li><code>BOOT:</code> contains boot firmware. <code>rustBoot</code> always boots from this partition address.</li>
 <li><code>UPDATE:</code> contains update firmware i.e. downloaded update firmware is placed in this partition.</li>
 <li><code>SWAP:</code> is an empty partition that is used while swapping contents of <code>BOOT</code> and <code>UPDATE</code>.</li>
