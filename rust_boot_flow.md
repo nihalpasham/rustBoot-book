@@ -1,4 +1,5 @@
-Below is the code for rust boot flow chart diagram in mermaid tool version 9.1.1 .
+Below is the code for rust boot flow chart diagram in mermaid tool version 9.1.1 . 
+The .svg file RustBootFlowChart is the actual image.
 
 ```sh
 graph TD
