@@ -55,7 +55,7 @@ Raspberry Pi computers use a micro SD card to store a bootable image.
 
 *SD card preparation:* 
 - make 2 partitions 
-    - the first one must be a `fat32` partition named `firmware`. It must at least 150 MB in size. For simplicity, you can use a 256MB partition.  
+    - the first one must be a `fat32` partition named `firmware`. The `fat` partition needs to be (at-least) 150MB(s). But to keep things simple, you can use a 256MB partition.
     - the second one can be `ext2/3/4` partition. This is used to host the root file system. 
 
 *FAT32 partition contents:*
@@ -80,7 +80,13 @@ You must have rust installed. You can install rust by following the installation
 rustup default nightly
 rustup target add aarch64-unknown-none-softfloat
 ```
-To verify that you have the pre-requisites installed, run the following command
+Additionally you'll need a few binary utilities to extract the bootloader as a `.bin` file. They can be installed via the following commands.
+
+```powershell
+cargo install cargo-binutils
+rustup component add llvm-tools-preview
+```
+To verify that you have the pre-requisites installed correctly, run the following command
 ```powershell
 rustup show
 ```
@@ -110,7 +116,7 @@ active toolchain
 nightly-aarch64-apple-darwin (default)
 rustc 1.63.0-nightly (ee160f2f5 2022-05-23)
 ```
-You should be able see `aarch64-unknown-none-softfloat` in the installed targets for active toolchain section. To compile and extract rustBoot-bootloader, simply clone the [`rustBoot repo`](https://github.com/nihalpasham/rustBoot) and run the following command
+You should be able to see `aarch64-unknown-none-softfloat` as one of the installed targets. To compile the rustBoot-bootloader, simply clone the [`rustBoot repo`](https://github.com/nihalpasham/rustBoot) and run the following command
 
 ```powershell
 cargo rpi4 build rustBoot-only
@@ -129,6 +135,8 @@ $ cargo build --release
     Finished release [optimized] target(s) in 4.77s
 $ rust-objcopy --strip-all -O binary ../../target/aarch64-unknown-none-softfloat/release/kernel rustBoot.bin
 ```
+> If you run into any linker issues during the compilation process in a windows environment, please ensure you have C++ build tools installed on your machine. You can download and install the visual studio's build tools from the [microsoft website](https://docs.microsoft.com/en-us/windows/dev-environment/rust/setup).
+
 After compiling rustBoot, copy `rustBoot.bin` file onto the sd card's fat32 partiton.
 
 The last step in preparing a bootable SD card is to copy the rustBoot fit-image that you'd like to boot onto the sd card's fat32 partition.
