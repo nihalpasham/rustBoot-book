@@ -22,6 +22,7 @@
 - [Build & Flash](./user_guide.md)
     - [nrf52840](usage/nrf52840.md)
     - [rpi4](usage/rpi4.md)
+    - [stm32f411](usage/stm32f411.md)
     - [stm32h723](usage/stm32h723.md)
 
 # Coding Guidelines and Testing
