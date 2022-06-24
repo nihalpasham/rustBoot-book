@@ -178,7 +178,7 @@ pub const UPDATE_PARTITION_ADDRESS: usize = 0x58000;
 <ul>
 <li><strong><code>RUSTBOOT partition:</code></strong> contains the bootloader (its code and data) and a (test) public-key embedded as part of the bootloader image, starts at address <code>0x0</code>.</li>
 <li><strong><code>BOOT partition:</code></strong> contains boot firmware, starts at address <code>PARTITION_BOOT_ADDRESS</code>.</li>
-<li><strong><code>UPDATE partition:</code></strong> contains update firmware, starts at address <code>UPDATE_PARTITION_ADDRESS</code>. The boot firmware is responsible for downloading and installed the update firmware into this partition via a secure channel.</li>
+<li><strong><code>UPDATE partition:</code></strong> contains update firmware, starts at address <code>UPDATE_PARTITION_ADDRESS</code>. The boot firmware is responsible for downloading and installing the update firmware into this partition via a secure channel.</li>
 <li><strong><code>SWAP partition:</code></strong> is the temporary swap space, starts at address <code>SWAP_PARTITION_ADDRESS</code>. </li>
 </ul>
 <h2 id="compiling-signing-and-programming"><a class="header" href="#compiling-signing-and-programming">Compiling, Signing and Programming:</a></h2>
