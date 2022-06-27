@@ -210,7 +210,7 @@ We'll need extra hardware for this:
     - You connect it to GND and GPIO pins 14/15 as shown below.
  
 Connect the USB-serial converter to your host computer as shown in the wiring diagram
-[![wiring diagram](https://www.jeffgeerling.com/sites/default/files/images/raspberry-pi-serial-cable-connection.png?raw=true "USB-Serial UART connection")](https://www.jeffgeerling.com/sites/default/files/images/raspberry-pi-serial-cable-connection.png?raw=true).
+[![wiring diagram](https://github.com/imrank03/rustBoot-book-diagrams/blob/main/USB-serial.png?raw=true "USB-Serial UART connection")](https://github.com/imrank03/rustBoot-book-diagrams/blob/main/USB-serial.png?raw=true).
 - make sure that you DO NOT connect the power pin of the USB serial. Only RX/TX and GND.
 - connect the rpi4 to the (USB) power cable and observe the output:
 
