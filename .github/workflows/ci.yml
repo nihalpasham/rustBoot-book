@@ -31,8 +31,6 @@ jobs:
         run: find . -name '*.sh' | xargs shellcheck
       - name: Spellcheck
         run: bash ci/spellcheck.sh list
-      - name: Validate references
-        run: bash ci/validate.sh
       - name: Check for broken links
         run: |
           rustup toolchain install nightly --component rust-docs
@@ -40,6 +38,12 @@ jobs:
             https://raw.githubusercontent.com/rust-lang/rust/master/src/tools/linkchecker/linkcheck.sh
           # Cannot use --all here because of the generated redirect pages aren't available.
           sh linkcheck.sh book
+      - name: Lint for local file paths
+        run: |
+          mdbook build
+        cargo run --bin lfp src
+      - name: Validate references
+        run: bash ci/validate.sh
 
   pages:
     name: GitHub Pages
