@@ -41,6 +41,8 @@ BOOT, UPDATE, SWAP addresses and SECTOR_SIZE, PARTITION_SIZE values can be set v
 
 ## Linux system partitions:
 
+[![partition](https://github.com/imrank03/rustBoot-book-diagrams/blob/main/linux_partition.svg?raw=true "Simplified Block Diagram, linux system partition")](https://github.com/imrank03/rustBoot-book-diagrams/blob/main/linux_partition.svg?raw=true)
+
 To boot into a linux system, rustBoot includes support for the fat32 file-system. 
 
 Boot-storage media must contain a fat32 partition 
