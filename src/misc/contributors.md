@@ -6,6 +6,8 @@ Here is a list of the contributors who have helped improve `rustBoot`. Big shout
 > 2. [**`Yashwanth Singh M`** <img src="https://img.icons8.com/ios-glyphs/20/11/github.png"/>](https://github.com/yashwanthsinghm "yashwanthsinghm")
 > 3. [**`Anand Gedam`** <img src="https://img.icons8.com/ios-glyphs/20/11/github.png"/>](https://github.com/strange21 "strange21")
 > 4. [**`Udayakumar Hidakal`** <img src="https://img.icons8.com/ios-glyphs/20/11/github.png"/>](https://github.com/UdayakumarHidakal "@UdayakumarHidakal")
+> 5. [**`Bobbili Sarath Kumar`** <img src="https://img.icons8.com/ios-glyphs/20/11/github.png"/>](https://github.com/sarath3192 "sarath3192")
+
 
 
 If you feel you're missing from this list, feel free to add yourself in a PR.
