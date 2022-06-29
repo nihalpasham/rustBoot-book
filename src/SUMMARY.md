@@ -26,6 +26,7 @@
     - [stm32f446](usage/stm32f446.md)
     - [stm32h723](usage/stm32h723.md)
     - [stm32f746](usage/stm32f746.md)
+    - [stm32f334](usage/stm32f334.md)
 
 # Coding Guidelines and Testing
 
