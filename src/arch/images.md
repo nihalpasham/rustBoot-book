@@ -161,7 +161,7 @@ As shown in the example above, a rustBoot compliant fit-image contains 4 items -
 - `kernel` - the linux kernel 
 - `fdt` - the flattened device tree or device tree blob
 - `ramdisk`- a root filesystem that is embedded into the kernel and loaded at an early stage of the boot process. It is the successor of initrd. It can do things the kernel can't easily do by itself during the boot process. For example: customize the boot process (e.g., print a welcome message) 
-- `rbconfig` - this is rustBoot's kernel configuraton. A simple `txt` file to add kernel command-line arguments.
+- `rbconfig` - this is rustBoot's kernel configuration. A simple `txt` file to add kernel command-line arguments.
 
 You can retrieve the first 3 (i.e. kernel, fdt, ramdisk) from a pre-built OS image: 
 - Maintainers of a linux distribution provide pre-built OS images. These images usually contain several partitions such as - 

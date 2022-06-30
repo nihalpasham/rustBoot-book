@@ -35,12 +35,12 @@ aspell --version
 shopt -s nullglob
 
 dict_filename=./ci/dictionary.txt
-markdown_sources=(./src/*.md ./src/usage/*.md ./src/arch/*.md ./src/design/*.md ./src/for_developers/*.md ./src/misc/*.md)
+markdown_sources=(./src/*.md ./src/*/*.md)
 mode="check"
 
 # aspell repeatedly modifies the personal dictionary for some reason,
 # so we should use a copy of our dictionary.
-dict_path="/tmp/dictionary.txt"
+dict_path="/tmp/dictionary.txt" 
 
 if [[ "$1" == "list" ]]; then
     mode="list"

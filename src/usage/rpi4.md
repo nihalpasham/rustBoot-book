@@ -31,23 +31,23 @@ rpi4 has an unconventional boot process
 So, rustBoot checks the following
 - is the core executing in `EL2`? 
 - are we executing on the `boot-core` i.e. is it core 0? 
-- if the answer to any of the above questions is `no`, then we park the core i.e. go into an inifinte wait state.
+- if the answer to any of the above questions is `no`, then we park the core i.e. go into an infinite wait state.
 - If yes, then we initialize `DRAM`, `zero out bss`, transition to EL1 and finally jump to an early initialization routine called kernel_init.
 - `kernel_init` is an early initialization routine. It takes care of the following - 
     - enables exception handling
-    - enales the MMU along with instruction + data caching
+    - enables the MMU along with instruction + data caching
     - initializes a small set of peripheral drivers i.e EMMC controller, UART, GPIO
-    - and passes control to the core bootloader rountine called kernel_main.
+    - and passes control to the core bootloader routine called kernel_main.
 - `kernel_main` takes care of loading, verifying and booting fit-images.
     -  it uses rustBoot's (fat32) file-system to retrieve the first partition (or volume). 
     > Note:  rustBoot does not support GUID Partition Table disks.
     -  If the first volume is a `valid fat32` partition, it loads the supplied fit-image into RAM and attempts to verify its signature using the ecdsa algorithm.
-    - If the fit-image is authentic i.e. the signature check passes, it relocates the following components to an approriate location in memory. 
+    - If the fit-image is authentic i.e. the signature check passes, it relocates the following components to an appropriate location in memory. 
         - `linux kernel`
         - `fdt or dtb`
         - `ramdisk or initramfs`
     - additionally, it will patch the dtb with any supplied (boot-time) kernel command-line arguments. 
-    > Note: kernel cmd-line arguments are set at package-build time i.e. when building the fit-image and cannot be interactively set at runtime.
+    > Note: kernel cmd-line arguments are set at package-build time i.e. when building the fit-image and cannot be interactively set at run time.
     - Finally, it disables the MMU and boots the linux kernel by jumping to its (relocated) entry point.
 
 ### 💾 &nbsp; Booting from an SD card:
@@ -121,7 +121,7 @@ You should be able to see `aarch64-unknown-none-softfloat` as one of the install
 ```powershell
 cargo rpi4 build rustBoot-only
 ```
-The above command should output the following (output will be longer when compilng for the first time) logs, produce an executable bootloader named `rustBoot.bin` and store it in the following path `./rustBoot/boards/bootloaders/rpi4`
+The above command should output the following (output will be longer when compiling for the first time) logs, produce an executable bootloader named `rustBoot.bin` and store it in the following path `./rustBoot/boards/bootloaders/rpi4`
 
 ```powershell
 Output:
@@ -137,7 +137,7 @@ $ rust-objcopy --strip-all -O binary ../../target/aarch64-unknown-none-softfloat
 ```
 > If you run into any linker issues during the compilation process in a windows environment, please ensure you have C++ build tools installed on your machine. You can download and install the visual studio's build tools from the [microsoft website](https://docs.microsoft.com/en-us/windows/dev-environment/rust/setup).
 
-After compiling rustBoot, copy `rustBoot.bin` file onto the sd card's fat32 partiton.
+After compiling rustBoot, copy `rustBoot.bin` file onto the sd card's fat32 partition.
 
 The last step in preparing a bootable SD card is to copy the rustBoot fit-image that you'd like to boot onto the sd card's fat32 partition.
 
