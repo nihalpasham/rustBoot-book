@@ -150,14 +150,14 @@
 <blockquote>
 <p>Note:</p>
 <ul>
-<li>If you're using a different version of the board, you'll probably need to edit your firmware's <code>partition-adddresses</code> to accomodate for differences. </li>
-<li>Just make sure you dont change the names of files or the folder structure, as cargo xtask looks for these file/folder names.</li>
+<li>If you're using a different version of the board, you'll probably need to edit your firmware's <code>partition-addresses</code> to accommodate for differences. </li>
+<li>Just make sure you don't change the names of files or the folder structure, as cargo xtask looks for these file/folder names.</li>
 </ul>
 </blockquote>
 <h2 id="partitioning"><a class="header" href="#partitioning">Partitioning:</a></h2>
 <p>The first step in integrating rustBoot is <code>flash-memory partitioning</code> i.e. we divide the <code>stm32f746</code>'s flash-memory into 4 partitions, taking into account the geometry of the flash memory.</p>
 <blockquote>
-<p>You can read more about <code>mcu</code> partitoning <a href="../arch/partitions.html#micro-controller-partitions">here</a></p>
+<p>You can read more about <code>mcu</code> partitioning <a href="../arch/partitions.html#micro-controller-partitions">here</a></p>
 </blockquote>
 <p>In this example, we'll be using the following partitioning scheme. You can locate these constants in the <a href="https://github.com/nihalpasham/rustBoot/blob/main/rustBoot/src/constants.rs">constants module</a></p>
 <pre><pre class="playground"><code class="language-rust">
@@ -312,11 +312,11 @@ udayakumar@udayakumar-VirtualBox:~/devspace/rustBoot$
 <li>boots into the UPDATE'd firmware </li>
 </ul>
 </li>
-<li>Now that execution-control has been transfered to the UPDATE'd firmware
+<li>Now that execution-control has been transferred to the UPDATE'd firmware
 <ul>
 <li>it will attempt to blink a <code>red-led</code> </li>
 <li>and set a <code>confirmation flag</code> to indicate that the update was successful.</li>
-<li>post which, it continuosly blinks a <code>red-led</code>.</li>
+<li>post which, it continuously blinks a <code>red-led</code>.</li>
 </ul>
 </li>
 </ul>

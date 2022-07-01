@@ -544,7 +544,7 @@ support for a highly secure and efficient <code>firmware transport</code> method
 <li><code>kernel</code> - the linux kernel </li>
 <li><code>fdt</code> - the flattened device tree or device tree blob</li>
 <li><code>ramdisk</code>- a root filesystem that is embedded into the kernel and loaded at an early stage of the boot process. It is the successor of initrd. It can do things the kernel can't easily do by itself during the boot process. For example: customize the boot process (e.g., print a welcome message) </li>
-<li><code>rbconfig</code> - this is rustBoot's kernel configuraton. A simple <code>txt</code> file to add kernel command-line arguments.</li>
+<li><code>rbconfig</code> - this is rustBoot's kernel configuration. A simple <code>txt</code> file to add kernel command-line arguments.</li>
 </ul>
 <p>You can retrieve the first 3 (i.e. kernel, fdt, ramdisk) from a pre-built OS image: </p>
 <ul>
@@ -699,7 +699,7 @@ Created:         Sat Jun  4 13:18:45 2022
 </ul>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="rustboot-partitions"><a class="header" href="#rustboot-partitions"><code>rustBoot Partitions</code></a></h1>
-<p><code>rustBoot</code> has 2 distinct partioning schemes, depending on the type of the underlying system.</p>
+<p><code>rustBoot</code> has 2 distinct partitioning schemes, depending on the type of the underlying system.</p>
 <ul>
 <li><a href="arch/./partitions.html#micro-controller-partitions"><strong>micro-controller partitions:</strong></a> uses the concept of <a href="https://github.com/nihalpasham/rustBoot/issues/2"><code>swappable flash partitions</code></a> to update micro-controller firmware. 
 <blockquote>
@@ -746,7 +746,7 @@ Created:         Sat Jun  4 13:18:45 2022
 <p><strong>MCU defaults:</strong></p>
 <ul>
 <li>By default, public keys used for firmware validation are embedded in <code>rustBoot-firmware</code> during a factory-image-burn. However, rustBoot also offers the option to retrieve them from secure-hardware (ex: crypto-elements).</li>
-<li>The <code>BOOT</code> partiton is the only partition from which we can boot a firmware image. The firmware image must be linked so that its entry-point is at address <code>256 + BOOT_PARTITION_ADDRESS</code>.</li>
+<li>The <code>BOOT</code> partition is the only partition from which we can boot a firmware image. The firmware image must be linked so that its entry-point is at address <code>256 + BOOT_PARTITION_ADDRESS</code>.</li>
 <li><code>BOOT</code> firmware is responsible for downloading a new firmware image via a secure channel and installing it in the <code>UPDATE</code> partition. To trigger an update, the <code>BOOT</code> firmware updates the <code>status byte</code> of the <code>UPDATE</code> partition and performs a reboot. This will allow the bootloader to <code>swap the contents</code> of <code>BOOT</code> partition with that of the <code>UPDATE</code> partition. </li>
 </ul>
 </blockquote>
@@ -754,7 +754,7 @@ Created:         Sat Jun  4 13:18:45 2022
 <p>To boot into a linux system, rustBoot includes support for the fat32 file-system. </p>
 <p>Boot-storage media must contain a fat32 partition </p>
 <ul>
-<li>of at least 150 MiB to accomodate the bootloader, boot + update fit-images and other vendor-specific boot files and</li>
+<li>of at least 150 MiB to accommodate the bootloader, boot + update fit-images and other vendor-specific boot files and</li>
 <li>to add rustBoot support for your board, you can either implement the <code>BlockDevice</code> trait for your board's boot-storage media <code>controller</code> or simply use an existing implementation from the repo.</li>
 </ul>
 <blockquote>
@@ -853,14 +853,14 @@ bytes_written: 62202019
 <blockquote>
 <p>Note:</p>
 <ul>
-<li>If you're using a different version of the board, you'll probably need to edit your firmware's <code>partition-adddresses</code> to accomodate for differences. </li>
-<li>Just make sure you dont change the names of files or the folder structure, as cargo xtask looks for these file/folder names.</li>
+<li>If you're using a different version of the board, you'll probably need to edit your firmware's <code>partition-addresses</code> to accommodate for differences. </li>
+<li>Just make sure you don't change the names of files or the folder structure, as cargo xtask looks for these file/folder names.</li>
 </ul>
 </blockquote>
 <h2 id="partitioning"><a class="header" href="#partitioning">Partitioning:</a></h2>
 <p>The first step in integrating rustBoot is <code>flash-memory partitioning</code> i.e. we divide the <code>nrf52840</code>'s flash-memory into 4 partitions, taking into account the geometry of the flash memory. </p>
 <blockquote>
-<p>You can read more about <code>mcu</code> partitoning <a href="usage/../arch/partitions.html#micro-controller-partitions">here</a></p>
+<p>You can read more about <code>mcu</code> partitioning <a href="usage/../arch/partitions.html#micro-controller-partitions">here</a></p>
 </blockquote>
 <p>In this example, we'll be using the following partitioning scheme. You can locate these constants in the <a href="https://github.com/nihalpasham/rustBoot/blob/main/rustBoot/src/constants.rs">constants module</a></p>
 <pre><pre class="playground"><code class="language-rust">
@@ -987,11 +987,11 @@ PS C:\Users\Nil\devspace\rust\projects\rb&gt;
 <li>boots into the UPDATE'd firmware </li>
 </ul>
 </li>
-<li>Now that execution-control has been transfered to the UPDATE'd firmware
+<li>Now that execution-control has been transferred to the UPDATE'd firmware
 <ul>
 <li>it will attempt to blink a <code>red-led</code> </li>
 <li>and set a <code>confirmation flag</code> to indicate that the update was successful.</li>
-<li>post which, it continuosly blinks a <code>red-led</code>.</li>
+<li>post which, it continuously blinks a <code>red-led</code>.</li>
 </ul>
 </li>
 </ul>
@@ -1044,14 +1044,14 @@ PS C:\Users\Nil\devspace\rust\projects\rb&gt;
 <ul>
 <li>is the core executing in <code>EL2</code>? </li>
 <li>are we executing on the <code>boot-core</code> i.e. is it core 0? </li>
-<li>if the answer to any of the above questions is <code>no</code>, then we park the core i.e. go into an inifinte wait state.</li>
+<li>if the answer to any of the above questions is <code>no</code>, then we park the core i.e. go into an infinite wait state.</li>
 <li>If yes, then we initialize <code>DRAM</code>, <code>zero out bss</code>, transition to EL1 and finally jump to an early initialization routine called kernel_init.</li>
 <li><code>kernel_init</code> is an early initialization routine. It takes care of the following - 
 <ul>
 <li>enables exception handling</li>
-<li>enales the MMU along with instruction + data caching</li>
+<li>enables the MMU along with instruction + data caching</li>
 <li>initializes a small set of peripheral drivers i.e EMMC controller, UART, GPIO</li>
-<li>and passes control to the core bootloader rountine called kernel_main.</li>
+<li>and passes control to the core bootloader routine called kernel_main.</li>
 </ul>
 </li>
 <li><code>kernel_main</code> takes care of loading, verifying and booting fit-images.
@@ -1063,7 +1063,7 @@ PS C:\Users\Nil\devspace\rust\projects\rb&gt;
 </blockquote>
 <ul>
 <li>If the first volume is a <code>valid fat32</code> partition, it loads the supplied fit-image into RAM and attempts to verify its signature using the ecdsa algorithm.</li>
-<li>If the fit-image is authentic i.e. the signature check passes, it relocates the following components to an approriate location in memory. 
+<li>If the fit-image is authentic i.e. the signature check passes, it relocates the following components to an appropriate location in memory. 
 <ul>
 <li><code>linux kernel</code></li>
 <li><code>fdt or dtb</code></li>
@@ -1073,7 +1073,7 @@ PS C:\Users\Nil\devspace\rust\projects\rb&gt;
 <li>additionally, it will patch the dtb with any supplied (boot-time) kernel command-line arguments. </li>
 </ul>
 <blockquote>
-<p>Note: kernel cmd-line arguments are set at package-build time i.e. when building the fit-image and cannot be interactively set at runtime.</p>
+<p>Note: kernel cmd-line arguments are set at package-build time i.e. when building the fit-image and cannot be interactively set at run time.</p>
 </blockquote>
 <ul>
 <li>Finally, it disables the MMU and boots the linux kernel by jumping to its (relocated) entry point.</li>
@@ -1151,7 +1151,7 @@ rustc 1.63.0-nightly (ee160f2f5 2022-05-23)
 <p>You should be able to see <code>aarch64-unknown-none-softfloat</code> as one of the installed targets. To compile the rustBoot-bootloader, simply clone the <a href="https://github.com/nihalpasham/rustBoot"><code>rustBoot repo</code></a> and run the following command</p>
 <pre><code class="language-powershell">cargo rpi4 build rustBoot-only
 </code></pre>
-<p>The above command should output the following (output will be longer when compilng for the first time) logs, produce an executable bootloader named <code>rustBoot.bin</code> and store it in the following path <code>./rustBoot/boards/bootloaders/rpi4</code></p>
+<p>The above command should output the following (output will be longer when compiling for the first time) logs, produce an executable bootloader named <code>rustBoot.bin</code> and store it in the following path <code>./rustBoot/boards/bootloaders/rpi4</code></p>
 <pre><code class="language-powershell">Output:
    Compiling xtask v0.1.0 (/Users/nihal.pasham/devspace/rust/projects/prod/rustBoot/xtask)
     Finished dev [unoptimized + debuginfo] target(s) in 0.64s
@@ -1166,7 +1166,7 @@ $ rust-objcopy --strip-all -O binary ../../target/aarch64-unknown-none-softfloat
 <blockquote>
 <p>If you run into any linker issues during the compilation process in a windows environment, please ensure you have C++ build tools installed on your machine. You can download and install the visual studio's build tools from the <a href="https://docs.microsoft.com/en-us/windows/dev-environment/rust/setup">microsoft website</a>.</p>
 </blockquote>
-<p>After compiling rustBoot, copy <code>rustBoot.bin</code> file onto the sd card's fat32 partiton.</p>
+<p>After compiling rustBoot, copy <code>rustBoot.bin</code> file onto the sd card's fat32 partition.</p>
 <p>The last step in preparing a bootable SD card is to copy the rustBoot fit-image that you'd like to boot onto the sd card's fat32 partition.</p>
 <blockquote>
 <p>Note: </p>
@@ -1334,14 +1334,14 @@ Depending on your host operating system, the device name might differ. For examp
 <blockquote>
 <p>Note:</p>
 <ul>
-<li>If you're using a different version of the board, you'll probably need to edit your firmware's <code>partition-adddresses</code> to accomodate for differences. </li>
-<li>Just make sure you dont change the names of files or the folder structure, as cargo xtask looks for these file/folder names.</li>
+<li>If you're using a different version of the board, you'll probably need to edit your firmware's <code>partition-addresses</code> to accommodate for differences. </li>
+<li>Just make sure you don't change the names of files or the folder structure, as cargo xtask looks for these file/folder names.</li>
 </ul>
 </blockquote>
 <h2 id="partitioning-1"><a class="header" href="#partitioning-1">Partitioning:</a></h2>
 <p>The first step in integrating rustBoot is <code>flash-memory partitioning</code> i.e. we divide the <code>stm32f411</code>'s flash-memory into 4 partitions, taking into account the geometry of the flash memory. </p>
 <blockquote>
-<p>You can read more about <code>mcu</code> partitoning <a href="usage/../arch/partitions.html#micro-controller-partitions">here</a></p>
+<p>You can read more about <code>mcu</code> partitioning <a href="usage/../arch/partitions.html#micro-controller-partitions">here</a></p>
 </blockquote>
 <p>In this example, we'll be using the following partitioning scheme. You can locate these constants in the <a href="https://github.com/nihalpasham/rustBoot/blob/main/rustBoot/src/constants.rs">constants module</a></p>
 <pre><pre class="playground"><code class="language-rust">
@@ -1460,11 +1460,11 @@ yashwanthsingh@Yashwanths-MBP rustBoot %
 <li>boots into the UPDATE'd firmware </li>
 </ul>
 </li>
-<li>Now that execution-control has been transfered to the UPDATE'd firmware
+<li>Now that execution-control has been transferred to the UPDATE'd firmware
 <ul>
 <li>it will attempt to blink a <code>red-led</code> </li>
 <li>and set a <code>confirmation flag</code> to indicate that the update was successful.</li>
-<li>post which, it continuosly blinks a <code>red-led</code>.</li>
+<li>post which, it continuously blinks a <code>red-led</code>.</li>
 </ul>
 </li>
 </ul>
@@ -1473,14 +1473,14 @@ yashwanthsingh@Yashwanths-MBP rustBoot %
 <blockquote>
 <p>Note </p>
 <ul>
-<li>If you're using a different version of the board, you'll probably need to edit your firmware's <code>partition-adddresses</code> to accomodate for differences. </li>
-<li>Just make sure you dont change the names of files or the folder structure, as cargo xtask looks for these file/folder names.</li>
+<li>If you're using a different version of the board, you'll probably need to edit your firmware's <code>partition-addresses</code> to accommodate for differences. </li>
+<li>Just make sure you don't change the names of files or the folder structure, as cargo xtask looks for these file/folder names.</li>
 </ul>
 </blockquote>
 <h2 id="partitioning-2"><a class="header" href="#partitioning-2">Partitioning</a></h2>
 <p>The first step in integrating rustBoot is <code>flash-memory partitioning</code> i.e. we divide the <code>stm32f446</code>'s flash-memory into 4 partitions, taking into account the geometry of the flash memory. </p>
 <blockquote>
-<p>You can read more about <code>mcu</code> partitoning <a href="usage/../arch/partitions.html#micro-controller-partitions">here</a></p>
+<p>You can read more about <code>mcu</code> partitioning <a href="usage/../arch/partitions.html#micro-controller-partitions">here</a></p>
 </blockquote>
 <p>In this example, we'll be using the following partitioning scheme. You can locate these constants in the <a href="https://github.com/nihalpasham/rustBoot/blob/main/rustBoot/src/constants.rs">constants module</a></p>
 <pre><pre class="playground"><code class="language-rust">
@@ -1577,11 +1577,11 @@ $ cargo build --release
 <li>boots into the UPDATE'd firmware </li>
 </ul>
 </li>
-<li>Now that execution-control has been transfered to the UPDATE'd firmware
+<li>Now that execution-control has been transferred to the UPDATE'd firmware
 <ul>
 <li>it will attempt to blink a <code>user led</code> at an interval of <code>1 second</code>. </li>
 <li>and set a <code>confirmation flag</code> to indicate that the update was successful.</li>
-<li>post which, it continuosly blinks a <code>user led</code> at an interval of <code>1 second</code>.</li>
+<li>post which, it continuously blinks a <code>user led</code> at an interval of <code>1 second</code>.</li>
 </ul>
 </li>
 </ul>
@@ -1590,8 +1590,8 @@ $ cargo build --release
 <blockquote>
 <p>Note:</p>
 <ul>
-<li>If you're using a different version of the board, you'll probably need to edit your firmware's <code>partition-adddresses</code> to accomodate for differences. </li>
-<li>Just make sure you dont change the names of files or the folder structure, as cargo xtask looks for these file/folder names.</li>
+<li>If you're using a different version of the board, you'll probably need to edit your firmware's <code>partition-addresses</code> to accommodate for differences. </li>
+<li>Just make sure you don't change the names of files or the folder structure, as cargo xtask looks for these file/folder names.</li>
 </ul>
 </blockquote>
 <h2 id="partitioning-3"><a class="header" href="#partitioning-3">Partitioning:</a></h2>
@@ -1604,7 +1604,7 @@ $ cargo build --release
 </ul>
 </blockquote>
 <blockquote>
-<p>You can read more about <code>mcu</code> partitoning <a href="usage/../arch/partitions.html#micro-controller-partitions">here</a></p>
+<p>You can read more about <code>mcu</code> partitioning <a href="usage/../arch/partitions.html#micro-controller-partitions">here</a></p>
 </blockquote>
 <p>In this example, we'll be using the following partitioning scheme. You can locate these constants in the <a href="https://github.com/nihalpasham/rustBoot/blob/main/rustBoot/src/constants.rs">constants module</a></p>
 <pre><pre class="playground"><code class="language-rust">
@@ -1735,11 +1735,11 @@ Finished in 5.773s
 <li>boots into the UPDATE'd firmware </li>
 </ul>
 </li>
-<li>Now that execution-control has been transfered to the UPDATE'd firmware
+<li>Now that execution-control has been transferred to the UPDATE'd firmware
 <ul>
 <li>it will attempt to blink a <code>red-led</code> </li>
 <li>and set a <code>confirmation flag</code> to indicate that the update was successful.</li>
-<li>post which, it continuosly blinks a <code>red-led</code>.</li>
+<li>post which, it continuously blinks a <code>red-led</code>.</li>
 </ul>
 </li>
 </ul>
@@ -1748,14 +1748,14 @@ Finished in 5.773s
 <blockquote>
 <p>Note:</p>
 <ul>
-<li>If you're using a different version of the board, you'll probably need to edit your firmware's <code>partition-adddresses</code> to accomodate for differences. </li>
-<li>Just make sure you dont change the names of files or the folder structure, as cargo xtask looks for these file/folder names.</li>
+<li>If you're using a different version of the board, you'll probably need to edit your firmware's <code>partition-addresses</code> to accommodate for differences. </li>
+<li>Just make sure you don't change the names of files or the folder structure, as cargo xtask looks for these file/folder names.</li>
 </ul>
 </blockquote>
 <h2 id="partitioning-4"><a class="header" href="#partitioning-4">Partitioning:</a></h2>
 <p>The first step in integrating rustBoot is <code>flash-memory partitioning</code> i.e. we divide the <code>stm32f746</code>'s flash-memory into 4 partitions, taking into account the geometry of the flash memory.</p>
 <blockquote>
-<p>You can read more about <code>mcu</code> partitoning <a href="usage/../arch/partitions.html#micro-controller-partitions">here</a></p>
+<p>You can read more about <code>mcu</code> partitioning <a href="usage/../arch/partitions.html#micro-controller-partitions">here</a></p>
 </blockquote>
 <p>In this example, we'll be using the following partitioning scheme. You can locate these constants in the <a href="https://github.com/nihalpasham/rustBoot/blob/main/rustBoot/src/constants.rs">constants module</a></p>
 <pre><pre class="playground"><code class="language-rust">
@@ -1910,11 +1910,11 @@ udayakumar@udayakumar-VirtualBox:~/devspace/rustBoot$
 <li>boots into the UPDATE'd firmware </li>
 </ul>
 </li>
-<li>Now that execution-control has been transfered to the UPDATE'd firmware
+<li>Now that execution-control has been transferred to the UPDATE'd firmware
 <ul>
 <li>it will attempt to blink a <code>red-led</code> </li>
 <li>and set a <code>confirmation flag</code> to indicate that the update was successful.</li>
-<li>post which, it continuosly blinks a <code>red-led</code>.</li>
+<li>post which, it continuously blinks a <code>red-led</code>.</li>
 </ul>
 </li>
 </ul>
@@ -1923,14 +1923,14 @@ udayakumar@udayakumar-VirtualBox:~/devspace/rustBoot$
 <blockquote>
 <p>Note </p>
 <ul>
-<li>If you're using a different version of the board, you'll probably need to edit your firmware's <code>partition-adddresses</code> to accomodate for differences. </li>
-<li>Just make sure you dont change the names of files or the folder structure, as cargo xtask looks for these file/folder names.</li>
+<li>If you're using a different version of the board, you'll probably need to edit your firmware's <code>partition-addresses</code> to accommodate for differences. </li>
+<li>Just make sure you don't change the names of files or the folder structure, as cargo xtask looks for these file/folder names.</li>
 </ul>
 </blockquote>
 <h2 id="partitioning-5"><a class="header" href="#partitioning-5">Partitioning</a></h2>
 <p>The first step in integrating rustBoot is <code>flash-memory partitioning</code> i.e. we divide the <code>stm32f334</code>'s flash-memory into 4 partitions, taking into account the geometry of the flash memory. </p>
 <blockquote>
-<p>You can read more about <code>mcu</code> partitoning <a href="usage/../arch/partitions.html#micro-controller-partitions">here</a></p>
+<p>You can read more about <code>mcu</code> partitioning <a href="usage/../arch/partitions.html#micro-controller-partitions">here</a></p>
 </blockquote>
 <p>In this example, we'll be using the following partitioning scheme. You can locate these constants in the <a href="https://github.com/nihalpasham/rustBoot/blob/main/rustBoot/src/constants.rs">constants module</a></p>
 <pre><pre class="playground"><code class="language-rust">
@@ -2053,10 +2053,10 @@ sarathk@sarath:~/stm32f/pull_req/rustBoot$
 <li>boots into the UPDATE'd firmware </li>
 </ul>
 </li>
-<li>Now that execution-control has been transfered to the UPDATE'd firmware 
+<li>Now that execution-control has been transferred to the UPDATE'd firmware 
 <ul>
 <li>and set a <code>confirmation flag</code> to indicate that the update was successful.</li>
-<li>post which, it continuosly blinks a <code>user led</code> at an interval of <code>0.25 second</code> continuously.</li>
+<li>post which, it continuously blinks a <code>user led</code> at an interval of <code>0.25 second</code> continuously.</li>
 </ul>
 </li>
 </ul>

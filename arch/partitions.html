@@ -146,7 +146,7 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="rustboot-partitions"><a class="header" href="#rustboot-partitions"><code>rustBoot Partitions</code></a></h1>
-<p><code>rustBoot</code> has 2 distinct partioning schemes, depending on the type of the underlying system.</p>
+<p><code>rustBoot</code> has 2 distinct partitioning schemes, depending on the type of the underlying system.</p>
 <ul>
 <li><a href="./partitions.html#micro-controller-partitions"><strong>micro-controller partitions:</strong></a> uses the concept of <a href="https://github.com/nihalpasham/rustBoot/issues/2"><code>swappable flash partitions</code></a> to update micro-controller firmware. 
 <blockquote>
@@ -193,7 +193,7 @@
 <p><strong>MCU defaults:</strong></p>
 <ul>
 <li>By default, public keys used for firmware validation are embedded in <code>rustBoot-firmware</code> during a factory-image-burn. However, rustBoot also offers the option to retrieve them from secure-hardware (ex: crypto-elements).</li>
-<li>The <code>BOOT</code> partiton is the only partition from which we can boot a firmware image. The firmware image must be linked so that its entry-point is at address <code>256 + BOOT_PARTITION_ADDRESS</code>.</li>
+<li>The <code>BOOT</code> partition is the only partition from which we can boot a firmware image. The firmware image must be linked so that its entry-point is at address <code>256 + BOOT_PARTITION_ADDRESS</code>.</li>
 <li><code>BOOT</code> firmware is responsible for downloading a new firmware image via a secure channel and installing it in the <code>UPDATE</code> partition. To trigger an update, the <code>BOOT</code> firmware updates the <code>status byte</code> of the <code>UPDATE</code> partition and performs a reboot. This will allow the bootloader to <code>swap the contents</code> of <code>BOOT</code> partition with that of the <code>UPDATE</code> partition. </li>
 </ul>
 </blockquote>
@@ -201,7 +201,7 @@
 <p>To boot into a linux system, rustBoot includes support for the fat32 file-system. </p>
 <p>Boot-storage media must contain a fat32 partition </p>
 <ul>
-<li>of at least 150 MiB to accomodate the bootloader, boot + update fit-images and other vendor-specific boot files and</li>
+<li>of at least 150 MiB to accommodate the bootloader, boot + update fit-images and other vendor-specific boot files and</li>
 <li>to add rustBoot support for your board, you can either implement the <code>BlockDevice</code> trait for your board's boot-storage media <code>controller</code> or simply use an existing implementation from the repo.</li>
 </ul>
 <blockquote>

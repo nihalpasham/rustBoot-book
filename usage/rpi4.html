@@ -194,14 +194,14 @@
 <ul>
 <li>is the core executing in <code>EL2</code>? </li>
 <li>are we executing on the <code>boot-core</code> i.e. is it core 0? </li>
-<li>if the answer to any of the above questions is <code>no</code>, then we park the core i.e. go into an inifinte wait state.</li>
+<li>if the answer to any of the above questions is <code>no</code>, then we park the core i.e. go into an infinite wait state.</li>
 <li>If yes, then we initialize <code>DRAM</code>, <code>zero out bss</code>, transition to EL1 and finally jump to an early initialization routine called kernel_init.</li>
 <li><code>kernel_init</code> is an early initialization routine. It takes care of the following - 
 <ul>
 <li>enables exception handling</li>
-<li>enales the MMU along with instruction + data caching</li>
+<li>enables the MMU along with instruction + data caching</li>
 <li>initializes a small set of peripheral drivers i.e EMMC controller, UART, GPIO</li>
-<li>and passes control to the core bootloader rountine called kernel_main.</li>
+<li>and passes control to the core bootloader routine called kernel_main.</li>
 </ul>
 </li>
 <li><code>kernel_main</code> takes care of loading, verifying and booting fit-images.
@@ -213,7 +213,7 @@
 </blockquote>
 <ul>
 <li>If the first volume is a <code>valid fat32</code> partition, it loads the supplied fit-image into RAM and attempts to verify its signature using the ecdsa algorithm.</li>
-<li>If the fit-image is authentic i.e. the signature check passes, it relocates the following components to an approriate location in memory. 
+<li>If the fit-image is authentic i.e. the signature check passes, it relocates the following components to an appropriate location in memory. 
 <ul>
 <li><code>linux kernel</code></li>
 <li><code>fdt or dtb</code></li>
@@ -223,7 +223,7 @@
 <li>additionally, it will patch the dtb with any supplied (boot-time) kernel command-line arguments. </li>
 </ul>
 <blockquote>
-<p>Note: kernel cmd-line arguments are set at package-build time i.e. when building the fit-image and cannot be interactively set at runtime.</p>
+<p>Note: kernel cmd-line arguments are set at package-build time i.e. when building the fit-image and cannot be interactively set at run time.</p>
 </blockquote>
 <ul>
 <li>Finally, it disables the MMU and boots the linux kernel by jumping to its (relocated) entry point.</li>
@@ -301,7 +301,7 @@ rustc 1.63.0-nightly (ee160f2f5 2022-05-23)
 <p>You should be able to see <code>aarch64-unknown-none-softfloat</code> as one of the installed targets. To compile the rustBoot-bootloader, simply clone the <a href="https://github.com/nihalpasham/rustBoot"><code>rustBoot repo</code></a> and run the following command</p>
 <pre><code class="language-powershell">cargo rpi4 build rustBoot-only
 </code></pre>
-<p>The above command should output the following (output will be longer when compilng for the first time) logs, produce an executable bootloader named <code>rustBoot.bin</code> and store it in the following path <code>./rustBoot/boards/bootloaders/rpi4</code></p>
+<p>The above command should output the following (output will be longer when compiling for the first time) logs, produce an executable bootloader named <code>rustBoot.bin</code> and store it in the following path <code>./rustBoot/boards/bootloaders/rpi4</code></p>
 <pre><code class="language-powershell">Output:
    Compiling xtask v0.1.0 (/Users/nihal.pasham/devspace/rust/projects/prod/rustBoot/xtask)
     Finished dev [unoptimized + debuginfo] target(s) in 0.64s
@@ -316,7 +316,7 @@ $ rust-objcopy --strip-all -O binary ../../target/aarch64-unknown-none-softfloat
 <blockquote>
 <p>If you run into any linker issues during the compilation process in a windows environment, please ensure you have C++ build tools installed on your machine. You can download and install the visual studio's build tools from the <a href="https://docs.microsoft.com/en-us/windows/dev-environment/rust/setup">microsoft website</a>.</p>
 </blockquote>
-<p>After compiling rustBoot, copy <code>rustBoot.bin</code> file onto the sd card's fat32 partiton.</p>
+<p>After compiling rustBoot, copy <code>rustBoot.bin</code> file onto the sd card's fat32 partition.</p>
 <p>The last step in preparing a bootable SD card is to copy the rustBoot fit-image that you'd like to boot onto the sd card's fat32 partition.</p>
 <blockquote>
 <p>Note: </p>
