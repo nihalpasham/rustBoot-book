@@ -31,8 +31,6 @@ jobs:
         run: find . -name '*.sh' | xargs shellcheck
       - name: Spellcheck
         run: bash ci/spellcheck.sh list
-      - name: Validate references
-        run: bash ci/validate.sh
       - name: Check for broken links
         run: |
           rustup toolchain install nightly --component rust-docs
