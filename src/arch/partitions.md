@@ -1,6 +1,6 @@
 # `rustBoot Partitions`
 
-`rustBoot` has 2 distinct partioning schemes, depending on the type of the underlying system.
+`rustBoot` has 2 distinct partitioning schemes, depending on the type of the underlying system.
 - [**micro-controller partitions:**](./partitions.md#micro-controller-partitions) uses the concept of [`swappable flash partitions`](https://github.com/nihalpasham/rustBoot/issues/2) to update micro-controller firmware. 
     > This usually means bare-metal firmware but it is also applicable to `RTOS(s)`.
 - [**linux system partitions:**](./partitions.md#linux-system-partitions) uses a single fat32 partition to host the `rustBoot-bootloader` and  (boot/update) fit-images. This method uses a `rustBoot-state` file to determine which image is to be booted.
@@ -36,7 +36,7 @@ BOOT, UPDATE, SWAP addresses and SECTOR_SIZE, PARTITION_SIZE values can be set v
 
 > **MCU defaults:**
 > - By default, public keys used for firmware validation are embedded in `rustBoot-firmware` during a factory-image-burn. However, rustBoot also offers the option to retrieve them from secure-hardware (ex: crypto-elements).
-> - The `BOOT` partiton is the only partition from which we can boot a firmware image. The firmware image must be linked so that its entry-point is at address `256 + BOOT_PARTITION_ADDRESS`.
+> - The `BOOT` partition is the only partition from which we can boot a firmware image. The firmware image must be linked so that its entry-point is at address `256 + BOOT_PARTITION_ADDRESS`.
 > - `BOOT` firmware is responsible for downloading a new firmware image via a secure channel and installing it in the `UPDATE` partition. To trigger an update, the `BOOT` firmware updates the `status byte` of the `UPDATE` partition and performs a reboot. This will allow the bootloader to `swap the contents` of `BOOT` partition with that of the `UPDATE` partition. 
 
 ## Linux system partitions:
@@ -46,7 +46,7 @@ BOOT, UPDATE, SWAP addresses and SECTOR_SIZE, PARTITION_SIZE values can be set v
 To boot into a linux system, rustBoot includes support for the fat32 file-system. 
 
 Boot-storage media must contain a fat32 partition 
-- of at least 150 MiB to accomodate the bootloader, boot + update fit-images and other vendor-specific boot files and
+- of at least 150 MiB to accommodate the bootloader, boot + update fit-images and other vendor-specific boot files and
 - to add rustBoot support for your board, you can either implement the `BlockDevice` trait for your board's boot-storage media `controller` or simply use an existing implementation from the repo.
 
 > Note: rustBoot comes with batteries-included. It provides `rusty` implementations for basic peripherals such as flash, uart, crypto, gpio (out of the box) along with the necessary arch-specific initialization routines.
