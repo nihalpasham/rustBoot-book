@@ -41,7 +41,7 @@ jobs:
       - name: Lint for local file paths
         run: |
           mdbook build
-        cargo run --bin lfp src
+          cargo run --bin lfp src
       - name: Validate references
         run: bash ci/validate.sh
 
