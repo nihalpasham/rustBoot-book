@@ -751,6 +751,7 @@ Created:         Sat Jun  4 13:18:45 2022
 </ul>
 </blockquote>
 <h2 id="linux-system-partitions"><a class="header" href="#linux-system-partitions">Linux system partitions:</a></h2>
+<p><a href="https://github.com/imrank03/rustBoot-book-diagrams/blob/main/linux_partition.svg?raw=true"><img src="https://github.com/imrank03/rustBoot-book-diagrams/blob/main/linux_partition.svg?raw=true" alt="partition" title="Simplified Block Diagram, linux system partition" /></a></p>
 <p>To boot into a linux system, rustBoot includes support for the fat32 file-system. </p>
 <p>Boot-storage media must contain a fat32 partition </p>
 <ul>
@@ -863,8 +864,7 @@ bytes_written: 62202019
 <p>You can read more about <code>mcu</code> partitioning <a href="usage/../arch/partitions.html#micro-controller-partitions">here</a></p>
 </blockquote>
 <p>In this example, we'll be using the following partitioning scheme. You can locate these constants in the <a href="https://github.com/nihalpasham/rustBoot/blob/main/rustBoot/src/constants.rs">constants module</a></p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>#[cfg(feature = &quot;nrf52840&quot;)]
 pub const SECTOR_SIZE: usize = 0x1000;
@@ -1344,8 +1344,7 @@ Depending on your host operating system, the device name might differ. For examp
 <p>You can read more about <code>mcu</code> partitioning <a href="usage/../arch/partitions.html#micro-controller-partitions">here</a></p>
 </blockquote>
 <p>In this example, we'll be using the following partitioning scheme. You can locate these constants in the <a href="https://github.com/nihalpasham/rustBoot/blob/main/rustBoot/src/constants.rs">constants module</a></p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>#[cfg(feature = &quot;stm32f411&quot;)]
 pub const SECTOR_SIZE: usize = 0x20000;
@@ -1483,8 +1482,7 @@ yashwanthsingh@Yashwanths-MBP rustBoot %
 <p>You can read more about <code>mcu</code> partitioning <a href="usage/../arch/partitions.html#micro-controller-partitions">here</a></p>
 </blockquote>
 <p>In this example, we'll be using the following partitioning scheme. You can locate these constants in the <a href="https://github.com/nihalpasham/rustBoot/blob/main/rustBoot/src/constants.rs">constants module</a></p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>#[cfg(feature = &quot;stm32f446&quot;)]
 pub const SECTOR_SIZE: usize = 0x20000;
@@ -1607,8 +1605,7 @@ $ cargo build --release
 <p>You can read more about <code>mcu</code> partitioning <a href="usage/../arch/partitions.html#micro-controller-partitions">here</a></p>
 </blockquote>
 <p>In this example, we'll be using the following partitioning scheme. You can locate these constants in the <a href="https://github.com/nihalpasham/rustBoot/blob/main/rustBoot/src/constants.rs">constants module</a></p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span>
 <span class="boring">fn main() {
 </span>#[cfg(feature = &quot;stm32h723&quot;)]
@@ -1758,8 +1755,7 @@ Finished in 5.773s
 <p>You can read more about <code>mcu</code> partitioning <a href="usage/../arch/partitions.html#micro-controller-partitions">here</a></p>
 </blockquote>
 <p>In this example, we'll be using the following partitioning scheme. You can locate these constants in the <a href="https://github.com/nihalpasham/rustBoot/blob/main/rustBoot/src/constants.rs">constants module</a></p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span>
 <span class="boring">fn main() {
 </span>#[cfg(feature = &quot;stm32f746&quot;)]
@@ -1933,8 +1929,7 @@ udayakumar@udayakumar-VirtualBox:~/devspace/rustBoot$
 <p>You can read more about <code>mcu</code> partitioning <a href="usage/../arch/partitions.html#micro-controller-partitions">here</a></p>
 </blockquote>
 <p>In this example, we'll be using the following partitioning scheme. You can locate these constants in the <a href="https://github.com/nihalpasham/rustBoot/blob/main/rustBoot/src/constants.rs">constants module</a></p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>#[cfg(feature = &quot;stm32f334&quot;)]
 pub const SECTOR_SIZE: usize = 0x1800; 
