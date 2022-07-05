@@ -99,6 +99,7 @@ rustup
 nbsp
 typenum
 ZGTx
+zgtx
 updt
 thumbv
 blinky
