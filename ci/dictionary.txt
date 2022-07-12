@@ -45,3 +45,4 @@ ATECC
 STSAFE
 TrustZone
 unrepresentable
+littlearm
