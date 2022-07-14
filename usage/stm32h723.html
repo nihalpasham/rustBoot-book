@@ -196,81 +196,96 @@ pub const UPDATE_PARTITION_ADDRESS: usize = 0x08060000;
 <li>boot and update firmware</li>
 </ul>
 <p>sign both pieces of firmware with a (test) <a href="https://github.com/nihalpasham/rustBoot/tree/main/boards/rbSigner/keygen">private-key</a> and finally create valid <a href="../arch/images.html#mcu-image-format"><code>rustBoot mcu-images</code></a> i.e. signed boot and update firmware images.</p>
+<blockquote>
+<p>Note:</p>
+<ul>
+<li><code>ecc256.der</code> contains a public-key and a private-key, the first 32 bytes being the public-key and the rest being the private-key, used to sign the firmware. We are using it for testing purposes only.</li>
+</ul>
+</blockquote>
 <p>Compiling, signing and programming can be performed via a single command</p>
-<pre><code class="language-Terminal">cargo stm32h723 build-sign-flash rustBoot
+<pre><code class="language-Terminal">cargo stm32h723 build-sign-flash rustBoot [boot-ver] [updt-ver]
 </code></pre>
+<blockquote>
+<p>Note:</p>
+<ul>
+<li>The <code>updt-ver</code> number should be greater than <code>boot-ver</code>.</li>
+</ul>
+</blockquote>
 <p>This will build, sign and flash all 3 packages (i.e. bootloader + boot-fw + update-fw) onto the board.</p>
 <blockquote>
 <p>Note: </p>
 <ul>
 <li>The corresponding public-key is embedded in the bootloader's source.</li>
-<li>In order to test this example, you'll have to install a couple of pre-requisites - probe-rs-cli, python3 </li>
+<li>In order to test this example, you'll have to install a couple of pre-requisites - probe-rs-cli, cargo-binutils.</li>
 <li>Owing to the above mentioned dependencies, the command only works in a linux environment or with WSL2 in a windows environment. </li>
 </ul>
 </blockquote>
 <p>Here's the command line output that should be produced.</p>
-<pre><code class="language-Terminal">imran@ubuntu:~/Desktop/rustBoot$ cargo stm32h723 build-sign-flash rustBoot
-Compiling typenum v1.15.0
-Compiling version_check v0.9.4
-..
-..
-Compiling rustBoot v0.1.0 (/home/imran/Desktop/rustBoot/rustBoot)
-Compiling xtask v0.1.0 (/home/imran/Desktop/rustBoot/xtask)
-Finished dev [unoptimized + debuginfo] target(s) in 7.43s
-Running target/debug/xtask stm32h723 build-sign-flash rustBoot
+<pre><code class="language-Terminal">$ cargo stm32h723 build-sign-flash rustBoot 1234 1235
+    Finished dev [unoptimized + debuginfo] target(s) in 0.10s
+     Running `target/debug/xtask stm32h723 build-sign-flash rustBoot 1234 1235`
 $ cargo build --release
-Compiling version_check v0.9.4
-Compiling typenum v1.15.0
-..
-..
-Compiling rustBoot-hal v0.1.0 (/home/imran/Desktop/rustBoot/boards/hal)
-Compiling rustBoot-update v0.1.0 (/home/imran/Desktop/rustBoot/boards/update)
-Finished release [optimized] target(s) in 26.19s
+   Compiling version_check v0.9.4
+   Compiling typenum v1.15.0
+   ...
+   ...
+   Compiling rustBoot-update v0.1.0 (/Users/imrankhaleelsab/Imran/Boschspace/RB_workspace/rustBoot-mcusigner/rustBoot/boards/update)
+    Finished release [optimized] target(s) in 53.55s
 $ cargo build --release
-Compiling stm32h723_updtfw v0.1.0 (/home/imran/Desktop/rustBoot/boards/firmware/stm32h723/updt_fw_blinky_red)
-Finished release [optimized] target(s) in 1.03s
+   Compiling stm32h723_updtfw v0.1.0 (/Users/imrankhaleelsab/Imran/Boschspace/RB_workspace/rustBoot-mcusigner/rustBoot/boards/firmware/stm32h723/updt_fw_blinky_red)
+    Finished release [optimized] target(s) in 1.54s
 $ cargo build --release
-Compiling stm32h723 v0.1.0 (/home/imran/Desktop/rustBoot/boards/bootloaders/stm32h723)
-Finished release [optimized] target(s) in 1.50s
-$ python3 convert2bin.py
-$ python3 signer.py
-['sign.py', '--ecc256', '--sha256', 'stm32h723_bootfw.bin', 'ecc256.der', '1234']
-Update type:          Firmware
-Input image:          stm32h723_bootfw.bin
-Selected cipher:      ecc256
-Public key:           ecc256.der
-Output image:         stm32h723_bootfw_v1234_signed.bin
-Not Encrypted
+   Compiling stm32h723 v0.1.0 (/Users/imrankhaleelsab/Imran/Boschspace/RB_workspace/rustBoot-mcusigner/rustBoot/boards/bootloaders/stm32h723)
+    Finished release [optimized] target(s) in 2.25s
+$ rust-objcopy -I elf32-littlearm ../../target/thumbv7em-none-eabihf/release/stm32h723_bootfw -O binary stm32h723_bootfw.bin
+$ rust-objcopy -I elf32-littlearm ../../target/thumbv7em-none-eabihf/release/stm32h723_updtfw -O binary stm32h723_updtfw.bin
+$ cargo run mcu-image ../boards/rbSigner/signed_images/stm32h723_bootfw.bin nistp256 ../boards/rbSigner/keygen/ecc256.der 1234
+   Compiling rbsigner v0.1.0 (/Users/imrankhaleelsab/Imran/Boschspace/RB_workspace/rustBoot-mcusigner/rustBoot/rbsigner)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.59s
+     Running `/Users/imrankhaleelsab/Imran/Boschspace/RB_workspace/rustBoot-mcusigner/rustBoot/target/debug/rbsigner mcu-image ../boards/rbSigner/signed_images/stm32h723_bootfw.bin nistp256 ../boards/rbSigner/keygen/ecc256.der 1234`
+
+Update type       :Firmware
+Curve type        :nistp256
+Input image       :stm32h723_bootfw.bin
+Public key        :ecc256.der
+Image version     :1234
+Output image      :stm32h723_bootfw_v1234_signed.bin
 Calculating sha256 digest...
 Signing the firmware...
 Done.
-Output image successfully created.
-['sign.py', '--ecc256', '--sha256', 'stm32h723_updtfw.bin', 'ecc256.der', '1235']
-Update type:          Firmware
-Input image:          stm32h723_updtfw.bin
-Selected cipher:      ecc256
-Public key:           ecc256.der
-Output image:         stm32h723_updtfw_v1235_signed.bin
-Not Encrypted
+Output image successfully created with 4608 bytes.
+
+$ cargo run mcu-image ../boards/rbSigner/signed_images/stm32h723_updtfw.bin nistp256 ../boards/rbSigner/keygen/ecc256.der 1235
+    Finished dev [unoptimized + debuginfo] target(s) in 0.05s
+     Running `/Users/imrankhaleelsab/Imran/Boschspace/RB_workspace/rustBoot-mcusigner/rustBoot/target/debug/rbsigner mcu-image ../boards/rbSigner/signed_images/stm32h723_updtfw.bin nistp256 ../boards/rbSigner/keygen/ecc256.der 1235`
+
+Update type       :Firmware
+Curve type        :nistp256
+Input image       :stm32h723_updtfw.bin
+Public key        :ecc256.der
+Image version     :1235
+Output image      :stm32h723_updtfw_v1235_signed.bin
 Calculating sha256 digest...
 Signing the firmware...
 Done.
-Output image successfully created.
-$ probe-rs-cli erase --chip stm32h723zgtx
-$ probe-rs-cli download --format Bin --base-address 0x8020000 --chip stm32h723zgtx stm32h723_bootfw_v1234_signed.bin
-Erasing sectors ✔ [00:00:00] [##################################################################################################]  3.00KiB/ 3.00KiB @  7.30KiB/s (eta 0s )
-Programming pages   ✔ [00:00:00] [##################################################################################################]  3.00KiB/ 3.00KiB @  3.85KiB/s (eta 0s )
-Finished in 0.611s
-$ probe-rs-cli download --format Bin --base-address 0x8060000 --chip stm32h723zgtx stm32h723_updtfw_v1235_signed.bin
-Erasing sectors ✔ [00:00:00] [##################################################################################################]  3.00KiB/ 3.00KiB @  7.17KiB/s (eta 0s )
-Programming pages   ✔ [00:00:00] [##################################################################################################]  3.00KiB/ 3.00KiB @  3.77KiB/s (eta 0s )
-Finished in 0.613s
-$ cargo flash --chip stm32h723zgtx --release
-Finished release [optimized] target(s) in 0.04s
-Flashing /home/imran/Desktop/rustBoot/boards/target/thumbv7em-none-eabihf/release/stm32h723
-Erasing sectors ✔ [00:00:02] [##################################################################################################] 47.00KiB/47.00KiB @ 17.60KiB/s (eta 0s )
-Programming pages   ✔ [00:00:03] [##################################################################################################] 47.00KiB/47.00KiB @  7.60KiB/s (eta 0s )
-Finished in 5.773s
+Output image successfully created with 4624 bytes.
+
+$ probe-rs-cli erase --chip stm32h723ZGTx
+$ probe-rs-cli download --format Bin --base-address 0x8020000 --chip STM32H723ZGTx stm32h723_bootfw_v1234_signed.bin
+     Erasing sectors ✔ [00:00:02] [############################] 128.00KiB/128.00KiB @ 63.21KiB/s (eta 0s )
+ Programming pages   ✔ [00:00:00] [##############################]  5.00KiB/ 5.00KiB @  1.05KiB/s (eta 0s )
+    Finished in 2.165s
+$ probe-rs-cli download --format Bin --base-address 0x8060000 --chip STM32H723ZGTx stm32h723_updtfw_v1235_signed.bin
+     Erasing sectors ✔ [00:00:01] [############################] 128.00KiB/128.00KiB @ 64.68KiB/s (eta 0s )
+ Programming pages   ✔ [00:00:00] [##############################]  5.00KiB/ 5.00KiB @  1.08KiB/s (eta 0s )
+    Finished in 2.117s
+$ cargo flash --chip stm32h723ZGTx --release
+    Finished release [optimized] target(s) in 0.08s
+    Flashing /Users/imrankhaleelsab/Imran/Boschspace/RB_workspace/rustBoot-mcusigner/rustBoot/boards/target/thumbv7em-none-eabihf/release/stm32h723
+        WARN probe_rs::config::target &gt; Using custom sequence for STM32H7
+     Erasing sectors ✔ [00:00:01] [############################] 128.00KiB/128.00KiB @ 66.35KiB/s (eta 0s )
+ Programming pages   ✔ [00:00:00] [##############################] 44.00KiB/44.00KiB @ 13.45KiB/s (eta 0s )
+    Finished in 2.878s
 </code></pre>
 <h2 id="verifying"><a class="header" href="#verifying">Verifying:</a></h2>
 <p><code>blinky leds</code> are used to confirm that rustBoot works as expected. Here's the flow</p>
