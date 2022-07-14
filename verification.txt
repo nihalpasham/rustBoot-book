@@ -1,0 +1,42 @@
+@startuml
+
+title Verify Integrity and Authenticity 
+
+start
+note left: Verifing Integrity
+
+:Take the Firmware Image size; 
+
+:Take the stored Hash \nfrom the header;
+
+:Compute Image Hash \nusing FW image size;
+
+#orange:if (\nCheck Stored Hash 
+      is equals to
+ computed Hash\n) then (<color:Green>**True**)
+  :Update the hash for the part descriptor;
+  kill
+else (<color:Red>**False**)
+  #plum:Return False Image verification failed;
+endif
+kill 
+
+start
+note left: Verifing Authenticity
+
+:Take the Firmware Image size; 
+
+:Take the stored Signature \nfrom the header;
+:Compute Image signature\nusing FW image size; 
+
+#orange:if (\nCheck Stored Signature 
+        is equals to
+ computed Signature\n) then (<color:Green>**True**)
+  :Update the hash for the part descriptor;
+  kill
+else (<color:Red>**False**)
+  #plum:Return False Image Authentication failed;
+endif
+kill 
+
+@enduml
