@@ -189,105 +189,98 @@ pub const UPDATE_PARTITION_ADDRESS: usize = 0x08080000;
 <li>boot and update firmware</li>
 </ul>
 <p>sign both pieces of firmware with a (test) <a href="https://github.com/nihalpasham/rustBoot/tree/main/boards/rbSigner/keygen">private-key</a> and finally create valid <a href="../arch/images.html#mcu-image-format"><code>rustBoot mcu-images</code></a> i.e. signed boot and update firmware images.</p>
+<blockquote>
+<p>Note:</p>
+<ul>
+<li><code>ecc256.der</code> contains a public-key and a private-key, the first 32 bytes being the public-key and the rest being the private-key, used to sign the firmware. We are using it for testing purposes only.</li>
+</ul>
+</blockquote>
 <p>Compiling, signing and programming can be performed via a single command</p>
-<pre><code class="language-Terminal">cargo stm32f746 build-sign-flash rustBoot
+<pre><code class="language-Terminal">cargo stm32f746 build-sign-flash rustBoot [boot-ver] [updt-ver]
 </code></pre>
+<blockquote>
+<p>Note:</p>
+<ul>
+<li>The <code>updt-ver</code> number should be greater than <code>boot-ver</code>.</li>
+</ul>
+</blockquote>
 <p>This will build, sign and flash all 3 packages (i.e. bootloader + boot-fw + update-fw) onto the board.</p>
 <blockquote>
 <p>Note: </p>
 <ul>
 <li>The corresponding public-key is embedded in the bootloader's source.</li>
-<li>In order to test this example, you'll have to install a couple of pre-requisites - probe-rs-cli, python3 </li>
-<li>Owing to the above mentioned dependencies, the command only works in a linux environment or with WSL2 in a windows environment. </li>
+<li>In order to test this example, you'll have to install a couple of pre-requisites  as it uses probe-run to flash the binary. </li>
 </ul>
 </blockquote>
+<pre><code class="language-powershell">cargo install probe-rs-cli 
+cargo install cargo-flash
+cargo install cargo-binutils
+</code></pre>
 <p>Here's the command line output that should be produced.</p>
-<pre><code class="language-Terminal">udayakumar@udayakumar-VirtualBox:~/devspace/rustBoot$ cargo stm32f746 build-sign-flash rustBoot
-   Compiling xtask v0.1.0 (/home/udayakumar/devspace/rustBoot/xtask)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.50s
-     Running `target/debug/xtask stm32f746 build-sign-flash rustBoot`
+<pre><code class="language-Terminal">udayakumar@udayakumar-VirtualBox:~/devspace/rustBoot$ cargo stm32f746 build-sign-flash rustBoot 1234 1235
+    Finished dev [unoptimized + debuginfo] target(s) in 0.04s
+     Running `target/debug/xtask stm32f746 build-sign-flash rustBoot 1234 1235`
 $ cargo build --release
-   Compiling rand_core v0.6.3
-   Compiling nb v1.0.0
-   Compiling subtle v2.4.1
-   Compiling const-oid v0.7.1
-   Compiling vcell v0.1.3
-   ...
-   Compiling rustBoot v0.1.0 (/home/udayakumar/devspace/rustBoot/rustBoot)
-   Compiling stm32f7xx-hal v0.7.0
-   Compiling rustBoot-hal v0.1.0 (/home/udayakumar/devspace/rustBoot/boards/hal)
-   Compiling rustBoot-update v0.1.0 (/home/udayakumar/devspace/rustBoot/boards/update)
    Compiling stm32f746_bootfw v0.1.0 (/home/udayakumar/devspace/rustBoot/boards/firmware/stm32f746/boot_fw_blinky_green)
-    Finished release [optimized] target(s) in 23.39s
+    Finished release [optimized] target(s) in 0.99s
 $ cargo build --release
    Compiling stm32f746_updtfw v0.1.0 (/home/udayakumar/devspace/rustBoot/boards/firmware/stm32f746/updt_fw_blinky_red)
-    Finished release [optimized] target(s) in 0.65s
+    Finished release [optimized] target(s) in 0.95s
 $ cargo build --release
-   Compiling stm32f746 v0.1.0 (/home/udayakumar/devspace/rustBoot/boards/bootloaders/stm32f746)
-    Finished release [optimized] target(s) in 1.26s
-$ python3 convert2bin.py
-$ python3 signer.py
-['sign.py', '--ecc256', '--sha256', 'stm32f411_updtfw.bin', 'ecc256.der', '1235']
-Update type:          Firmware
-Input image:          stm32f411_updtfw.bin
-Selected cipher:      ecc256
-Public key:           ecc256.der
-Output image:         stm32f411_updtfw_v1235_signed.bin
-Not Encrypted
+    Finished release [optimized] target(s) in 0.09s
+$ rust-objcopy -I elf32-littlearm ../../target/thumbv7em-none-eabihf/release/stm32f746_bootfw -O binary stm32f746_bootfw.bin
+$ rust-objcopy -I elf32-littlearm ../../target/thumbv7em-none-eabihf/release/stm32f746_updtfw -O binary stm32f746_updtfw.bin
+$ cargo run mcu-image ../boards/sign_images/signed_images/stm32f746_bootfw.bin nistp256 ../boards/sign_images/keygen/ecc256.der 1234
+   Compiling libc v0.2.126
+   Compiling rustBoot v0.1.0 (/home/udayakumar/devspace/rustBoot/rustBoot)
+   Compiling filetime v0.2.17
+   Compiling rbsigner v0.1.0 (/home/udayakumar/devspace/rustBoot/rbsigner)
+    Finished dev [unoptimized + debuginfo] target(s) in 2.17s
+     Running `/home/udayakumar/devspace/rustBoot/target/debug/rbsigner mcu-image ../boards/sign_images/signed_images/stm32f746_bootfw.bin nistp256 ../boards/sign_images/keygen/ecc256.der 1234`
+
+Update type:    Firmware
+Curve type:       nistp256
+Input image:      stm32f746_bootfw.bin
+Public key:       ecc256.der
+Image version:    1234
+Output image:     stm32f746_bootfw_v1234_signed.bin
 Calculating sha256 digest...
 Signing the firmware...
 Done.
-Output image successfully created.
-['sign.py', '--ecc256', '--sha256', 'stm32f746_updtfw.bin', 'ecc256.der', '1235']
-Update type:          Firmware
-Input image:          stm32f746_updtfw.bin
-Selected cipher:      ecc256
-Public key:           ecc256.der
-Output image:         stm32f746_updtfw_v1235_signed.bin
-Not Encrypted
+Output image successfully created with 2780 bytes.
+
+$ cargo run mcu-image ../boards/sign_images/signed_images/stm32f746_updtfw.bin nistp256 ../boards/sign_images/keygen/ecc256.der 1235
+    Finished dev [unoptimized + debuginfo] target(s) in 0.05s
+     Running `/home/udayakumar/devspace/rustBoot/target/debug/rbsigner mcu-image ../boards/sign_images/signed_images/stm32f746_updtfw.bin nistp256 ../boards/sign_images/keygen/ecc256.der 1235`
+
+Update type:    Firmware
+Curve type:       nistp256
+Input image:      stm32f746_updtfw.bin
+Public key:       ecc256.der
+Image version:    1235
+Output image:     stm32f746_updtfw_v1235_signed.bin
 Calculating sha256 digest...
 Signing the firmware...
 Done.
-Output image successfully created.
-['sign.py', '--ecc256', '--sha256', 'stm32f746_bootfw.bin', 'ecc256.der', '1234']
-Update type:          Firmware
-Input image:          stm32f746_bootfw.bin
-Selected cipher:      ecc256
-Public key:           ecc256.der
-Output image:         stm32f746_bootfw_v1234_signed.bin
-Not Encrypted
-Calculating sha256 digest...
-Signing the firmware...
-Done.
-Output image successfully created.
-['sign.py', '--ecc256', '--sha256', 'stm32f411_bootfw.bin', 'ecc256.der', '1234']
-Update type:          Firmware
-Input image:          stm32f411_bootfw.bin
-Selected cipher:      ecc256
-Public key:           ecc256.der
-Output image:         stm32f411_bootfw_v1234_signed.bin
-Not Encrypted
-Calculating sha256 digest...
-Signing the firmware...
-Done.
-Output image successfully created.
+Output image successfully created with 2748 bytes.
+
 $ probe-rs-cli erase --chip stm32f746zgtx
 $ probe-rs-cli download --format Bin --base-address 0x8040000 --chip stm32f746zgtx stm32f746_bootfw_v1234_signed.bin
-     Erasing sectors ✔ [00:00:03] [################################################################################################################] 256.00KiB/256.00KiB @ 69.45KiB/s (eta 0s )
- Programming pages   ✔ [00:00:02] [##################################################################################################################]  3.00KiB/ 3.00KiB @     332B/s (eta 0s )
-    Finished in 6.597s
+     Erasing sectors ✔ [00:00:03] [################################################################################################################] 256.00KiB/256.00KiB @ 72.27KiB/s (eta 0s )
+ Programming pages   ✔ [00:00:02] [##################################################################################################################]  3.00KiB/ 3.00KiB @     353B/s (eta 0s )
+    Finished in 6.153s
 $ probe-rs-cli download --format Bin --base-address 0x8080000 --chip stm32f746zgtx stm32f746_updtfw_v1235_signed.bin
-     Erasing sectors ✔ [00:00:03] [################################################################################################################] 256.00KiB/256.00KiB @ 69.65KiB/s (eta 0s )
- Programming pages   ✔ [00:00:02] [##################################################################################################################]  3.00KiB/ 3.00KiB @     332B/s (eta 0s )
-    Finished in 6.586s
+     Erasing sectors ✔ [00:00:03] [################################################################################################################] 256.00KiB/256.00KiB @ 72.63KiB/s (eta 0s )
+ Programming pages   ✔ [00:00:02] [##################################################################################################################]  3.00KiB/ 3.00KiB @     351B/s (eta 0s )
+    Finished in 6.171s
 $ cargo flash --chip stm32f746zgtx --release
-    Finished release [optimized] target(s) in 0.06s
-
+    Finished release [optimized] target(s) in 0.08s
     Flashing /home/udayakumar/devspace/rustBoot/boards/target/thumbv7em-none-eabihf/release/stm32f746
-     Erasing sectors ✔ [00:00:02] [##################################################################################################################] 64.00KiB/64.00KiB @ 21.29KiB/s (eta 0s )
- Programming pages   ✔ [00:00:21] [##################################################################################################################] 43.00KiB/43.00KiB @  1.80KiB/s (eta 0s )
-    Finished in 24.035s
+     Erasing sectors ✔ [00:00:02] [##################################################################################################################] 64.00KiB/64.00KiB @ 22.76KiB/s (eta 0s )
+ Programming pages   ✔ [00:00:20] [##################################################################################################################] 43.00KiB/43.00KiB @  1.88KiB/s (eta 0s )
+    Finished in 22.968s
 udayakumar@udayakumar-VirtualBox:~/devspace/rustBoot$ 
+
 </code></pre>
 <h2 id="verifying"><a class="header" href="#verifying">Verifying:</a></h2>
 <p><code>blinky leds</code> are used to confirm that rustBoot works as expected. Here's the flow</p>
