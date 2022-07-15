@@ -216,10 +216,15 @@ pub const UPDATE_PARTITION_ADDRESS: usize = 0x08060000;
 <p>Note: </p>
 <ul>
 <li>The corresponding public-key is embedded in the bootloader's source.</li>
-<li>In order to test this example, you'll have to install a couple of pre-requisites - probe-rs-cli, cargo-binutils.</li>
-<li>Owing to the above mentioned dependencies, the command only works in a linux environment or with WSL2 in a windows environment. </li>
+<li>In order to test this example, you'll have to install a couple of pre-requisites - probe-rs-cli, cargo-binutils and cargo-flash.</li>
 </ul>
 </blockquote>
+<pre><code class="language-pre-requisites">$ cargo install probe-rs-cli
+
+$ cargo install cargo-binutils
+
+$ cargo install cargo-flash
+</code></pre>
 <p>Here's the command line output that should be produced.</p>
 <pre><code class="language-Terminal">$ cargo stm32h723 build-sign-flash rustBoot 1234 1235
     Finished dev [unoptimized + debuginfo] target(s) in 0.10s
