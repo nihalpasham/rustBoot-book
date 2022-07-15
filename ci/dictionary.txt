@@ -177,3 +177,12 @@ imrankhaleelsab
 Boschspace
 mcusigner
 littlearm
+zeroize
+memchr
+cpufeatures
+deref
+byteorder
+xshell
+filetime
+retx
+libc
