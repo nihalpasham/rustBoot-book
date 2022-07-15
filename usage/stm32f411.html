@@ -188,93 +188,70 @@ pub const UPDATE_PARTITION_ADDRESS: usize = 0x08040000;
 <li>boot and update firmware</li>
 </ul>
 <p>sign both pieces of firmware with a (test) <a href="https://github.com/nihalpasham/rustBoot/tree/main/boards/rbSigner/keygen">private-key</a> and finally create valid <a href="../arch/images.html#mcu-image-format"><code>rustBoot mcu-images</code></a> i.e. signed boot and update firmware images.</p>
-<blockquote>
-<p>Note:</p>
-<ul>
-<li><code>ecc256.der</code> contains a public-key and a private-key, the first 32 bytes being the public-key and the rest being the private-key, used to sign the firmware. We are using it for testing purposes only.</li>
-</ul>
-</blockquote>
 <p>Compiling, signing and programming can be performed via a single command</p>
-<pre><code class="language-MAC">cargo stm32f411 build-sign-flash rustBoot [boot-ver] [updt-ver]
+<pre><code class="language-MAC">cargo stm32f411 build-sign-flash rustBoot
 </code></pre>
-<blockquote>
-<p>Note:</p>
-<ul>
-<li>The <code>updt-ver</code> number should be greater than <code>boot-ver</code>.</li>
-</ul>
-</blockquote>
 <p>This will build, sign and flash all 3 packages (i.e. bootloader + boot-fw + update-fw) onto the board.</p>
 <blockquote>
 <p>Note: </p>
 <ul>
 <li>The corresponding public-key is embedded in the bootloader's source.</li>
 <li>In order to test this example, you'll have to install a couple of pre-requisites  as it uses probe-run to flash the binary.</li>
+<li>cargo install probe-rs-cli </li>
+<li>cargo install cargo-flash </li>
 </ul>
 </blockquote>
-<pre><code> cargo install probe-rs-cli 
- cargo install cargo-flash 
- cargo install cargo-binutils
-</code></pre>
 <p>Here's the command line output that should be produced.</p>
-<pre><code>yashwanthsingh@Yashwanths-MacBook-Pro rustBoot % cargo stm32f411 build-sign-flash rustBoot 1234 1235
+<pre><code>yashwanthsingh@Yashwanths-MBP rustBoot % cargo stm32f411 build-sign-flash rustBoot
+    Finished dev [unoptimized + debuginfo] target(s) in 0.12s
+     Running `target/debug/xtask stm32f411 build-sign-flash rustBoot`
+$ cargo build --release
+warning: unused config key `build.runner` in `/Users/yashwanthsingh/Yash/Projects/git_rustBoot_yash/rustBoot/boards/firmware/stm32f411/boot_fw_blinky_green/.cargo/config.toml`
+   ..
+   ..
+   Compiling rustBoot v0.1.0 (/Users/yashwanthsingh/Yash/Projects/git_rustBoot_yash/rustBoot/rustBoot)
+   Compiling stm32f4xx-hal v0.10.1
+   Compiling rustBoot-hal v0.1.0 (/Users/yashwanthsingh/Yash/Projects/git_rustBoot_yash/rustBoot/boards/hal)
+   Compiling rustBoot-update v0.1.0 (/Users/yashwanthsingh/Yash/Projects/git_rustBoot_yash/rustBoot/boards/update)
+   Compiling boot_fw_blinky_green v0.1.0 (/Users/yashwanthsingh/Yash/Projects/git_rustBoot_yash/rustBoot/boards/firmware/stm32f411/boot_fw_blinky_green)
+    Finished release [optimized] target(s) in 18.33s
+$ cargo build --release
+warning: unused config key `build.runner` in `/Users/yashwanthsingh/Yash/Projects/git_rustBoot_yash/rustBoot/boards/firmware/stm32f411/updt_fw_blinky_red/.cargo/config.toml`
+   Compiling update_fw_blinky_red v0.1.0 (/Users/yashwanthsingh/Yash/Projects/git_rustBoot_yash/rustBoot/boards/firmware/stm32f411/updt_fw_blinky_red)
+    Finished release [optimized] target(s) in 0.87s
+$ cargo build --release
+   ..
+   ..
+   Compiling rustBoot v0.1.0 (/Users/yashwanthsingh/Yash/Projects/git_rustBoot_yash/rustBoot/rustBoot)
+   Compiling stm32f4xx-hal v0.10.1
+   Compiling rustBoot-hal v0.1.0 (/Users/yashwanthsingh/Yash/Projects/git_rustBoot_yash/rustBoot/boards/hal)
+   Compiling rustBoot-update v0.1.0 (/Users/yashwanthsingh/Yash/Projects/git_rustBoot_yash/rustBoot/boards/update)
+   Compiling stm32f411 v0.1.0 (/Users/yashwanthsingh/Yash/Projects/git_rustBoot_yash/rustBoot/boards/bootloaders/stm32f411)
+    Finished release [optimized] target(s) in 16.40s
+$ rust-objcopy ../../boards/target/thumbv7em-none-eabihf/release/boot_fw_blinky_green -O binary stm32f411_bootfw.bin
+$ rust-objcopy ../../boards/target/thumbv7em-none-eabihf/release/update_fw_blinky_red -O binary stm32f411_updtfw.bin
+$ cargo run --example SignBootImage stm32f411_bootfw.bin
     Finished dev [unoptimized + debuginfo] target(s) in 0.07s
-     Running `target/debug/xtask stm32f411 build-sign-flash rustBoot 1234 1235`
-$ cargo build --release
-warning: unused config key `build.runner` in `/Users/yashwanthsingh/Yash/Projects/git_rustBoot_mcusigner/rustBoot/boards/firmware/stm32f411/boot_fw_blinky_green/.cargo/config.toml`
-    Finished release [optimized] target(s) in 0.10s
-$ cargo build --release
-warning: unused config key `build.runner` in `/Users/yashwanthsingh/Yash/Projects/git_rustBoot_mcusigner/rustBoot/boards/firmware/stm32f411/updt_fw_blinky_red/.cargo/config.toml`
-    Finished release [optimized] target(s) in 0.10s
-$ cargo build --release
-    Finished release [optimized] target(s) in 0.11s
-$ rust-objcopy -I elf32-littlearm ../../target/thumbv7em-none-eabihf/release/stm32f411_bootfw -O binary stm32f411_bootfw.bin
-$ rust-objcopy -I elf32-littlearm ../../target/thumbv7em-none-eabihf/release/stm32f411_updtfw -O binary stm32f411_updtfw.bin
-$ cargo run mcu-image ../boards/sign_images/signed_images/stm32f411_bootfw.bin nistp256 ../boards/sign_images/keygen/ecc256.der 1234
-    Finished dev [unoptimized + debuginfo] target(s) in 0.06s
-     Running `/Users/yashwanthsingh/Yash/Projects/git_rustBoot_mcusigner/rustBoot/target/debug/rbsigner mcu-image ../boards/sign_images/signed_images/stm32f411_bootfw.bin nistp256 ../boards/sign_images/keygen/ecc256.der 1234`
-
-Update type:    Firmware
-Curve type:       nistp256
-Input image:      stm32f411_bootfw.bin
-Public key:       ecc256.der
-Image version:    1234
-Output image:     stm32f411_bootfw_v1234_signed.bin
-Calculating sha256 digest...
-Signing the firmware...
-Done.
-Output image successfully created with 1908 bytes.
-
-$ cargo run mcu-image ../boards/sign_images/signed_images/stm32f411_updtfw.bin nistp256 ../boards/sign_images/keygen/ecc256.der 1235
-    Finished dev [unoptimized + debuginfo] target(s) in 0.10s
-     Running `/Users/yashwanthsingh/Yash/Projects/git_rustBoot_mcusigner/rustBoot/target/debug/rbsigner mcu-image ../boards/sign_images/signed_images/stm32f411_updtfw.bin nistp256 ../boards/sign_images/keygen/ecc256.der 1235`
-
-Update type:    Firmware
-Curve type:       nistp256
-Input image:      stm32f411_updtfw.bin
-Public key:       ecc256.der
-Image version:    1235
-Output image:     stm32f411_updtfw_v1235_signed.bin
-Calculating sha256 digest...
-Signing the firmware...
-Done.
-Output image successfully created with 1996 bytes.
-
+     Running `/Users/yashwanthsingh/Yash/Projects/git_rustBoot_yash/rustBoot/boards/target/debug/examples/SignBootImage stm32f411_bootfw.bin`
+$ cargo run --example SignUpdateImage stm32f411_updtfw.bin
+    Finished dev [unoptimized + debuginfo] target(s) in 0.05s
+     Running `/Users/yashwanthsingh/Yash/Projects/git_rustBoot_yash/rustBoot/boards/target/debug/examples/SignUpdateImage stm32f411_updtfw.bin`
 $ probe-rs-cli erase --chip stm32f411vetx
 $ probe-rs-cli download --format Bin --base-address 0x8020000 --chip stm32f411vetx stm32f411_bootfw_v1234_signed.bin
-     Erasing sectors ✔ [00:00:01] [############################] 128.00KiB/128.00KiB @ 65.02KiB/s (eta 0s )
- Programming pages   ✔ [00:00:00] [##############################]  2.00KiB/ 2.00KiB @     677B/s (eta 0s )
-    Finished in 2.057s
+     Erasing sectors ✔ [00:00:01] [#################################] 128.00KiB/128.00KiB @ 65.20KiB/s (eta 0s )
+ Programming pages   ✔ [00:00:00] [###################################]  5.00KiB/ 5.00KiB @  1.08KiB/s (eta 0s )
+    Finished in 2.135s
 $ probe-rs-cli download --format Bin --base-address 0x8040000 --chip stm32f411vetx stm32f411_updtfw_v1235_signed.bin
-     Erasing sectors ✔ [00:00:01] [############################] 128.00KiB/128.00KiB @ 65.15KiB/s (eta 0s )
- Programming pages   ✔ [00:00:00] [##############################]  2.00KiB/ 2.00KiB @     679B/s (eta 0s )
-    Finished in 2.052s
+     Erasing sectors ✔ [00:00:01] [#################################] 128.00KiB/128.00KiB @ 65.50KiB/s (eta 0s )
+ Programming pages   ✔ [00:00:00] [###################################]  5.00KiB/ 5.00KiB @  1.08KiB/s (eta 0s )
+    Finished in 2.121s
 $ cargo flash --chip stm32f411vetx --release
-    Finished release [optimized] target(s) in 0.08s
-    Flashing /Users/yashwanthsingh/Yash/Projects/git_rustBoot_mcusigner/rustBoot/boards/target/thumbv7em-none-eabihf/release/stm32f411
-     Erasing sectors ✔ [00:00:01] [##############################] 48.00KiB/48.00KiB @ 40.79KiB/s (eta 0s )
- Programming pages   ✔ [00:00:01] [##############################] 43.00KiB/43.00KiB @ 17.31KiB/s (eta 0s )
-    Finished in 2.267s
-yashwanthsingh@Yashwanths-MacBook-Pro rustBoot % 
+    Finished release [optimized] target(s) in 0.07s
+    Flashing /Users/yashwanthsingh/Yash/Projects/git_rustBoot_yash/rustBoot/boards/target/thumbv7em-none-eabihf/release/stm32f411
+     Erasing sectors ✔ [00:00:01] [###################################] 48.00KiB/48.00KiB @ 40.80KiB/s (eta 0s )
+ Programming pages   ✔ [00:00:01] [###################################] 43.00KiB/43.00KiB @ 16.79KiB/s (eta 0s )
+    Finished in 2.319s
+yashwanthsingh@Yashwanths-MBP rustBoot % 
 </code></pre>
 <h2 id="verifying"><a class="header" href="#verifying">Verifying:</a></h2>
 <p><code>blinky leds</code> are used to confirm that rustBoot works as expected. Here's the flow</p>
