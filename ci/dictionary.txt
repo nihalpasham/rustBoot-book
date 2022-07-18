@@ -189,3 +189,6 @@ xshell
 filetime
 retx
 libc
+proc
+bitflags
+attr
