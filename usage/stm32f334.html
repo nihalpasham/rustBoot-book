@@ -192,8 +192,14 @@ pub const UPDATE_PARTITION_ADDRESS: usize = 0x0800d000; //its is of 3 pages star
 </ul>
 <p>sign both pieces of firmware with a (test) <a href="https://github.com/nihalpasham/rustBoot/tree/main/boards/rbSigner/keygen">private-key</a> and finally create valid <a href="../arch/images.html#mcu-image-format"><code>rustBoot mcu-images</code></a> i.e. signed boot and update firmware images.</p>
 <p>Compiling, signing and programming can be performed via a single command</p>
-<pre><code class="language-MAC">cargo stm32f334 build-sign-flash rustBoot
+<pre><code class="language-Terminal">cargo stm32f334 build-sign-flash rustBoot [boot-ver] [updt-ver]
 </code></pre>
+<blockquote>
+<p>Note:</p>
+<ul>
+<li>The <code>updt-ver</code> number should be greater than <code>boot-ver</code>.</li>
+</ul>
+</blockquote>
 <p>This will build, sign and flash all 3 packages (i.e. bootloader + boot-fw + update-fw) onto the board.</p>
 <blockquote>
 <p>Note: </p>
@@ -206,56 +212,80 @@ pub const UPDATE_PARTITION_ADDRESS: usize = 0x0800d000; //its is of 3 pages star
 cargo install cargo-flash 
 </code></pre>
 <p>Here's the command line output that should be produced.</p>
-<pre><code>sarathk@sarath:~/stm32f/pull_req/rustBoot$ cargo stm32f334 build-sign-flash rustBoot
-   Compiling xtask v0.1.0 (/home/sarathk/stm32f/pull_req/rustBoot/xtask)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.73s
-     Running `target/debug/xtask stm32f334 build-sign-flash rustBoot`
+<pre><code>sarathk@sarath:~/stm32f/pull_req/rustBoot$ cargo stm32f334 build-sign-flash rustBoot 1234 1235
+    Finished dev [unoptimized + debuginfo] target(s) in 0.05s
+     Running `target/debug/xtask stm32f334 build-sign-flash rustBoot 1234 1235`
 $ cargo build --release
-    Finished release [optimized] target(s) in 0.23s
+   Compiling rustBoot-hal v0.1.0 (/home/sarathk/stm32f/pull_req/rustBoot/boards/hal)
+   Compiling rustBoot-update v0.1.0 (/home/sarathk/stm32f/pull_req/rustBoot/boards/update)
+   Compiling stm32f334_bootfw v0.1.0 (/home/sarathk/stm32f/pull_req/rustBoot/boards/firmware/stm32f334/boot_fw_blinky_green)
+    Finished release [optimized] target(s) in 1.60s
 $ cargo build --release
-    Finished release [optimized] target(s) in 0.22s
+   Compiling stm32f334_updtfw v0.1.0 (/home/sarathk/stm32f/pull_req/rustBoot/boards/firmware/stm32f334/updt_fw_blinky_red)
+    Finished release [optimized] target(s) in 1.17s
 $ cargo build --release
-    Finished release [optimized] target(s) in 0.16s
-$ python3 convert2bin.py
-$ python3 signer.py
-['sign.py', '--ecc256', '--sha256', 'stm32f334_updtfw.bin', 'ecc256.der', '1235']
-Update type:          Firmware
-Input image:          stm32f334_updtfw.bin
-Selected cipher:      ecc256
-Public key:           ecc256.der
-Output image:         stm32f334_updtfw_v1235_signed.bin
-Not Encrypted
+   Compiling defmt v0.3.2
+   Compiling defmt-macros v0.3.2
+   Compiling critical-section v0.2.7
+   Compiling defmt-parser v0.3.1
+   Compiling bare-metal v1.0.0
+   Compiling bitflags v1.3.2
+   Compiling defmt-rtt v0.3.2
+   Compiling stm32f334 v0.1.0 (/home/sarathk/stm32f/pull_req/rustBoot/boards/bootloaders/stm32f334)
+   Compiling proc-macro-error-attr v1.0.4
+   Compiling proc-macro-error v1.0.4
+    Finished release [optimized] target(s) in 9.29s
+$ rust-objcopy -I elf32-littlearm ../../target/thumbv7em-none-eabihf/release/stm32f334_bootfw -O binary stm32f334_bootfw.bin
+$ rust-objcopy -I elf32-littlearm ../../target/thumbv7em-none-eabihf/release/stm32f334_updtfw -O binary stm32f334_updtfw.bin
+$ cargo run mcu-image ../boards/sign_images/signed_images/stm32f334_bootfw.bin nistp256 ../boards/sign_images/keygen/ecc256.der 1234
+   Compiling libc v0.2.126
+   Compiling filetime v0.2.17
+   Compiling rustBoot v0.1.0 (/home/sarathk/stm32f/pull_req/rustBoot/rustBoot)
+   Compiling rbsigner v0.1.0 (/home/sarathk/stm32f/pull_req/rustBoot/rbsigner)
+    Finished dev [unoptimized + debuginfo] target(s) in 3.89s
+     Running `/home/sarathk/stm32f/pull_req/rustBoot/target/debug/rbsigner mcu-image ../boards/sign_images/signed_images/stm32f334_bootfw.bin nistp256 ../boards/sign_images/keygen/ecc256.der 1234`
+
+Update type:    Firmware
+Curve type:       nistp256
+Input image:      stm32f334_bootfw.bin
+Public key:       ecc256.der
+Image version:    1234
+Output image:     stm32f334_bootfw_v1234_signed.bin
 Calculating sha256 digest...
 Signing the firmware...
 Done.
-Output image successfully created.
-['sign.py', '--ecc256', '--sha256', 'stm32f334_bootfw.bin', 'ecc256.der', '1234']
-Update type:          Firmware
-Input image:          stm32f334_bootfw.bin
-Selected cipher:      ecc256
-Public key:           ecc256.der
-Output image:         stm32f334_bootfw_v1234_signed.bin
-Not Encrypted
+Output image successfully created with 2508 bytes.
+
+$ cargo run mcu-image ../boards/sign_images/signed_images/stm32f334_updtfw.bin nistp256 ../boards/sign_images/keygen/ecc256.der 1235
+    Finished dev [unoptimized + debuginfo] target(s) in 0.04s
+     Running `/home/sarathk/stm32f/pull_req/rustBoot/target/debug/rbsigner mcu-image ../boards/sign_images/signed_images/stm32f334_updtfw.bin nistp256 ../boards/sign_images/keygen/ecc256.der 1235`
+
+Update type:    Firmware
+Curve type:       nistp256
+Input image:      stm32f334_updtfw.bin
+Public key:       ecc256.der
+Image version:    1235
+Output image:     stm32f334_updtfw_v1235_signed.bin
 Calculating sha256 digest...
 Signing the firmware...
 Done.
-Output image successfully created.
+Output image successfully created with 2484 bytes.
+
 $ probe-rs-cli erase --chip stm32f334r8tx
 $ probe-rs-cli download --format Bin --base-address 0x800b800 --chip stm32f334r8tx stm32f334_bootfw_v1234_signed.bin
-     Erasing sectors ✔ [00:00:01] [#####################################################################################]  4.00KiB/ 4.00KiB @  1.75KiB/s (eta 0s )
- Programming pages   ✔ [00:00:02] [#####################################################################################]  3.00KiB/ 3.00KiB @     537B/s (eta 0s )
-    Finished in 4.654s
+     Erasing sectors ✔ [00:00:01] [################################################################################################]  4.00KiB/ 4.00KiB @  1.81KiB/s (eta 0s )
+ Programming pages   ✔ [00:00:02] [################################################################################################]  3.00KiB/ 3.00KiB @     557B/s (eta 0s )
+    Finished in 4.483s
 $ probe-rs-cli download --format Bin --base-address 0x800d000 --chip stm32f334r8tx stm32f334_updtfw_v1235_signed.bin
-     Erasing sectors ✔ [00:00:01] [#####################################################################################]  4.00KiB/ 4.00KiB @  1.78KiB/s (eta 0s )
- Programming pages   ✔ [00:00:02] [#####################################################################################]  3.00KiB/ 3.00KiB @     542B/s (eta 0s )
-    Finished in 4.625s
+     Erasing sectors ✔ [00:00:01] [################################################################################################]  4.00KiB/ 4.00KiB @  1.85KiB/s (eta 0s )
+ Programming pages   ✔ [00:00:02] [################################################################################################]  3.00KiB/ 3.00KiB @     554B/s (eta 0s )
+    Finished in 4.491s
 $ cargo flash --chip stm32f334r8tx --release
-    Finished release [optimized] target(s) in 0.22s
+    Finished release [optimized] target(s) in 0.08s
     Flashing /home/sarathk/stm32f/pull_req/rustBoot/boards/target/thumbv7em-none-eabihf/release/stm32f334
-     Erasing sectors ✔ [00:00:10] [#####################################################################################] 44.00KiB/44.00KiB @  3.92KiB/s (eta 0s )
- Programming pages   ✔ [00:00:21] [#####################################################################################] 43.00KiB/43.00KiB @  1.27KiB/s (eta 0s )
-    Finished in 32.288s
-sarathk@sarath:~/stm32f/pull_req/rustBoot$ 
+     Erasing sectors ✔ [00:00:10] [################################################################################################] 44.00KiB/44.00KiB @  4.03KiB/s (eta 0s )
+ Programming pages   ✔ [00:00:20] [################################################################################################] 43.00KiB/43.00KiB @  1.31KiB/s (eta 0s )
+    Finished in 31.232s
 </code></pre>
 <h2 id="verifying"><a class="header" href="#verifying">Verifying:</a></h2>
 <p><code>user led</code> is used to confirm that rustBoot works as expected. Here's the flow</p>
@@ -282,7 +312,7 @@ sarathk@sarath:~/stm32f/pull_req/rustBoot$
 <li>Now that execution-control has been transferred to the UPDATE'd firmware 
 <ul>
 <li>and set a <code>confirmation flag</code> to indicate that the update was successful.</li>
-<li>post which, it continuously blinks a <code>user led</code> at an interval of <code>0.25 second</code> continuously.</li>
+<li>post which, it continuously blinks a <code>user led</code> at an interval of <code>0.25 second</code> continuously. </li>
 </ul>
 </li>
 </ul>
