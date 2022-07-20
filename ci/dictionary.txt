@@ -198,4 +198,3 @@ dhamale
 abhishekdhamale
 Pi
 Pico
-rp2040
