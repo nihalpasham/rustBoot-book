@@ -192,3 +192,13 @@ libc
 proc
 bitflags
 attr
+abhishek
+Dhamale
+dhamale
+abhishekdhamale
+Pi
+Pico
+BOOTSEL
+QSPI
+Pico's
+eabi
