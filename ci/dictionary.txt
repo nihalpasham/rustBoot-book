@@ -198,4 +198,7 @@ dhamale
 abhishekdhamale
 Pi
 Pico
-rp2040
+BOOTSEL
+QSPI
+Pico's
+eabi
