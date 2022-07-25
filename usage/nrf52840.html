@@ -188,85 +188,117 @@ pub const UPDATE_PARTITION_ADDRESS: usize = 0x58000;
 <li>boot and update firmware</li>
 </ul>
 <p>sign both pieces of firmware with a (test) <a href="https://github.com/nihalpasham/rustBoot/tree/main/boards/rbSigner/keygen">private-key</a> and finally create valid <a href="../arch/images.html#mcu-image-format"><code>rustBoot mcu-images</code></a> i.e. signed boot and update firmware images.</p>
+<blockquote>
+<p>Note:</p>
+<ul>
+<li>the <code>ecc256.der</code> file contains a public-key and a private-key, the first 64 bytes being the public-key and remaining 32 bytes make up the private-key. </li>
+<li>This is a test key file and is to be used for testing purposes only.</li>
+</ul>
+</blockquote>
 <p>Compiling, signing and programming can be performed via a single command</p>
 <pre><code class="language-powershell">cargo nrf52840 build-sign-flash rustBoot
 </code></pre>
+<blockquote>
+<p>Note:</p>
+<ul>
+<li>The <code>updt-ver</code> number must be greater than <code>boot-ver</code>.</li>
+</ul>
+</blockquote>
 <p>This will build, sign and flash all 3 packages (i.e. bootloader + boot-fw + update-fw) onto the board.</p>
 <blockquote>
 <p>Note: </p>
 <ul>
 <li>The corresponding public-key is embedded in the bootloader's source.</li>
-<li>In order to test this example, you'll have to install a couple of pre-requisites - pyocd, python3 </li>
-<li>Owing to the above mentioned dependencies, the command only works in a linux environment or with WSL2 in a windows environment. </li>
+<li>In order to test this example, you'll have to install a couple of pre-requisites  as it uses probe-run to flash the binary. </li>
 </ul>
 </blockquote>
+<pre><code class="language-powershell">cargo install probe-rs-cli 
+cargo install cargo-flash
+cargo install cargo-binutils
+</code></pre>
 <p>Here's the command line output that should be produced.</p>
-<pre><code class="language-powershell">PS C:\Users\Nil\devspace\rust\projects\rb&gt; cargo xtask build-sign-flash rustBoot nrf52840
-   Compiling xtask v0.1.0 (C:\Users\Nil\devspace\rust\projects\rb\xtask)
-    Finished dev [unoptimized + debuginfo] target(s) in 1.06s
-     Running `target\debug\xtask.exe build-sign-flash rustBoot nrf52840`
+<pre><code class="language-powershell">PS C:\Users\Nil\devspace\rust\projects\rb&gt; cargo nrf52840 build-sign-flash rustBoot 1234 1235
+    Finished dev [unoptimized + debuginfo] target(s) in 0.06s
+     Running `target/debug/xtask nrf52840 build-sign-flash rustBoot 1234 1235`
 $ cargo build --release
    Compiling rand_core v0.6.3
+   Compiling subtle v2.4.1
+   Compiling nb v1.0.0
+   Compiling cfg-if v1.0.0
+   ...
+   ...
+   Compiling rustBoot-hal v0.1.0 (/Users/nihal.pasham/devspace/rust/projects/prod/rustBoot/boards/hal)
+   Compiling rustBoot-update v0.1.0 (/Users/nihal.pasham/devspace/rust/projects/prod/rustBoot/boards/update)
+   Compiling nrf52840_bootfw v0.1.0 (/Users/nihal.pasham/devspace/rust/projects/prod/rustBoot/boards/firmware/nrf52840/boot_fw_blinky_green)
+    Finished release [optimized] target(s) in 10.60s
+$ cargo build --release
+   Compiling nrf52840_updtfw v0.1.0 (/Users/nihal.pasham/devspace/rust/projects/prod/rustBoot/boards/firmware/nrf52840/updt_fw_blinky_red)
+    Finished release [optimized] target(s) in 0.43s
+$ cargo build --release
+   Compiling rand_core v0.6.3
+   Compiling subtle v2.4.1
+   Compiling cfg-if v1.0.0
    Compiling nb v1.0.0
    ...
    ...
-   Compiling nrf52840_bootfw v0.1.0 (C:\Users\Nil\devspace\rust\projects\rb\boards\test_firmware\nrf52840\boot_fw_blinky_blue)
-    Finished release [optimized + debuginfo] target(s) in 46.70s
-$ cargo build --release
-   Compiling nrf52840_updtfw v0.1.0 (C:\Users\Nil\devspace\rust\projects\rb\boards\test_firmware\nrf52840\updt_fw_blinky_red)
-    Finished release [optimized + debuginfo] target(s) in 2.22s
-$ cargo build --release
-   Compiling defmt-rtt v0.2.0
-   Compiling nrf52840 v0.1.0 (C:\Users\Nil\devspace\rust\projects\rb\boards\test_impls\nrf52840)
-    Finished release [optimized + debuginfo] target(s) in 5.52s
-$ python3 convert2bin.py
-$ wsl python3 signer.py
-['sign.py', '--ecc256', '--sha256', 'nrf52840_bootfw.bin', 'ecc256.der', '1234']
-Update type:          Firmware
-Input image:          nrf52840_bootfw.bin
-Selected cipher:      ecc256
-Public key:           ecc256.der
-Output image:         nrf52840_bootfw_v1234_signed.bin
-Not Encrypted
+   Compiling rustBoot-hal v0.1.0 (/Users/nihal.pasham/devspace/rust/projects/prod/rustBoot/boards/hal)
+   Compiling rustBoot-update v0.1.0 (/Users/nihal.pasham/devspace/rust/projects/prod/rustBoot/boards/update)
+   Compiling nrf52840 v0.1.0 (/Users/nihal.pasham/devspace/rust/projects/prod/rustBoot/boards/bootloaders/nrf52840)
+    Finished release [optimized] target(s) in 10.96s
+$ rust-objcopy -I elf32-littlearm ../../target/thumbv7em-none-eabihf/release/nrf52840_bootfw -O binary nrf52840_bootfw.bin
+$ rust-objcopy -I elf32-littlearm ../../target/thumbv7em-none-eabihf/release/nrf52840_updtfw -O binary nrf52840_updtfw.bin
+$ cargo run mcu-image ../boards/sign_images/signed_images/nrf52840_bootfw.bin nistp256 ../boards/sign_images/keygen/ecc256.der 1234
+    Finished dev [unoptimized + debuginfo] target(s) in 0.03s
+     Running `/Users/nihal.pasham/devspace/rust/projects/prod/rustBoot/target/debug/rbsigner mcu-image ../boards/sign_images/signed_images/nrf52840_bootfw.bin nistp256 ../boards/sign_images/keygen/ecc256.der 1234`
+
+Image type:       mcu-image
+Curve type:       nistp256
+Input image:      nrf52840_bootfw.bin
+Public key:       ecc256.der
+Image version:    1234
+Output image:     nrf52840_bootfw_v1234_signed.bin
 Calculating sha256 digest...
 Signing the firmware...
 Done.
-Output image successfully created.
-Update type:          Firmware
-Input image:          nrf52840_updtfw.bin
-Selected cipher:      ecc256
-Public key:           ecc256.der
-Output image:         nrf52840_updtfw_v1235_signed.bin
-Not Encrypted
+Output image successfully created with 1696 bytes.
+
+$ cargo run mcu-image ../boards/sign_images/signed_images/nrf52840_updtfw.bin nistp256 ../boards/sign_images/keygen/ecc256.der 1235
+    Finished dev [unoptimized + debuginfo] target(s) in 0.03s
+     Running `/Users/nihal.pasham/devspace/rust/projects/prod/rustBoot/target/debug/rbsigner mcu-image ../boards/sign_images/signed_images/nrf52840_updtfw.bin nistp256 ../boards/sign_images/keygen/ecc256.der 1235`
+
+Image type:       mcu-image
+Curve type:       nistp256
+Input image:      nrf52840_updtfw.bin
+Public key:       ecc256.der
+Image version:    1235
+Output image:     nrf52840_updtfw_v1235_signed.bin
 Calculating sha256 digest...
 Signing the firmware...
 Done.
-Output image successfully created.
-$ pyocd erase -t nrf52 --mass-erase
-0001530:INFO:eraser:Successfully erased.
-$ pyocd flash -t nrf52840 --base-address 0x2f000 nrf52840_bootfw_v1234_signed.bin
-[====================] 100%
-0001848:INFO:loader:Erased 4096 bytes (1 sector), programmed 4096 bytes (1 page), skipped 0 bytes (0 pages) at 4.84 kB/s
-$ pyocd flash -t nrf52840 --base-address 0x56ffc trailer_magic.bin
-[====================] 100%
-0002045:INFO:loader:Erased 4096 bytes (1 sector), programmed 4096 bytes (1 page), skipped 0 bytes (0 pages) at 4.23 kB/s
-$ pyocd flash -t nrf52840 --base-address 0x58000 nrf52840_updtfw_v1235_signed.bin
-[====================] 100%
-[====================] 100%
-0001983:INFO:loader:Erased 4096 bytes (1 sector), programmed 4096 bytes (1 page), skipped 0 bytes (0 pages) at 4.22 kB/s
-    Finished release [optimized + debuginfo] target(s) in 0.15s
-    Flashing C:\Users\Nil\devspace\rust\projects\rb\boards\target\thumbv7em-none-eabihf\release\nrf52840
-     Erasing sectors ✔ [00:00:01] [############################################################################] 44.00KiB/44.00KiB @ 24.39KiB/s (eta 0s )
- Programming pages   ✔ [00:00:03] [############################################################################] 44.00KiB/44.00KiB @  5.43KiB/s (eta 0s )
-    Finished in 4.995s
-PS C:\Users\Nil\devspace\rust\projects\rb&gt;
+Output image successfully created with 1724 bytes.
+
+$ probe-rs-cli erase --chip nRF52840_xxAA
+$ probe-rs-cli download --format Bin --base-address 0x2f000 --chip nRF52840_xxAA nrf52840_bootfw_v1234_signed.bin
+     Erasing sectors ✔ [00:00:00] [##########]  4.00KiB/ 4.00KiB @ 15.97KiB/s (eta 0s )
+ Programming pages   ✔ [00:00:00] [##########]  4.00KiB/ 4.00KiB @  6.77KiB/s (eta 0s )
+    Finished in 0.73s
+$ probe-rs-cli download --format Bin --base-address 0x58000 --chip nRF52840_xxAA nrf52840_updtfw_v1235_signed.bin
+     Erasing sectors ✔ [00:00:00] [##########]  4.00KiB/ 4.00KiB @ 16.34KiB/s (eta 0s )
+ Programming pages   ✔ [00:00:00] [##########]  4.00KiB/ 4.00KiB @  6.86KiB/s (eta 0s )
+    Finished in 0.713s
+$ cargo flash --chip nRF52840_xxAA --release
+    Finished release [optimized] target(s) in 0.06s
+    Flashing /Users/nihal.pasham/devspace/rust/projects/prod/rustBoot/boards/target/thumbv7em-none-eabihf/release/nrf52840
+     Erasing sectors ✔ [00:00:01] [##########] 44.00KiB/44.00KiB @ 25.20KiB/s (eta 0s )
+ Programming pages   ✔ [00:00:03] [##########] 44.00KiB/44.00KiB @  5.62KiB/s (eta 0s )
+    Finished in 4.808s
 </code></pre>
 <h2 id="verifying"><a class="header" href="#verifying">Verifying:</a></h2>
 <p><code>blinky leds</code> are used to confirm that rustBoot works as expected. Here's the flow</p>
 <ul>
 <li>Upon supplying power to the board, rustBoot takes over 
 <ul>
-<li>validates the firmware image stored in the BOOT partition</li>
+<li><code>validates</code> the firmware image stored in the <code>BOOT</code> partition i.e.</li>
 <li>verifies the signature attached against a known public key stored in the rustBoot image.</li>
 </ul>
 </li>
@@ -278,8 +310,8 @@ PS C:\Users\Nil\devspace\rust\projects\rb&gt;
 <li>Upon reset, the rustBoot again takes over 
 <ul>
 <li>validates the firmware image stored in the UPDATE partition </li>
-<li>swaps the contents of the BOOT and the UPDATE partitions</li>
-<li>marks the new firmware in the BOOT partition as in state STATE_TESTING</li>
+<li><code>swaps</code> the contents of the <code>BOOT</code> and the <code>UPDATE</code> partitions</li>
+<li>marks the new firmware in the <code>BOOT</code> partition as in state <code>STATE_TESTING</code></li>
 <li>boots into the UPDATE'd firmware </li>
 </ul>
 </li>

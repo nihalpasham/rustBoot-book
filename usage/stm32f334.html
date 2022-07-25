@@ -191,6 +191,13 @@ pub const UPDATE_PARTITION_ADDRESS: usize = 0x0800d000; //its is of 3 pages star
 <li>boot and update firmware</li>
 </ul>
 <p>sign both pieces of firmware with a (test) <a href="https://github.com/nihalpasham/rustBoot/tree/main/boards/rbSigner/keygen">private-key</a> and finally create valid <a href="../arch/images.html#mcu-image-format"><code>rustBoot mcu-images</code></a> i.e. signed boot and update firmware images.</p>
+<blockquote>
+<p>Note:</p>
+<ul>
+<li>the <code>ecc256.der</code> file contains a public-key and a private-key, the first 64 bytes being the public-key and remaining 32 bytes make up the private-key. </li>
+<li>This is a test key file and is to be used for testing purposes only.</li>
+</ul>
+</blockquote>
 <p>Compiling, signing and programming can be performed via a single command</p>
 <pre><code class="language-Terminal">cargo stm32f334 build-sign-flash rustBoot [boot-ver] [updt-ver]
 </code></pre>

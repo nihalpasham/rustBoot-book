@@ -199,7 +199,8 @@ pub const UPDATE_PARTITION_ADDRESS: usize = 0x08060000;
 <blockquote>
 <p>Note:</p>
 <ul>
-<li><code>ecc256.der</code> contains a public-key and a private-key, the first 32 bytes being the public-key and the rest being the private-key, used to sign the firmware. We are using it for testing purposes only.</li>
+<li>the <code>ecc256.der</code> file contains a public-key and a private-key, the first 64 bytes being the public-key and remaining 32 bytes make up the private-key. </li>
+<li>This is a test key file and is to be used for testing purposes only.</li>
 </ul>
 </blockquote>
 <p>Compiling, signing and programming can be performed via a single command</p>
