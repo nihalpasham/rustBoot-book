@@ -4,8 +4,8 @@ This section will detail the steps involved in building and flashing `rustBoot` 
 
 - **Partitioning**: 
     - rustBoot offers 2 different partitioning schemes, depending on the target device
-        - [microcontroller partitions](./arch/partitions.md#micro-controller-partitions) 
-        - [linux system partitions](./arch/partitions.md#linux-system-partitions) 
+        - [`microcontroller-partitions`](./arch/partitions.md#micro-controller-partitions) 
+        - [`linux-system partitions`](./arch/partitions.md#linux-system-partitions) 
 - **Building**: 
     - a rustBoot build usually involves 
         - compiling firmware i.e. boot and update firmware. 
@@ -22,4 +22,4 @@ This section will detail the steps involved in building and flashing `rustBoot` 
         - *sbc*(s): rustBoot simply outputs logs to a UART-terminal. For specifics, please refer to `usage` page for the board.
     - Among other things, rustBoot logs will indicate `image-authentication` status. 
 
-> Note: drivers for peripherals such as flash, uart, gpio etc. are included for each board. 
+> Note: drivers for peripherals such as flash-memory, uart, gpio etc. are included for each board. 
