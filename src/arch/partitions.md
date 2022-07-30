@@ -10,18 +10,18 @@
 
 > Note: `BOOT`, `UPDATE` and `SWAP` partitions need **NOT** be consecutively laid out in flash memory. The above diagram only serves as a visual aid.
 
-rustBoot requires `mcu flash` to be divided into (at-least) 4 non-overlapping memory regions (i.e. partitions). 
+rustBoot requires an `mcu's` non-volatile memory (or `flash storage`) to be divided into (at-least) 4 non-overlapping memory regions (i.e. partitions). 
 - `rustBoot`: contains the bootloader. This usually starts at `address 0x0` in flash-memory. 
 - `BOOT:` contains boot firmware. `rustBoot` always boots from this partition address.
 - `UPDATE:` contains update firmware i.e. downloaded update firmware is placed in this partition.
-- `SWAP:` is an empty partition that is used while swapping contents of `BOOT` and `UPDATE`.
+- `SWAP:` is an empty partition that is used to swap contents of `BOOT` and `UPDATE`, one sector at a time.
 
 All 3 partition boundaries must be aligned to a physical sector as `rustBoot` erases all flash sectors prior to storing a new firmware image, and swaps the contents of the two partitions, one sector at a time.
 
-To ensure partition-sector alignments are maintained, before proceeding to partition a target system, the following points must be considered:
+To ensure that a partition's sector alignments are maintained, the following points must be considered:
 
 - `BOOT and UPDATE` partition must be of the same size.
-- `SWAP` partition `must be larger than the largest sector` in either `BOOT` or `UPDATE` partition.
+- `SWAP` partition `must be larger than or equal to the largest sector` in either `BOOT` or `UPDATE` partition.
 
 MCU flash memory is partitioned as follows:
 
@@ -32,12 +32,13 @@ MCU flash memory is partitioned as follows:
 - `SWAP` partition starts at a predefined address - [`SWAP_PARTITION_ADDRESS`](https://github.com/nihalpasham/rustBoot/blob/7ea124b2d8f82b85b5500bfdbc038c104eee4452/rustBoot/src/constants.rs#L9)
   - swap-space size is defined by [`SECTOR_SIZE`](https://github.com/nihalpasham/rustBoot/blob/7ea124b2d8f82b85b5500bfdbc038c104eee4452/rustBoot/src/constants.rs#L5) and must be larger than the largest sector in either `BOOT` or `UPDATE` partition.
 
-BOOT, UPDATE, SWAP addresses and SECTOR_SIZE, PARTITION_SIZE values can be set via command line options or developers `constants.rs`.
+BOOT, UPDATE, SWAP addresses and SECTOR_SIZE, PARTITION_SIZE values can be set via source files - `constants.rs`.
 
 > **MCU defaults:**
-> - By default, public keys used for firmware validation are embedded in `rustBoot-firmware` during a factory-image-burn. However, rustBoot also offers the option to retrieve them from secure-hardware (ex: crypto-elements).
+> - By default, public keys used for firmware validation are embedded in `rustBoot-firmware` during a factory image-burn. However, rustBoot also supports the option to retrieve them from secure-hardware (ex: crypto-elements).
 > - The `BOOT` partition is the only partition from which we can boot a firmware image. The firmware image must be linked so that its entry-point is at address `256 + BOOT_PARTITION_ADDRESS`.
-> - `BOOT` firmware is responsible for downloading a new firmware image via a secure channel and installing it in the `UPDATE` partition. To trigger an update, the `BOOT` firmware updates the `status byte` of the `UPDATE` partition and performs a reboot. This will allow the bootloader to `swap the contents` of `BOOT` partition with that of the `UPDATE` partition. 
+> - `BOOT` firmware is responsible for downloading a new firmware image via a secure channel and installing it in the `UPDATE` partition. 
+> - To trigger an update, the `BOOT` firmware updates the `status byte` of the `UPDATE` partition and performs a reboot. This will allow the bootloader to `swap the contents` of `BOOT` partition with that of the `UPDATE` partition. 
 
 ## Linux system partitions:
 
