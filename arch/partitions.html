@@ -160,18 +160,18 @@
 <blockquote>
 <p>Note: <code>BOOT</code>, <code>UPDATE</code> and <code>SWAP</code> partitions need <strong>NOT</strong> be consecutively laid out in flash memory. The above diagram only serves as a visual aid.</p>
 </blockquote>
-<p>rustBoot requires <code>mcu flash</code> to be divided into (at-least) 4 non-overlapping memory regions (i.e. partitions). </p>
+<p>rustBoot requires an <code>mcu's</code> non-volatile memory (or <code>flash storage</code>) to be divided into (at-least) 4 non-overlapping memory regions (i.e. partitions). </p>
 <ul>
 <li><code>rustBoot</code>: contains the bootloader. This usually starts at <code>address 0x0</code> in flash-memory. </li>
 <li><code>BOOT:</code> contains boot firmware. <code>rustBoot</code> always boots from this partition address.</li>
 <li><code>UPDATE:</code> contains update firmware i.e. downloaded update firmware is placed in this partition.</li>
-<li><code>SWAP:</code> is an empty partition that is used while swapping contents of <code>BOOT</code> and <code>UPDATE</code>.</li>
+<li><code>SWAP:</code> is an empty partition that is used to swap contents of <code>BOOT</code> and <code>UPDATE</code>, one sector at a time.</li>
 </ul>
 <p>All 3 partition boundaries must be aligned to a physical sector as <code>rustBoot</code> erases all flash sectors prior to storing a new firmware image, and swaps the contents of the two partitions, one sector at a time.</p>
-<p>To ensure partition-sector alignments are maintained, before proceeding to partition a target system, the following points must be considered:</p>
+<p>To ensure that a partition's sector alignments are maintained, the following points must be considered:</p>
 <ul>
 <li><code>BOOT and UPDATE</code> partition must be of the same size.</li>
-<li><code>SWAP</code> partition <code>must be larger than the largest sector</code> in either <code>BOOT</code> or <code>UPDATE</code> partition.</li>
+<li><code>SWAP</code> partition <code>must be larger than or equal to the largest sector</code> in either <code>BOOT</code> or <code>UPDATE</code> partition.</li>
 </ul>
 <p>MCU flash memory is partitioned as follows:</p>
 <ul>
@@ -188,13 +188,14 @@
 </ul>
 </li>
 </ul>
-<p>BOOT, UPDATE, SWAP addresses and SECTOR_SIZE, PARTITION_SIZE values can be set via command line options or developers <code>constants.rs</code>.</p>
+<p>BOOT, UPDATE, SWAP addresses and SECTOR_SIZE, PARTITION_SIZE values can be set via source files - <code>constants.rs</code>.</p>
 <blockquote>
 <p><strong>MCU defaults:</strong></p>
 <ul>
-<li>By default, public keys used for firmware validation are embedded in <code>rustBoot-firmware</code> during a factory-image-burn. However, rustBoot also offers the option to retrieve them from secure-hardware (ex: crypto-elements).</li>
+<li>By default, public keys used for firmware validation are embedded in <code>rustBoot-firmware</code> during a factory image-burn. However, rustBoot also supports the option to retrieve them from secure-hardware (ex: crypto-elements).</li>
 <li>The <code>BOOT</code> partition is the only partition from which we can boot a firmware image. The firmware image must be linked so that its entry-point is at address <code>256 + BOOT_PARTITION_ADDRESS</code>.</li>
-<li><code>BOOT</code> firmware is responsible for downloading a new firmware image via a secure channel and installing it in the <code>UPDATE</code> partition. To trigger an update, the <code>BOOT</code> firmware updates the <code>status byte</code> of the <code>UPDATE</code> partition and performs a reboot. This will allow the bootloader to <code>swap the contents</code> of <code>BOOT</code> partition with that of the <code>UPDATE</code> partition. </li>
+<li><code>BOOT</code> firmware is responsible for downloading a new firmware image via a secure channel and installing it in the <code>UPDATE</code> partition. </li>
+<li>To trigger an update, the <code>BOOT</code> firmware updates the <code>status byte</code> of the <code>UPDATE</code> partition and performs a reboot. This will allow the bootloader to <code>swap the contents</code> of <code>BOOT</code> partition with that of the <code>UPDATE</code> partition. </li>
 </ul>
 </blockquote>
 <h2 id="linux-system-partitions"><a class="header" href="#linux-system-partitions">Linux system partitions:</a></h2>

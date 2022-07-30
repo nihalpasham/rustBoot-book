@@ -713,18 +713,18 @@ Created:         Sat Jun  4 13:18:45 2022
 <blockquote>
 <p>Note: <code>BOOT</code>, <code>UPDATE</code> and <code>SWAP</code> partitions need <strong>NOT</strong> be consecutively laid out in flash memory. The above diagram only serves as a visual aid.</p>
 </blockquote>
-<p>rustBoot requires <code>mcu flash</code> to be divided into (at-least) 4 non-overlapping memory regions (i.e. partitions). </p>
+<p>rustBoot requires an <code>mcu's</code> non-volatile memory (or <code>flash storage</code>) to be divided into (at-least) 4 non-overlapping memory regions (i.e. partitions). </p>
 <ul>
 <li><code>rustBoot</code>: contains the bootloader. This usually starts at <code>address 0x0</code> in flash-memory. </li>
 <li><code>BOOT:</code> contains boot firmware. <code>rustBoot</code> always boots from this partition address.</li>
 <li><code>UPDATE:</code> contains update firmware i.e. downloaded update firmware is placed in this partition.</li>
-<li><code>SWAP:</code> is an empty partition that is used while swapping contents of <code>BOOT</code> and <code>UPDATE</code>.</li>
+<li><code>SWAP:</code> is an empty partition that is used to swap contents of <code>BOOT</code> and <code>UPDATE</code>, one sector at a time.</li>
 </ul>
 <p>All 3 partition boundaries must be aligned to a physical sector as <code>rustBoot</code> erases all flash sectors prior to storing a new firmware image, and swaps the contents of the two partitions, one sector at a time.</p>
-<p>To ensure partition-sector alignments are maintained, before proceeding to partition a target system, the following points must be considered:</p>
+<p>To ensure that a partition's sector alignments are maintained, the following points must be considered:</p>
 <ul>
 <li><code>BOOT and UPDATE</code> partition must be of the same size.</li>
-<li><code>SWAP</code> partition <code>must be larger than the largest sector</code> in either <code>BOOT</code> or <code>UPDATE</code> partition.</li>
+<li><code>SWAP</code> partition <code>must be larger than or equal to the largest sector</code> in either <code>BOOT</code> or <code>UPDATE</code> partition.</li>
 </ul>
 <p>MCU flash memory is partitioned as follows:</p>
 <ul>
@@ -741,13 +741,14 @@ Created:         Sat Jun  4 13:18:45 2022
 </ul>
 </li>
 </ul>
-<p>BOOT, UPDATE, SWAP addresses and SECTOR_SIZE, PARTITION_SIZE values can be set via command line options or developers <code>constants.rs</code>.</p>
+<p>BOOT, UPDATE, SWAP addresses and SECTOR_SIZE, PARTITION_SIZE values can be set via source files - <code>constants.rs</code>.</p>
 <blockquote>
 <p><strong>MCU defaults:</strong></p>
 <ul>
-<li>By default, public keys used for firmware validation are embedded in <code>rustBoot-firmware</code> during a factory-image-burn. However, rustBoot also offers the option to retrieve them from secure-hardware (ex: crypto-elements).</li>
+<li>By default, public keys used for firmware validation are embedded in <code>rustBoot-firmware</code> during a factory image-burn. However, rustBoot also supports the option to retrieve them from secure-hardware (ex: crypto-elements).</li>
 <li>The <code>BOOT</code> partition is the only partition from which we can boot a firmware image. The firmware image must be linked so that its entry-point is at address <code>256 + BOOT_PARTITION_ADDRESS</code>.</li>
-<li><code>BOOT</code> firmware is responsible for downloading a new firmware image via a secure channel and installing it in the <code>UPDATE</code> partition. To trigger an update, the <code>BOOT</code> firmware updates the <code>status byte</code> of the <code>UPDATE</code> partition and performs a reboot. This will allow the bootloader to <code>swap the contents</code> of <code>BOOT</code> partition with that of the <code>UPDATE</code> partition. </li>
+<li><code>BOOT</code> firmware is responsible for downloading a new firmware image via a secure channel and installing it in the <code>UPDATE</code> partition. </li>
+<li>To trigger an update, the <code>BOOT</code> firmware updates the <code>status byte</code> of the <code>UPDATE</code> partition and performs a reboot. This will allow the bootloader to <code>swap the contents</code> of <code>BOOT</code> partition with that of the <code>UPDATE</code> partition. </li>
 </ul>
 </blockquote>
 <h2 id="linux-system-partitions"><a class="header" href="#linux-system-partitions">Linux system partitions:</a></h2>
@@ -765,7 +766,42 @@ Created:         Sat Jun  4 13:18:45 2022
 </ul>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="secure-boot--update"><a class="header" href="#secure-boot--update">Secure Boot &amp; Update</a></h1>
+<p>rustBoot supports the following <code>boot and update</code> schemes, depending on the underlying device-type.</p>
+<ul>
+<li><a href="arch/secure_boot_update.html#mcu-updates"><code>mcu updates:</code></a> to boot and update bare-metal mcu-firmware using a simple <a href="arch/./partitions.html#micro-controller-partitions"><code>partitioning scheme</code></a></li>
+<li><a href="arch/secure_boot_update.html#linux-system-updates"><code>linux-system updates:</code></a> to boot and update a linux system.</li>
+</ul>
+<h2 id="mcu-updates"><a class="header" href="#mcu-updates">mcu updates:</a></h2>
+<p>rustBoot implements a small state machine leveraging rust's type-system to enforce compile-time state transition checks. Additionally, it uses the <a href="https://rust-lang.github.io/api-guidelines/future-proofing.html"><code>sealed-trait</code></a> pattern to declare and seal (all possible) valid <code>states</code> and <code>partitions</code>. </p>
+<p>The image below captures rustBoot's state transitions.</p>
+<p>Upon supplying power to a system, execution usually starts in an mcu's BootROM. The BootROM is a piece of immutable code, also referred to as the <code>root of trust</code>. BootROM(s) are programmed into an mcu's ROM in the factory and may support secure-boot i.e. the ability to cryptographically verify (and pass control to) a 2nd stage executable/binary. </p>
+<p>In our case, <code>rustBoot</code> is the 2nd stage. It checks the <a href="arch/./secure_boot_update.html#partition-status">status</a> of <code>BOOT</code> and <code>UPDATE</code> partitions and drives the state machine forward, as shown in the image below.</p>
+<blockquote>
+<p>Note:</p>
+<ul>
+<li>there may be many intermediate stages/executables between <code>BootROM</code> and <code>rustBoot</code>. </li>
+<li>rustBoot assumes that the target device contains a <code>root of trust</code> with support for digitally verifying cryptographic signatures. </li>
+<li>rustBoot will check for firmware integrity and authenticity at appropriate stages during boot/update/rollback.</li>
+<li>booting, updating and rolling back are determined by the the state machine.</li>
+</ul>
+</blockquote>
 <p><a href="https://github.com/UdayakumarHidakal/RustBoot-state-diagrams/blob/main/rustBoot_State_Diagram.svg?raw=true"><img src="https://github.com/UdayakumarHidakal/RustBoot-state-diagrams/blob/main/rustBoot_State_Diagram.svg?raw=true" alt="State Diagram" title="State diagram for rustBoot" /></a></p>
+<h3 id="partition-status"><a class="header" href="#partition-status">partition status:</a></h3>
+<p><a href="arch/./partitions.html#micro-controller-partitions"><code>rustBoot partitions</code></a> use a status byte to track the status of firmware in each partition. The status byte is a 1-byte field stored at the end of each partition. </p>
+<p>Possible states are:</p>
+<ul>
+<li><code>STATE_NEW (0xFF):</code> The image was never staged for boot, or triggered for an update. If an image is present, no flags are active.</li>
+<li><code>STATE_UPDATING (0x70):</code> Only valid in the <code>UPDATE</code> partition. The image is marked for update and should replace the current image in <code>BOOT</code>.</li>
+<li><code>STATE_TESTING (0x10):</code> Only valid in the <code>BOOT</code> partition. The image has been just updated, and never completed its boot. If present after reboot, it means that the updated image failed to boot, despite being correctly verified. This particular situation triggers a rollback.</li>
+<li><code>STATE_SUCCESS (0x00):</code> Only valid in the <code>BOOT</code> partition. The image stored in <code>BOOT</code> has been successfully staged at least once, and the update is now complete.</li>
+</ul>
+<h3 id="partition-sector-flags"><a class="header" href="#partition-sector-flags">partition sector flags:</a></h3>
+<ul>
+<li>When an update is triggered, the contents of <code>UPDATE</code> and <code>BOOT</code> are swapped one sector at a time. <code>SWAP</code> is used to temporarily hold a sector during the swap. This ensures that we always store a backup of the original firmware. </li>
+<li>rustBoot keeps track of the state of each sector (during a swap), using 4 bits per sector at the end of the <code>UPDATE</code> partition. </li>
+<li>Each <code>sector-swap</code> operation corresponds to a different flag-value for a sector in the sector flags area. This means if a swap operation is interrupted, it can be resumed upon reboot.</li>
+</ul>
+<h2 id="linux-system-updates"><a class="header" href="#linux-system-updates">linux-system updates:</a></h2>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="signing-utilities"><a class="header" href="#signing-utilities">Signing Utilities</a></h1>
 <p>As rustBoot supports 2 types of firmware image formats, depending on the underlying device i.e. either an</p>
 <ul>
