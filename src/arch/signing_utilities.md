@@ -6,7 +6,25 @@ As rustBoot supports 2 types of firmware image formats, depending on the underly
 
 rustBoot `rbsigner` utility can produce 2 different types signed images. 
 ### Signed mcu-image:
-    [TODO ..]
+To sign mcu-image, rustBoot's [image signing utility](https://github.com/nihalpasham/rustBoot/tree/main/rbsigner) takes 3 inputs
+- an unsigned mcu-image. 
+- a raw signing-key or ecdsa private key.
+- the ecdsa curve-type - (nistp256 only for now).
+
+Following ways to sign mcu-image
+
+- First we build the image and then sign it using the following commands.
+```
+ cargo [board-name] build pkgs-for
+
+ cargo [board-name] sign pkgs-for 
+``` 
+- Single command to build ,sign and flash.
+
+```
+cargo [board-name] build-sign-flash rustBoot [boot-ver] [updt-ver]
+```
+
 ### Signed fit-image:
 To sign a fit-image, rustBoot's [image signing utility](https://github.com/nihalpasham/rustBoot/tree/main/rbsigner) takes 3 inputs 
 - an unsigned fit-image in the above format
