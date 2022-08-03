@@ -5,7 +5,7 @@ As rustBoot supports 2 types of firmware image formats, depending on the underly
 - [`fit-image:`](./images.md#fit-image-format) the flattened-image-tree format for systems capable of booting linux.
 
 rustBoot `rbsigner` utility can produce 2 different types signed images. 
-### Signed mcu-image:
+### Signing mcu-images:
 To sign a mcu-image, rustBoot's [image signing utility](https://github.com/nihalpasham/rustBoot/tree/main/rbsigner) takes 3 inputs
 - an unsigned mcu-image. 
 - a raw signing-key or ecdsa private key.
@@ -153,7 +153,7 @@ $ cargo flash --chip stm32f411vetx --release
 yashwanthsingh@Yashwanths-MacBook-Pro rustBoot % 
 ```
 
-### Signed fit-image:
+### Signing fit-images:
 To sign a fit-image, rustBoot's [image signing utility](https://github.com/nihalpasham/rustBoot/tree/main/rbsigner) takes 3 inputs 
 - an unsigned fit-image in the above format
 - a raw signing-key or ecdsa private key
