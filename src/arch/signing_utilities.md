@@ -11,7 +11,7 @@ To sign a mcu-image, rustBoot's [image signing utility](https://github.com/nihal
 - a raw signing-key or ecdsa private key.
 - the ecdsa curve-type - (nistp256 only for now).
 
-There are 2 ways to sign mcu-image
+There are 2 ways to sign a mcu-image
 
 - First we build the image and then sign it using the following commands.
 ```
