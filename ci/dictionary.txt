@@ -202,3 +202,16 @@ BOOTSEL
 QSPI
 Pico's
 eabi
+prioritizes
+prioritize
+initializes
+initialize
+mcu's
+initialization
+cryptographically
+minimize
+optimized
+xxAA
+cryptographic
+executables
+customize
