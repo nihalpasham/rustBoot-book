@@ -10,7 +10,9 @@ rustBoot implements a small state machine leveraging rust's type-system to enfor
 
 The image below captures rustBoot's state transitions.
 
-Upon supplying power to a system, execution usually starts in an mcu's BootROM. The BootROM is a piece of immutable code, also referred to as the `root of trust`. BootROM(s) are programmed into an mcu's ROM in the factory and may support secure-boot i.e. the ability to cryptographically verify (and pass control to) a 2nd stage executable/binary. 
+Upon supplying power to a system, execution usually starts in an mcu's BootROM. The BootROM is a piece of immutable code, also referred to as the `root of trust`. BootROM(s) are programmed into an mcu's ROM in the factory and may support secure-boot i.e. the ability to cryptographically verify (and pass control to) a 2nd stage executable/binary.
+
+[![State Diagram](https://github.com/imrank03/rustBoot-book-diagrams/blob/main/bootrom.svg?raw=true "Simplified Block Diagram, 'Root of trust':")](https://github.com/imrank03/rustBoot-book-diagrams/blob/main/bootrom.svg?raw=true)
 
 In our case, `rustBoot` is the 2nd stage. It checks the [status](./secure_boot_update.md#partition-status) of `BOOT` and `UPDATE` partitions and drives the state machine forward, as shown in the image below.
 
@@ -39,5 +41,6 @@ Possible states are:
 - rustBoot keeps track of the state of each sector (during a swap), using 4 bits per sector at the end of the `UPDATE` partition. 
 - Each `sector-swap` operation corresponds to a different flag-value for a sector in the sector flags area. This means if a swap operation is interrupted, it can be resumed upon reboot.
 
+[![State Diagram](https://github.com/imrank03/rustBoot-book-diagrams/blob/main/partion_and_sector_flags.svg?raw=true "Simplified Block Diagram, Partition Status and Sector Flags:")](https://github.com/imrank03/rustBoot-book-diagrams/blob/main/partion_and_sector_flags.svg?raw=true)
 
 ## linux-system updates:

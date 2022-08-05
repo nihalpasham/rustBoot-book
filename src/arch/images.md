@@ -295,7 +295,7 @@ rustBoot fit-images are signed with `ecdsa256`. The signature includes the kerne
 
 Signing a rustBoot fit-image involves 2 steps: 
 - **Building a fit-image:** As explained in [preceding section](./images.md#building-a-rustboot-compliant-fit-image), FIT images can be built using `mkimage` - a command-line utility from the `uboot-tools` package i.e. you can pass an `.its` file to the mkimage tool and mkimage will produce an `.itb` blob or a image-tree blob.
-- **signing the fit-image:**  once you've built your fit-image, you can pass the it along with a signing key to rustBoot's `rbsigner` utility to [generate a signed fit-image](./signing_utilities.md#signed-fit-image). 
+- **signing the fit-image:**  once you've built your fit-image, you can pass the it along with a signing key to rustBoot's `rbsigner` utility to [generate a signed fit-image](./signing_utilities.md#signing-fit-images). 
 
 > **FIT-image defaults:** 
 > - By default, valid rustBoot images are always signed.
