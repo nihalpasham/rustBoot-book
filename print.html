@@ -679,7 +679,7 @@ Created:         Sat Jun  4 13:18:45 2022
 <p>Signing a rustBoot fit-image involves 2 steps: </p>
 <ul>
 <li><strong>Building a fit-image:</strong> As explained in <a href="arch/./images.html#building-a-rustboot-compliant-fit-image">preceding section</a>, FIT images can be built using <code>mkimage</code> - a command-line utility from the <code>uboot-tools</code> package i.e. you can pass an <code>.its</code> file to the mkimage tool and mkimage will produce an <code>.itb</code> blob or a image-tree blob.</li>
-<li><strong>signing the fit-image:</strong>  once you've built your fit-image, you can pass the it along with a signing key to rustBoot's <code>rbsigner</code> utility to <a href="arch/./signing_utilities.html#signed-fit-image">generate a signed fit-image</a>. </li>
+<li><strong>signing the fit-image:</strong>  once you've built your fit-image, you can pass the it along with a signing key to rustBoot's <code>rbsigner</code> utility to <a href="arch/./signing_utilities.html#signing-fit-images">generate a signed fit-image</a>. </li>
 </ul>
 <blockquote>
 <p><strong>FIT-image defaults:</strong> </p>
@@ -774,7 +774,8 @@ Created:         Sat Jun  4 13:18:45 2022
 <h2 id="mcu-updates"><a class="header" href="#mcu-updates">mcu updates:</a></h2>
 <p>rustBoot implements a small state machine leveraging rust's type-system to enforce compile-time state transition checks. Additionally, it uses the <a href="https://rust-lang.github.io/api-guidelines/future-proofing.html"><code>sealed-trait</code></a> pattern to declare and seal (all possible) valid <code>states</code> and <code>partitions</code>. </p>
 <p>The image below captures rustBoot's state transitions.</p>
-<p>Upon supplying power to a system, execution usually starts in an mcu's BootROM. The BootROM is a piece of immutable code, also referred to as the <code>root of trust</code>. BootROM(s) are programmed into an mcu's ROM in the factory and may support secure-boot i.e. the ability to cryptographically verify (and pass control to) a 2nd stage executable/binary. </p>
+<p>Upon supplying power to a system, execution usually starts in an mcu's BootROM. The BootROM is a piece of immutable code, also referred to as the <code>root of trust</code>. BootROM(s) are programmed into an mcu's ROM in the factory and may support secure-boot i.e. the ability to cryptographically verify (and pass control to) a 2nd stage executable/binary.</p>
+<p><a href="https://github.com/imrank03/rustBoot-book-diagrams/blob/main/bootrom.svg?raw=true"><img src="https://github.com/imrank03/rustBoot-book-diagrams/blob/main/bootrom.svg?raw=true" alt="State Diagram" title="Simplified Block Diagram, 'Root of trust':" /></a></p>
 <p>In our case, <code>rustBoot</code> is the 2nd stage. It checks the <a href="arch/./secure_boot_update.html#partition-status">status</a> of <code>BOOT</code> and <code>UPDATE</code> partitions and drives the state machine forward, as shown in the image below.</p>
 <blockquote>
 <p>Note:</p>
@@ -801,6 +802,7 @@ Created:         Sat Jun  4 13:18:45 2022
 <li>rustBoot keeps track of the state of each sector (during a swap), using 4 bits per sector at the end of the <code>UPDATE</code> partition. </li>
 <li>Each <code>sector-swap</code> operation corresponds to a different flag-value for a sector in the sector flags area. This means if a swap operation is interrupted, it can be resumed upon reboot.</li>
 </ul>
+<p><a href="https://github.com/imrank03/rustBoot-book-diagrams/blob/main/partion_and_sector_flags.svg?raw=true"><img src="https://github.com/imrank03/rustBoot-book-diagrams/blob/main/partion_and_sector_flags.svg?raw=true" alt="State Diagram" title="Simplified Block Diagram, Partition Status and Sector Flags:" /></a></p>
 <h2 id="linux-system-updates"><a class="header" href="#linux-system-updates">linux-system updates:</a></h2>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="signing-utilities"><a class="header" href="#signing-utilities">Signing Utilities</a></h1>
 <p>As rustBoot supports 2 types of firmware image formats, depending on the underlying device i.e. either an</p>
