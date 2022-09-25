@@ -184,6 +184,51 @@
 </ul>
 <p><a href="https://github.com/imrank03/rustBoot-book-diagrams/blob/main/partion_and_sector_flags.svg?raw=true"><img src="https://github.com/imrank03/rustBoot-book-diagrams/blob/main/partion_and_sector_flags.svg?raw=true" alt="State Diagram" title="Simplified Block Diagram, Partition Status and Sector Flags:" /></a></p>
 <h2 id="linux-system-updates"><a class="header" href="#linux-system-updates">linux-system updates:</a></h2>
+<p>linux-system updates rely on an <code>updt.txt</code> file. <code>updt.txt</code> as the name suggests is an update-configuration file containing active and passive image components.</p>
+<ul>
+<li><strong>active component:</strong> refers to the rustBoot compliant fit-image that's currently in-use. This also implies that the active image has been successfully verified and booted at least once.</li>
+<li><strong>passive component:</strong> refers to the rustBoot compliant fit-image that's been marked <code>ready-for-update</code> i.e. the active image has downloaded an update and set the corresponding passive component field in <code>updt.txt</code>. Passive component(s) have an additional field called <code>update_status</code> and can be assigned one of the following values.
+<ul>
+<li><strong>updating:</strong> The image is marked for update and should replace the current <code>active-image</code>.</li>
+<li><strong>testing:</strong> The image has been just updated, and never completed its boot. If present after reboot, it means that the updated image failed to boot, despite being correctly verified. This particular situation triggers a rollback.</li>
+<li><strong>success:</strong> The update has been successfully staged at least once, and the update is now complete. </li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>Notes:</p>
+<ul>
+<li>A valid <code>updt.txt</code> file must (always) contain an active and a passive component.</li>
+<li>The active component must contain the fields - <code>image_name</code> and <code>image_version</code>.</li>
+<li>The passive component may contain optional fields such as <code>image_name</code>, <code>image_version</code> and <code>update_status</code> </li>
+<li><strong>Example:</strong> for what constitutes a <code>valid config file</code>, please see the <code>updt.txt</code> in the rpi4 example.</li>
+</ul>
+</blockquote>
+<h3 id="heres-how-it-works"><a class="header" href="#heres-how-it-works">Here's how it works:</a></h3>
+<ul>
+<li>rustBoot loads the <code>updt.txt</code> file from the root directory, parses it and retrieves the active and passive components.</li>
+<li>it then performs the following checks, assuming an update is available
+<ul>
+<li>does the active component include valid <code>image_name</code> and <code>image_version</code> fields?</li>
+<li>has the passive component's <code>ready_for_update</code> field been set to true?</li>
+<li>if yes, have the <code>passive_name</code>, <code>passive_version</code> fields been set and has <code>passive_status</code> been set to either <code>updating</code> or <code>success</code>? i.e. update has been marked as ready (on the next reboot). </li>
+<li>is the passive_version field greater than the active? A valid update must have a version greater than the active version.</li>
+</ul>
+</li>
+<li>if all the above checks pass, we attempt to load the update (fit-image) and <em>if any one of above checks fail, we simply load the currently active-image.</em></li>
+<li>lastly, rustBoot verifies the loaded fit-image's cryptographic digital signature and additionally checks whether the <code>version-number</code> from <code>updt.txt</code> matches the fit-image's timestamp (to prevent rollback or downgrade attacks). The fit's version number is retrieved from rustBoot's <code>updt.txt</code> file.
+<ul>
+<li>if a version mismatch arises in the last step, rustBoot attempts to rollback to the currently active-image</li>
+</ul>
+</li>
+</ul>
+<p>A note on valid <code>updt.txt</code> configs. They must contain </p>
+<ul>
+<li>an image name that ends with <code>.itb</code> as its file extension</li>
+<li>a valid unix epoch timestamp as its version number and it must start with the <code>ts_</code> prefix.</li>
+<li>config keys that are recognized by rustBoot - <code>[active]</code>, <code>[passive]</code></li>
+<li>field names that are recognized by rustBoot. - <code>image_name</code>, <code>image_version</code>, <code>ready_for_update_flag</code>, <code>update_status</code> </li>
+</ul>
 
                     </main>
 
