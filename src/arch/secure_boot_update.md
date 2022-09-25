@@ -44,3 +44,35 @@ Possible states are:
 [![State Diagram](https://github.com/imrank03/rustBoot-book-diagrams/blob/main/partion_and_sector_flags.svg?raw=true "Simplified Block Diagram, Partition Status and Sector Flags:")](https://github.com/imrank03/rustBoot-book-diagrams/blob/main/partion_and_sector_flags.svg?raw=true)
 
 ## linux-system updates:
+
+linux-system updates rely on an `updt.txt` file. `updt.txt` as the name suggests is an update-configuration file containing active and passive image components.
+
+- **active component:** refers to the rustBoot compliant fit-image that's currently in-use. This also implies that the active image has been successfully verified and booted at least once.
+- **passive component:** refers to the rustBoot compliant fit-image that's been marked `ready-for-update` i.e. the active image has downloaded an update and set the corresponding passive component field in `updt.txt`. Passive component(s) have an additional field called `update_status` and can be assigned one of the following values.
+    - **updating:** The image is marked for update and should replace the current `active-image`.
+    - **testing:** The image has been just updated, and never completed its boot. If present after reboot, it means that the updated image failed to boot, despite being correctly verified. This particular situation triggers a rollback.
+    - **success:** The update has been successfully staged at least once, and the update is now complete. 
+
+> Notes:
+> - A valid `updt.txt` file must (always) contain an active and a passive component.
+> - The active component must contain the fields - `image_name` and `image_version`.
+> - The passive component may contain optional fields such as `image_name`, `image_version` and `update_status` 
+> - **Example:** for what constitutes a `valid config file`, please see the `updt.txt` in the rpi4 example.
+
+### Here's how it works:
+
+- rustBoot loads the `updt.txt` file from the root directory, parses it and retrieves the active and passive components.
+- it then performs the following checks, assuming an update is available
+    - does the active component include valid `image_name` and `image_version` fields?
+    - has the passive component's `ready_for_update` field been set to true?
+    - if yes, have the `passive_name`, `passive_version` fields been set and has `passive_status` been set to either `updating` or `success`? i.e. update has been marked as ready (on the next reboot). 
+    - is the passive_version field greater than the active? A valid update must have a version greater than the active version.
+- if all the above checks pass, we attempt to load the update (fit-image) and *if any one of above checks fail, we simply load the currently active-image.*
+- lastly, rustBoot verifies the loaded fit-image's cryptographic digital signature and additionally checks whether the `version-number` from `updt.txt` matches the fit-image's timestamp (to prevent rollback or downgrade attacks). The fit's version number is retrieved from rustBoot's `updt.txt` file.
+    - if a version mismatch arises in the last step, rustBoot attempts to rollback to the currently active-image
+
+A note on valid `updt.txt` configs. They must contain 
+- an image name that ends with `.itb` as its file extension
+- a valid unix epoch timestamp as its version number and it must start with the `ts_` prefix.
+- config keys that are recognized by rustBoot - `[active]`, `[passive]`
+- field names that are recognized by rustBoot. - `image_name`, `image_version`, `ready_for_update_flag`, `update_status` 

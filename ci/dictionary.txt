@@ -1,5 +1,7 @@
 personal_ws-1.1 en 0 utf-8
 artefacts
+lionelains
+Ains
 rustBoot
 rustboot
 rustBoot's
@@ -18,6 +20,7 @@ README
 UART
 GPIO
 gpio
+configs
 crypto
 interruptible
 svgbob
